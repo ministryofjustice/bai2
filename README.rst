@@ -1,58 +1,56 @@
-===============================
 bai2
-===============================
+====
 
-.. image:: https://img.shields.io/travis/ministryofjustice/bai2.svg
-        :target: https://travis-ci.org/ministryofjustice/bai2
+.. image:: https://travis-ci.org/ministryofjustice/bai2.svg
+    :target: https://travis-ci.org/ministryofjustice/bai2
 
-
-===========
-BAI2 Parser
-===========
+.. image:: https://coveralls.io/repos/ministryofjustice/bai2/badge.svg&service=github
+    :target: https://coveralls.io/github/ministryofjustice/bai2
 
 Python module for parsing `BAI2 Files <http://www.bai.org/Libraries/Site-General-Downloads/Cash_Management_2005.sflb.ashx>`_
 
 **The library is not production ready at the moment** as we don't have enough data to test against, please help us improve it.
 
 
-------------
 Requirements
 ------------
 
 Only python 3.4+ supported.
 
-------------
+
 Installation
 ------------
 
-At the moment, the only way to install the library is from github::
+At the moment, the only way to install the library is from github
+
+.. code-block:: bash
 
     pip install git+https://github.com/ministryofjustice/bai2.git
 
 
------
 Usage
 -----
 
-To use bai2 in a project::
+To use bai2 in a project
 
-    from bai2 import bai2
+.. code-block:: python
 
-    # parse from a file
-    with open(<file-path>) as f:
-        bai2_file = bai2.parse_from_file(f)
+    >>> from bai2 import bai2
 
-    # parse from a string
-    bai2_file = bai2.parse_from_string(<bai2_as_string>)
+    >>> # parse from a file
+    >>> with open(<file-path>) as f:
+    >>>     bai2_file = bai2.parse_from_file(f)
 
-    # parse from lines
-    bai2_file = bai2.parse_from_lines(<bai2_as_lines>)
+    >>> # parse from a string
+    >>> bai2_file = bai2.parse_from_string(<bai2_as_string>)
+
+    >>> # parse from lines
+    >>> bai2_file = bai2.parse_from_lines(<bai2_as_lines>)
 
 
 The `parse_from_*` methods return a `bai2.models.Bai2File` object which can be used to inspect the parsed data.
 
 
-------
 Models
 ------
 
@@ -75,7 +73,6 @@ Section models define a `header`, a `trailer` and a list of `children` whilst si
 Each Model has a `rows` property with the original rows from the BAI2 file.
 
 
-----------
 Exceptions
 ----------
 
@@ -86,7 +83,6 @@ The `parse` method might raise 3 exceptions:
 3. `IntegrityException`: when the control totals or the number of objects reported in the trailers don't match the ones in the file.
 
 
--------------
 Incongruences
 -------------
 
@@ -96,3 +92,12 @@ might therefore raise an ParsingException.
 We don't know yet how to deal with these cases as we don't have access to many bai2 files so we can't test it as we would like.
 
 Please let me know if this happens to you.
+
+
+Copyright
+---------
+
+Copyright |copy| 2015 HM Government (Ministry of Justice Digital Services). See
+LICENSE for further details.
+
+.. |copy| unicode:: 0xA9 .. copyright symbol
