@@ -1,7 +1,6 @@
 import datetime
 from unittest import TestCase
 
-from bai2 import bai2
 from bai2.helpers import IteratorHelper
 from bai2.parsers import TransactionDetailParser, AccountParser, \
     GroupParser, Bai2FileParser

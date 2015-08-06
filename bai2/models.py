@@ -15,6 +15,12 @@ class Record(object):
 class Bai2Model(object):
     code = None
 
+    def as_string(self):
+        return '\n'.join([
+            "{0},{1}".format(row[0].value, row[1])
+            for row in self.rows
+        ])
+
 
 class Bai2SingleModel(Bai2Model):
 
