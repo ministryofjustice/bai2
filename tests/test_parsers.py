@@ -21,7 +21,8 @@ class TransactionDetailParserTestCase(TestCase):
             '16,165,1500000,0,DD1620,,DEALER PAYMENTS',
         ]
 
-        parser = TransactionDetailParser(IteratorHelper(lines))
+        ii = IteratorHelper(lines)
+        parser = TransactionDetailParser(ii)
 
         transaction = parser.parse()
 

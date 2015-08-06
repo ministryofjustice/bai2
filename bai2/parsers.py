@@ -182,7 +182,10 @@ class BaseSingleParser(BaseParser):
 
         self.validate(obj)
 
-        self._iter.advance()
+        try:
+            self._iter.advance()
+        except StopIteration:
+            pass
 
         return obj
 
