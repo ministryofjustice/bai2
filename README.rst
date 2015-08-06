@@ -16,6 +16,12 @@ Python module for parsing `BAI2 Files <http://www.bai.org/Libraries/Site-General
 
 
 ------------
+Requirements
+------------
+
+Only python 3.4+ supported.
+
+------------
 Installation
 ------------
 
