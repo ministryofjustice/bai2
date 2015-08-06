@@ -17,121 +17,23 @@ from bai2.exceptions import ParsingException, \
 
 
 class TransactionDetailParserTestCase(TestCase):
-
     def test_parse(self):
         lines = [
-            '01,CITIDIRECT,8888888,150716,0713,00131100,,,2/',
-            '02,8888888,CITIGB00,1,150715,2340,GBP,2/',
-            '03,77777777,GBP,010,10000,,,015,10000,,,/',
-            '16,191,001,V,150715,,1234567890,RP12312312312312/',
-            '88,FR:FP SIP INCOMING',
-            '88,ENDT:20150715',
-            '88,TRID:RP12312312312312',
-            '88,PY:RP1231231231231200                 A1234BC 22/03/66',
-            '88,BI:22222222',
-            '88,OB:111111 BUCKINGHAM PALACE OB3:BARCLAYS BANK PLC',
-            '88,BO:11111111 BO1:DOE JO',
-            '49,20001,10/',
-            '98,20001,1,12/',
-            '99,20001,1,14/'
+            '16,165,1500000,0,DD1620,,DEALER PAYMENTS',
         ]
 
-        bai2_file = bai2.parse(lines)
+        parser = TransactionDetailParser(IteratorHelper(lines))
 
-        july_15_2015 = datetime.date(day=15, month=7, year=2015)
-        july_16_2015 = datetime.date(day=16, month=7, year=2015)
+        transaction = parser.parse()
 
-        # BAI2 file
-        self.assertTrue(isinstance(bai2_file, Bai2File))
-
-        # BAI2 file header
-        bai2_header = bai2_file.header
-        self.assertTrue(isinstance(bai2_header, Bai2FileHeader))
-        self.assertEqual(bai2_header.sender_id, 'CITIDIRECT')
-        self.assertEqual(bai2_header.receiver_id, '8888888')
-        self.assertEqual(bai2_header.creation_date, july_16_2015)
-        self.assertEqual(bai2_header.creation_time, datetime.time(hour=7, minute=13))
-        self.assertEqual(bai2_header.file_id, '00131100')
-        self.assertEqual(bai2_header.physical_record_length, None)
-        self.assertEqual(bai2_header.block_size, None)
-        self.assertEqual(bai2_header.version_number, 2)
-
-        # BAI2 file trailer
-        bai2_trailer = bai2_file.trailer
-        self.assertTrue(isinstance(bai2_trailer, Bai2FileTrailer))
-        self.assertEqual(bai2_trailer.file_control_total, 20001)
-        self.assertEqual(bai2_trailer.number_of_groups, 1)
-        self.assertEqual(bai2_trailer.number_of_records, 14)
-
-        # GROUP
-
-        self.assertEqual(len(bai2_file.children), 1)
-        group = bai2_file.children[0]
-        self.assertTrue(isinstance(group, Group))
-
-        # Group Header
-
-        group_header = group.header
-        self.assertTrue(isinstance(group_header, GroupHeader))
-        self.assertEqual(group_header.ultimate_receiver_id, '8888888')
-        self.assertEqual(group_header.originator_id, 'CITIGB00')
-        self.assertEqual(group_header.group_status, GroupStatus.update)
-        self.assertEqual(group_header.as_of_date, july_15_2015)
-        self.assertEqual(group_header.as_of_time, datetime.time(hour=23, minute=40))
-        self.assertEqual(group_header.currency, 'GBP')
-        self.assertEqual(
-            group_header.as_of_date_modifier, AsOfDateModifier.final_previous_day
-        )
-
-        # Group Trailer
-
-        group_trailer = group.trailer
-        self.assertTrue(isinstance(group_trailer, GroupTrailer))
-        self.assertEqual(group_trailer.group_control_total, 20001)
-        self.assertEqual(group_trailer.number_of_accounts, 1)
-        self.assertEqual(group_trailer.number_of_records, 12)
-
-        # ACCOUNT
-
-        self.assertEqual(len(group.children), 1)
-        account = group.children[0]
-        self.assertTrue(isinstance(account, Account))
-
-        # Account Identifier
-
-        account_identifier = account.header
-        self.assertTrue(isinstance(account_identifier, AccountIdentifier))
-        self.assertEqual(account_identifier.customer_account_number, '77777777')
-        self.assertEqual(account_identifier.currency, 'GBP')
-
-        # Account Trailer
-
-        account_trailer = account.trailer
-        self.assertTrue(isinstance(account_trailer, AccountTrailer))
-        self.assertEqual(account_trailer.account_control_total, 20001)
-        self.assertEqual(account_trailer.number_of_records, 10)
-
-        # Transaction Detail
-
-        self.assertEqual(len(account.children), 1)
-        transaction = account.children[0]
-        self.assertTrue(isinstance(transaction, TransactionDetail))
-        self.assertEqual(transaction.type_code, TypeCodes['191'])
-        self.assertEqual(transaction.amount, 1)
-        self.assertEqual(transaction.funds_type, FundsType.value_dated)
-        self.assertEqual(transaction.availability['date'], july_15_2015)
-        self.assertEqual(transaction.availability['time'], None)
-        self.assertEqual(transaction.bank_reference, '1234567890')
-        self.assertEqual(transaction.customer_reference, 'RP12312312312312')
+        self.assertEqual(transaction.type_code, TypeCodes['165'])
+        self.assertEqual(transaction.amount, 1500000)
+        self.assertEqual(transaction.funds_type, FundsType.immediate_availability)
+        self.assertEqual(transaction.bank_reference, 'DD1620')
+        self.assertEqual(transaction.customer_reference, None)
         self.assertEqual(
             transaction.text,
-            'FR:FP SIP INCOMING '
-            'ENDT:20150715 '
-            'TRID:RP12312312312312 '
-            'PY:RP1231231231231200                 A1234BC 22/03/66 '
-            'BI:22222222 '
-            'OB:111111 BUCKINGHAM PALACE OB3:BARCLAYS BANK PLC '
-            'BO:11111111 BO1:DOE JO'
+            'DEALER PAYMENTS'
         )
 
     def test_continuation_record(self):
@@ -459,38 +361,120 @@ class Bai2FileParserTestCase(TestCase):
 
     def test_parse(self):
         lines = [
-            '01,122099999,123456789,040621,0200,1,,,2/',
-            '02,031001234,122099999,1,040620,2359,GBP,2/',
-            '03,0975312468,GBP,010,500000,,,190,70000000,4,0/',
-            '16,165,1500000,1,DD1620,, DEALER PAYMENTS',
-            '49,72000000,3/',
-            '98,72000000,1,5/',
-            '99,72000000,1,7/'
+            '01,CITIDIRECT,8888888,150716,0713,00131100,,,2/',
+            '02,8888888,CITIGB00,1,150715,2340,GBP,2/',
+            '03,77777777,GBP,010,10000,,,015,10000,,,/',
+            '16,191,001,V,150715,,1234567890,RP12312312312312/',
+            '88,FR:FP SIP INCOMING',
+            '88,ENDT:20150715',
+            '88,TRID:RP12312312312312',
+            '88,PY:RP1231231231231200                 A1234BC 22/03/66',
+            '88,BI:22222222',
+            '88,OB:111111 BUCKINGHAM PALACE OB3:BARCLAYS BANK PLC',
+            '88,BO:11111111 BO1:DOE JO',
+            '49,20001,10/',
+            '98,20001,1,12/',
+            '99,20001,1,14/'
         ]
 
         parser = Bai2FileParser(IteratorHelper(lines))
-
         bai2_file = parser.parse()
 
-        header = bai2_file.header
-        self.assertEqual(header.sender_id, '122099999')
-        self.assertEqual(header.receiver_id, '123456789')
-        self.assertEqual(
-            header.creation_date,
-            datetime.date(year=2004, month=6, day=21)
-        )
-        self.assertEqual(header.creation_time, datetime.time(hour=2, minute=0))
-        self.assertEqual(header.physical_record_length, None)
-        self.assertEqual(header.file_id, '1')
-        self.assertEqual(header.block_size, None)
-        self.assertEqual(header.version_number, 2)
+        july_15_2015 = datetime.date(day=15, month=7, year=2015)
+        july_16_2015 = datetime.date(day=16, month=7, year=2015)
 
-        trailer = bai2_file.trailer
-        self.assertEqual(trailer.file_control_total, 72000000)
-        self.assertEqual(trailer.number_of_groups, 1)
-        self.assertEqual(trailer.number_of_records, 7)
+        # BAI2 file
+        self.assertTrue(isinstance(bai2_file, Bai2File))
+
+        # BAI2 file header
+        bai2_header = bai2_file.header
+        self.assertTrue(isinstance(bai2_header, Bai2FileHeader))
+        self.assertEqual(bai2_header.sender_id, 'CITIDIRECT')
+        self.assertEqual(bai2_header.receiver_id, '8888888')
+        self.assertEqual(bai2_header.creation_date, july_16_2015)
+        self.assertEqual(bai2_header.creation_time, datetime.time(hour=7, minute=13))
+        self.assertEqual(bai2_header.file_id, '00131100')
+        self.assertEqual(bai2_header.physical_record_length, None)
+        self.assertEqual(bai2_header.block_size, None)
+        self.assertEqual(bai2_header.version_number, 2)
+
+        # BAI2 file trailer
+        bai2_trailer = bai2_file.trailer
+        self.assertTrue(isinstance(bai2_trailer, Bai2FileTrailer))
+        self.assertEqual(bai2_trailer.file_control_total, 20001)
+        self.assertEqual(bai2_trailer.number_of_groups, 1)
+        self.assertEqual(bai2_trailer.number_of_records, 14)
+
+        # GROUP
 
         self.assertEqual(len(bai2_file.children), 1)
+        group = bai2_file.children[0]
+        self.assertTrue(isinstance(group, Group))
+
+        # Group Header
+
+        group_header = group.header
+        self.assertTrue(isinstance(group_header, GroupHeader))
+        self.assertEqual(group_header.ultimate_receiver_id, '8888888')
+        self.assertEqual(group_header.originator_id, 'CITIGB00')
+        self.assertEqual(group_header.group_status, GroupStatus.update)
+        self.assertEqual(group_header.as_of_date, july_15_2015)
+        self.assertEqual(group_header.as_of_time, datetime.time(hour=23, minute=40))
+        self.assertEqual(group_header.currency, 'GBP')
+        self.assertEqual(
+            group_header.as_of_date_modifier, AsOfDateModifier.final_previous_day
+        )
+
+        # Group Trailer
+
+        group_trailer = group.trailer
+        self.assertTrue(isinstance(group_trailer, GroupTrailer))
+        self.assertEqual(group_trailer.group_control_total, 20001)
+        self.assertEqual(group_trailer.number_of_accounts, 1)
+        self.assertEqual(group_trailer.number_of_records, 12)
+
+        # ACCOUNT
+
+        self.assertEqual(len(group.children), 1)
+        account = group.children[0]
+        self.assertTrue(isinstance(account, Account))
+
+        # Account Identifier
+
+        account_identifier = account.header
+        self.assertTrue(isinstance(account_identifier, AccountIdentifier))
+        self.assertEqual(account_identifier.customer_account_number, '77777777')
+        self.assertEqual(account_identifier.currency, 'GBP')
+
+        # Account Trailer
+
+        account_trailer = account.trailer
+        self.assertTrue(isinstance(account_trailer, AccountTrailer))
+        self.assertEqual(account_trailer.account_control_total, 20001)
+        self.assertEqual(account_trailer.number_of_records, 10)
+
+        # Transaction Detail
+
+        self.assertEqual(len(account.children), 1)
+        transaction = account.children[0]
+        self.assertTrue(isinstance(transaction, TransactionDetail))
+        self.assertEqual(transaction.type_code, TypeCodes['191'])
+        self.assertEqual(transaction.amount, 1)
+        self.assertEqual(transaction.funds_type, FundsType.value_dated)
+        self.assertEqual(transaction.availability['date'], july_15_2015)
+        self.assertEqual(transaction.availability['time'], None)
+        self.assertEqual(transaction.bank_reference, '1234567890')
+        self.assertEqual(transaction.customer_reference, 'RP12312312312312')
+        self.assertEqual(
+            transaction.text,
+            'FR:FP SIP INCOMING '
+            'ENDT:20150715 '
+            'TRID:RP12312312312312 '
+            'PY:RP1231231231231200                 A1234BC 22/03/66 '
+            'BI:22222222 '
+            'OB:111111 BUCKINGHAM PALACE OB3:BARCLAYS BANK PLC '
+            'BO:11111111 BO1:DOE JO'
+        )
 
     def test_only_variable_length_records_supported(self):
         """
