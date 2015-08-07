@@ -1,4 +1,5 @@
 import datetime
+import mock
 from unittest import TestCase
 
 from bai2.helpers import IteratorHelper
@@ -207,7 +208,7 @@ class AccountParserTestCase(TestCase):
         parser = AccountParser(IteratorHelper(lines))
         self.assertRaises(IntegrityException, parser.parse)
 
-    def tests_fails_integrity_on_account_control_total(self):
+    def test_fails_integrity_on_account_control_total(self):
         """
         Account Control Total == 72000001 when it should be 72000000.
         """
@@ -219,6 +220,24 @@ class AccountParserTestCase(TestCase):
 
         parser = AccountParser(IteratorHelper(lines))
         self.assertRaises(IntegrityException, parser.parse)
+
+    def test_ignore_integrity_checks(self):
+        """
+        Checks that if IGNORE_INTEGRITY_CHECKS is set, integrity checks
+        are not performed.
+        """
+        lines = [
+            '03,0975312468,GBP,010,500000,,,190,70000000,4,0/',
+            '16,165,1500000,1,DD1620,, DEALER PAYMENTS',
+            '49,72000001,3/'
+        ]
+
+        with mock.patch('bai2.parsers.settings') as mocked_settings:
+            mocked_settings.IGNORE_INTEGRITY_CHECKS = True
+
+            parser = AccountParser(IteratorHelper(lines))
+            account = parser.parse()
+            self.assertTrue(isinstance(account, Account))
 
 
 class GroupParserTestCase(TestCase):
@@ -341,7 +360,7 @@ class GroupParserTestCase(TestCase):
         parser = GroupParser(IteratorHelper(lines))
         self.assertRaises(IntegrityException, parser.parse)
 
-    def tests_fails_integrity_on_group_control_total(self):
+    def test_fails_integrity_on_group_control_total(self):
         """
         Group Control Total == 72000001 when it should be 72000000.
         """
@@ -355,6 +374,26 @@ class GroupParserTestCase(TestCase):
 
         parser = GroupParser(IteratorHelper(lines))
         self.assertRaises(IntegrityException, parser.parse)
+
+    def test_ignore_integrity_checks(self):
+        """
+        Checks that if IGNORE_INTEGRITY_CHECKS is set, integrity checks
+        are not performed.
+        """
+        lines = [
+            '02,031001234,122099999,1,040620,2359,GBP,2/',
+            '03,0975312468,GBP,010,500000,,,190,70000000,4,0/',
+            '16,165,1500000,1,DD1620,, DEALER PAYMENTS',
+            '49,72000000,3/',
+            '98,72000001,2,6/'
+        ]
+
+        with mock.patch('bai2.parsers.settings') as mocked_settings:
+            mocked_settings.IGNORE_INTEGRITY_CHECKS = True
+
+            parser = GroupParser(IteratorHelper(lines))
+            group = parser.parse()
+            self.assertTrue(isinstance(group, Group))
 
 
 class Bai2FileParserTestCase(TestCase):
@@ -608,7 +647,7 @@ class Bai2FileParserTestCase(TestCase):
         parser = Bai2FileParser(IteratorHelper(lines))
         self.assertRaises(IntegrityException, parser.parse)
 
-    def tests_fails_integrity_on_file_control_total(self):
+    def test_fails_integrity_on_file_control_total(self):
         """
         File Control Total == 72000001 when it should be 72000000.
         """
@@ -624,3 +663,25 @@ class Bai2FileParserTestCase(TestCase):
 
         parser = Bai2FileParser(IteratorHelper(lines))
         self.assertRaises(IntegrityException, parser.parse)
+
+    def test_ignore_integrity_checks(self):
+        """
+        Checks that if IGNORE_INTEGRITY_CHECKS is set, integrity checks
+        are not performed.
+        """
+        lines = [
+            '01,122099999,123456789,040621,0200,1,,,2/',
+            '02,031001234,122099999,1,040620,2359,GBP,2/',
+            '03,0975312468,GBP,010,500000,,,190,70000000,4,0/',
+            '16,165,1500000,1,DD1620,, DEALER PAYMENTS',
+            '49,72000000,3/',
+            '98,72000000,1,5/',
+            '99,72000001,2,8/'
+        ]
+
+        with mock.patch('bai2.parsers.settings') as mocked_settings:
+            mocked_settings.IGNORE_INTEGRITY_CHECKS = True
+
+            parser = Bai2FileParser(IteratorHelper(lines))
+            bai2_file = parser.parse()
+            self.assertTrue(isinstance(bai2_file, Bai2File))

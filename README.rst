@@ -4,8 +4,8 @@ bai2
 .. image:: https://travis-ci.org/ministryofjustice/bai2.svg
     :target: https://travis-ci.org/ministryofjustice/bai2
 
-.. image:: https://coveralls.io/repos/ministryofjustice/bai2/badge.svg&service=github
-    :target: https://coveralls.io/github/ministryofjustice/bai2
+.. image:: https://coveralls.io/repos/ministryofjustice/bai2/badge.svg?branch=master&service=github
+    :target: https://coveralls.io/github/ministryofjustice/bai2?branch=master
 
 Python module for parsing `BAI2 Files <http://www.bai.org/Libraries/Site-General-Downloads/Cash_Management_2005.sflb.ashx>`_
 
@@ -71,6 +71,14 @@ Models structure::
 Section models define a `header`, a `trailer` and a list of `children` whilst single models define properties matching the bai2 fields.
 
 Each Model has a `rows` property with the original rows from the BAI2 file.
+
+
+Settings
+--------
+
+You can customise the settings using environment vars:
+
+ * **BAI2_IGNORE_INTEGRITY_CHECKS**: if `1`, it disables integrity checks.
 
 
 Exceptions

@@ -7,6 +7,7 @@ from .models import \
     TransactionDetail
 from .constants import GroupStatus, AsOfDateModifier, FundsType
 from .utils import parse_date, parse_military_time, parse_type_code
+from .conf import settings
 
 
 # ABSTRACTION
@@ -80,19 +81,20 @@ class BaseSectionParser(BaseParser):
             (self.child_parser and self.child_parser.can_parse())
 
     def validate_number_of_records(self, obj):
-        number_of_records = len(obj.header.rows) + len(obj.trailer.rows)
-        for child in obj.children:
-            number_of_records += len(child.rows)
+        if not settings.IGNORE_INTEGRITY_CHECKS:
+            number_of_records = len(obj.header.rows) + len(obj.trailer.rows)
+            for child in obj.children:
+                number_of_records += len(child.rows)
 
-        if number_of_records != obj.trailer.number_of_records:
-            raise IntegrityException(
-                'Invalid number of records for {clazz}. '
-                'expected {expected}, found {found}'.format(
-                    clazz=obj.__class__.__name__,
-                    expected=obj.trailer.number_of_records,
-                    found=number_of_records
+            if number_of_records != obj.trailer.number_of_records:
+                raise IntegrityException(
+                    'Invalid number of records for {clazz}. '
+                    'expected {expected}, found {found}'.format(
+                        clazz=obj.__class__.__name__,
+                        expected=obj.trailer.number_of_records,
+                        found=number_of_records
+                    )
                 )
-            )
 
     def validate(self, obj):
         super(BaseSectionParser, self).validate(obj)
@@ -294,19 +296,20 @@ class AccountParser(BaseSectionParser):
     def validate(self, obj):
         super(AccountParser, self).validate(obj)
 
-        transaction_sum = sum([child.amount or 0 for child in obj.children])
-        account_sum = sum([summary['amount'] or 0 for summary in obj.header.summary_items])
+        if not settings.IGNORE_INTEGRITY_CHECKS:
+            transaction_sum = sum([child.amount or 0 for child in obj.children])
+            account_sum = sum([summary['amount'] or 0 for summary in obj.header.summary_items])
 
-        control_total = transaction_sum + account_sum
-        if control_total != obj.trailer.account_control_total:
-            raise IntegrityException(
-                'Invalid account control total for {clazz}. '
-                'expected {expected}, found {found}'.format(
-                    clazz=obj.__class__.__name__,
-                    expected=obj.trailer.account_control_total,
-                    found=control_total
+            control_total = transaction_sum + account_sum
+            if control_total != obj.trailer.account_control_total:
+                raise IntegrityException(
+                    'Invalid account control total for {clazz}. '
+                    'expected {expected}, found {found}'.format(
+                        clazz=obj.__class__.__name__,
+                        expected=obj.trailer.account_control_total,
+                        found=control_total
+                    )
                 )
-            )
 
 
 class GroupHeaderParser(BaseSingleParser):
@@ -354,29 +357,31 @@ class GroupParser(BaseSectionParser):
         if not obj.children:
             raise ParsingException('Group without accounts not allowed')
 
-        if obj.trailer.number_of_accounts != len(obj.children):
-            raise IntegrityException(
-                'Invalid number of accounts for {clazz}. '
-                'expected {expected}, found {found}'.format(
-                    clazz=obj.__class__.__name__,
-                    expected=obj.trailer.number_of_accounts,
-                    found=len(obj.children)
+        if not settings.IGNORE_INTEGRITY_CHECKS:
+            if obj.trailer.number_of_accounts != len(obj.children):
+                raise IntegrityException(
+                    'Invalid number of accounts for {clazz}. '
+                    'expected {expected}, found {found}'.format(
+                        clazz=obj.__class__.__name__,
+                        expected=obj.trailer.number_of_accounts,
+                        found=len(obj.children)
+                    )
                 )
-            )
 
-        control_total = sum(
-            [account.trailer.account_control_total for account in obj.children]
-        )
+            control_total = sum([
+                account.trailer.account_control_total
+                for account in obj.children
+            ])
 
-        if control_total != obj.trailer.group_control_total:
-            raise IntegrityException(
-                'Invalid group control total for {clazz}. '
-                'expected {expected}, found {found}'.format(
-                    clazz=obj.__class__.__name__,
-                    expected=obj.trailer.group_control_total,
-                    found=control_total
+            if control_total != obj.trailer.group_control_total:
+                raise IntegrityException(
+                    'Invalid group control total for {clazz}. '
+                    'expected {expected}, found {found}'.format(
+                        clazz=obj.__class__.__name__,
+                        expected=obj.trailer.group_control_total,
+                        found=control_total
+                    )
                 )
-            )
 
 
 class Bai2FileHeaderParser(BaseSingleParser):
@@ -434,26 +439,28 @@ class Bai2FileParser(BaseSectionParser):
         if not obj.children:
             raise ParsingException('File without groups not allowed')
 
-        if obj.trailer.number_of_groups != len(obj.children):
-            raise IntegrityException(
-                'Invalid number of groups for {clazz}. '
-                'expected {expected}, found {found}'.format(
-                    clazz=obj.__class__.__name__,
-                    expected=obj.trailer.number_of_groups,
-                    found=len(obj.children)
+        if not settings.IGNORE_INTEGRITY_CHECKS:
+            if obj.trailer.number_of_groups != len(obj.children):
+                raise IntegrityException(
+                    'Invalid number of groups for {clazz}. '
+                    'expected {expected}, found {found}'.format(
+                        clazz=obj.__class__.__name__,
+                        expected=obj.trailer.number_of_groups,
+                        found=len(obj.children)
+                    )
                 )
-            )
 
-        control_total = sum(
-            [account.trailer.group_control_total for account in obj.children]
-        )
+            control_total = sum([
+                account.trailer.group_control_total
+                for account in obj.children
+            ])
 
-        if control_total != obj.trailer.file_control_total:
-            raise IntegrityException(
-                'Invalid file control total for {clazz}. '
-                'expected {expected}, found {found}'.format(
-                    clazz=obj.__class__.__name__,
-                    expected=obj.trailer.file_control_total,
-                    found=control_total
+            if control_total != obj.trailer.file_control_total:
+                raise IntegrityException(
+                    'Invalid file control total for {clazz}. '
+                    'expected {expected}, found {found}'.format(
+                        clazz=obj.__class__.__name__,
+                        expected=obj.trailer.file_control_total,
+                        found=control_total
+                    )
                 )
-            )

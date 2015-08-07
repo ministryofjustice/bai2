@@ -12,6 +12,14 @@ bai2.bai2 module
     :undoc-members:
     :show-inheritance:
 
+bai2.conf module
+----------------
+
+.. automodule:: bai2.conf
+    :members:
+    :undoc-members:
+    :show-inheritance:
+
 bai2.constants module
 ---------------------
 
