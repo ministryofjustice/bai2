@@ -4,11 +4,9 @@ language: python
 
 python:
   - "3.4"
-  - "3.3"
-  - "pypy"
 
 # command to install dependencies, e.g. pip install -r requirements.txt --use-mirrors
-install: pip install -r requirements.txt
+install: pip install -r requirements-test.txt
 
 # command to run tests, e.g. python setup.py test
 script: python setup.py test
