@@ -29,7 +29,7 @@ class ParseMilitaryTime(TestCase):
         parsed_value = parse_military_time('9999')
 
         self.assertEqual(
-            datetime.time(hour=23, minute=59),
+            datetime.time.max,
             parsed_value
         )
 
@@ -37,7 +37,7 @@ class ParseMilitaryTime(TestCase):
         parsed_value = parse_military_time('2400')
 
         self.assertEqual(
-            datetime.time(hour=23, minute=59),
+            datetime.time.max,
             parsed_value
         )
 

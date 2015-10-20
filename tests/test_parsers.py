@@ -14,6 +14,7 @@ from bai2.models import \
     TransactionDetail
 from bai2.exceptions import ParsingException, \
     NotSupportedYetException, IntegrityException
+from bai2.utils import lookup
 
 
 class TransactionDetailParserTestCase(TestCase):
@@ -80,11 +81,11 @@ class TransactionDetailParserTestCase(TestCase):
 
         self.assertEqual(transaction.funds_type, FundsType.value_dated)
         self.assertEqual(
-            transaction.availability['date'],
+            lookup(transaction.availability, 'date'),
             datetime.date(day=15, month=7, year=2015)
         )
         self.assertEqual(
-            transaction.availability['time'],
+            lookup(transaction.availability, 'time'),
             datetime.time(hour=23, minute=40)
         )
 
@@ -500,8 +501,8 @@ class Bai2FileParserTestCase(TestCase):
         self.assertEqual(transaction.type_code, TypeCodes['191'])
         self.assertEqual(transaction.amount, 1)
         self.assertEqual(transaction.funds_type, FundsType.value_dated)
-        self.assertEqual(transaction.availability['date'], july_15_2015)
-        self.assertEqual(transaction.availability['time'], None)
+        self.assertEqual(lookup(transaction.availability, 'date'), july_15_2015)
+        self.assertEqual(lookup(transaction.availability, 'time'), None)
         self.assertEqual(transaction.bank_reference, '1234567890')
         self.assertEqual(transaction.customer_reference, 'RP12312312312312')
         self.assertEqual(
@@ -514,44 +515,6 @@ class Bai2FileParserTestCase(TestCase):
             'OB:111111 BUCKINGHAM PALACE OB3:BARCLAYS BANK PLC '
             'BO:11111111 BO1:DOE JO'
         )
-
-    def test_only_variable_length_records_supported(self):
-        """
-        Checks that only variable length records are supported, that is,
-        with block_size not defined.
-        """
-        lines = [
-            '01,122099999,123456789,040621,0200,1,55,,2/',
-            '02,031001234,122099999,1,040620,2359,GBP,2/',
-            '03,0975312468,GBP,010,500000,,,190,70000000,4,0/',
-            '16,165,1500000,1,DD1620,, DEALER PAYMENTS',
-            '49,18650000,3/',
-            '98,18650000,1,5/',
-            '99,18650000,1,7/'
-        ]
-
-        parser = Bai2FileParser(IteratorHelper(lines))
-
-        self.assertRaises(NotSupportedYetException, parser.parse)
-
-    def test_only_variable_block_size_supported(self):
-        """
-        Checks that only variable block size is supported, that is,
-        with physical_record_length not defined.
-        """
-        lines = [
-            '01,122099999,123456789,040621,0200,1,,44,2/',
-            '02,031001234,122099999,1,040620,2359,GBP,2/',
-            '03,0975312468,GBP,010,500000,,,190,70000000,4,0/',
-            '16,165,1500000,1,DD1620,, DEALER PAYMENTS',
-            '49,18650000,3/',
-            '98,18650000,1,5/',
-            '99,18650000,1,7/'
-        ]
-
-        parser = Bai2FileParser(IteratorHelper(lines))
-
-        self.assertRaises(NotSupportedYetException, parser.parse)
 
     def test_only_version_2_supported(self):
         """

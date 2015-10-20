@@ -159,13 +159,12 @@ class BaseSingleParser(BaseParser):
                 for day in ['0', '1', '>1']
             ]
         elif funds_type == FundsType.value_dated:
-            availability = self._parse_fields_from_config(
-                rest, [
-                    ('date', parse_date),
-                    ('time', parse_military_time)
-                ]
-            )
-            rest = rest[2:]
+            date = rest.pop(0)
+            time = rest.pop(0)
+            availability = [
+                ('date', parse_date(date) if date else None),
+                ('time', parse_military_time(time) if time else None)
+            ]
         elif funds_type == FundsType.distributed_availability:
             num_distributions = int(rest.pop(0))
             availability = [
@@ -400,16 +399,6 @@ class Bai2FileHeaderParser(BaseSingleParser):
 
     def validate(self, obj):
         super(Bai2FileHeaderParser, self).validate(obj)
-
-        if obj.physical_record_length != None:
-            raise NotSupportedYetException(
-                'Only variable length records supported'
-            )
-
-        if obj.block_size != None:
-            raise NotSupportedYetException(
-                'Only variable block size supported'
-            )
 
         if obj.version_number != 2:
             raise NotSupportedYetException(
