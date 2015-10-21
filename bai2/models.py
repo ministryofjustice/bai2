@@ -37,6 +37,9 @@ class Bai2SectionModel(Bai2Model):
         self.trailer = trailer
         self.children = children
 
+    def update_totals(self):
+        pass
+
     @property
     def rows(self):
         if not hasattr(self, '_rows'):
@@ -51,7 +54,14 @@ class Bai2SectionModel(Bai2Model):
 # IMPLEMENTATION
 
 class Bai2File(Bai2SectionModel):
-    pass
+
+    def update_totals(self):
+        file_control_total = 0
+        for group in self.children:
+            file_control_total += group.group_control_total
+
+        self.trailer.file_control_total = file_control_total
+        self.trailer.number_of_groups = len(self.children)
 
 
 class Bai2FileHeader(Bai2SingleModel):
@@ -63,7 +73,14 @@ class Bai2FileTrailer(Bai2SingleModel):
 
 
 class Group(Bai2SectionModel):
-    pass
+
+    def update_totals(self):
+        group_control_total = 0
+        for account in self.children:
+            group_control_total += account.account_control_total
+
+        self.trailer.group_control_total = group_control_total
+        self.trailer.number_of_groups = len(self.children)
 
 
 class GroupHeader(Bai2SingleModel):
@@ -75,7 +92,13 @@ class GroupTrailer(Bai2SingleModel):
 
 
 class Account(Bai2SectionModel):
-    pass
+
+    def update_totals(self):
+        account_control_total = 0
+        for transaction in self.children:
+            account_control_total += transaction.amount
+
+        self.trailer.account_control_total = account_control_total
 
 
 class AccountIdentifier(Bai2SingleModel):
