@@ -203,7 +203,7 @@ class TransactionDetail(Bai2SingleModel):
         type_code=None,
         amount=None,
         funds_type=None,
-        availability=[],
+        availability={},
         bank_reference=None,
         customer_reference=None,
         text=None

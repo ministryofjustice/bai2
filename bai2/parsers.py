@@ -1,3 +1,5 @@
+from collections import OrderedDict
+
 from .exceptions import ParsingException, NotSupportedYetException, \
     IntegrityException
 from .models import \
@@ -154,23 +156,22 @@ class BaseSingleParser(BaseParser):
     def _parse_availability(self, funds_type, rest):
         availability = None
         if funds_type == FundsType.distributed_availability_simple:
-            availability = [
-                (day, int(rest.pop(0)))
-                for day in ['0', '1', '>1']
-            ]
+            availability = OrderedDict()
+            for day in ['0', '1', '>1']:
+                availability[day] = int(rest.pop(0))
         elif funds_type == FundsType.value_dated:
             date = rest.pop(0)
             time = rest.pop(0)
-            availability = [
-                ('date', parse_date(date) if date else None),
-                ('time', parse_military_time(time) if time else None)
-            ]
+            availability = OrderedDict()
+            availability['date'] = parse_date(date) if date else None
+            availability['time'] = parse_military_time(time) if time else None
         elif funds_type == FundsType.distributed_availability:
             num_distributions = int(rest.pop(0))
-            availability = [
-                (rest.pop(0), int(rest.pop(0)))  # (day, amount)
-                for index in range(num_distributions)
-            ]
+            availability = OrderedDict()
+            for index in range(num_distributions):
+                day = rest.pop(0)
+                amount = int(rest.pop(0))
+                availability[day] = amount
 
         return (availability, rest)
 

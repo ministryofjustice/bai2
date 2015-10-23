@@ -48,10 +48,3 @@ def convert_to_string(value):
         return ''
     else:
         return str(value)
-
-
-def lookup(tuple_list, key, default=None):
-    for tuple_key, tuple_value in tuple_list:
-        if tuple_key == key:
-            return tuple_value
-    return default

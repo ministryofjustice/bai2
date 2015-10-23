@@ -1,6 +1,7 @@
 import datetime
 import mock
 from unittest import TestCase
+from collections import OrderedDict
 
 from bai2.helpers import IteratorHelper
 from bai2.parsers import TransactionDetailParser, AccountParser, \
@@ -14,7 +15,6 @@ from bai2.models import \
     TransactionDetail
 from bai2.exceptions import ParsingException, \
     NotSupportedYetException, IntegrityException
-from bai2.utils import lookup
 
 
 class TransactionDetailParserTestCase(TestCase):
@@ -54,7 +54,7 @@ class TransactionDetailParserTestCase(TestCase):
         self.assertEqual(transaction.funds_type, FundsType.distributed_availability_simple)
         self.assertEqual(
             transaction.availability,
-            [('0', 5000000), ('1', 4000000), ('>1', 1000000)]
+            OrderedDict([('0', 5000000), ('1', 4000000), ('>1', 1000000)])
         )
         self.assertEqual(transaction.bank_reference, 'AX13612')
         self.assertEqual(transaction.customer_reference, 'B096132')
@@ -81,11 +81,11 @@ class TransactionDetailParserTestCase(TestCase):
 
         self.assertEqual(transaction.funds_type, FundsType.value_dated)
         self.assertEqual(
-            lookup(transaction.availability, 'date'),
+            transaction.availability['date'],
             datetime.date(day=15, month=7, year=2015)
         )
         self.assertEqual(
-            lookup(transaction.availability, 'time'),
+            transaction.availability['time'],
             datetime.time(hour=23, minute=40)
         )
 
@@ -109,7 +109,7 @@ class TransactionDetailParserTestCase(TestCase):
         self.assertEqual(transaction.amount, 5)
         self.assertEqual(
             transaction.availability,
-            [('0', 1), ('1', 3), ('>1', 1)]
+            OrderedDict([('0', 1), ('1', 3), ('>1', 1)])
         )
 
     def test_distributed_availability(self):
@@ -133,7 +133,7 @@ class TransactionDetailParserTestCase(TestCase):
 
         self.assertEqual(
             transaction.availability,
-            [('1', 1), ('2', 4)]
+            OrderedDict([('1', 1), ('2', 4)])
         )
 
 
@@ -501,8 +501,8 @@ class Bai2FileParserTestCase(TestCase):
         self.assertEqual(transaction.type_code, TypeCodes['191'])
         self.assertEqual(transaction.amount, 1)
         self.assertEqual(transaction.funds_type, FundsType.value_dated)
-        self.assertEqual(lookup(transaction.availability, 'date'), july_15_2015)
-        self.assertEqual(lookup(transaction.availability, 'time'), None)
+        self.assertEqual(transaction.availability['date'], july_15_2015)
+        self.assertEqual(transaction.availability['time'], None)
         self.assertEqual(transaction.bank_reference, '1234567890')
         self.assertEqual(transaction.customer_reference, 'RP12312312312312')
         self.assertEqual(

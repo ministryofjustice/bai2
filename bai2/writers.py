@@ -92,7 +92,7 @@ class BaseSingleWriter(BaseWriter):
 
 def expand_availability(availability):
     fields = OrderedDict()
-    for field, value in availability:
+    for field, value in availability.items():
         if field == 'date':
             value = write_date(value) if value else None
         elif field == 'time':
