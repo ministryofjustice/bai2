@@ -58,7 +58,7 @@ class Bai2File(Bai2SectionModel):
     def update_totals(self):
         file_control_total = 0
         for group in self.children:
-            file_control_total += group.group_control_total
+            file_control_total += group.trailer.group_control_total
 
         self.trailer.file_control_total = file_control_total
         self.trailer.number_of_groups = len(self.children)
@@ -108,10 +108,10 @@ class Group(Bai2SectionModel):
     def update_totals(self):
         group_control_total = 0
         for account in self.children:
-            group_control_total += account.account_control_total
+            group_control_total += account.trailer.account_control_total
 
         self.trailer.group_control_total = group_control_total
-        self.trailer.number_of_groups = len(self.children)
+        self.trailer.number_of_accounts = len(self.children)
 
 
 class GroupHeader(Bai2SingleModel):
@@ -177,6 +177,23 @@ class AccountIdentifier(Bai2SingleModel):
             rows, customer_account_number=customer_account_number,
             currency=currency, summary_items=summary_items
         )
+
+
+class Summary(object):
+
+    def __init__(
+        self,
+        type_code=None,
+        amount=None,
+        item_count=None,
+        funds_type=None,
+        availability={}
+    ):
+        self.type_code = type_code
+        self.amount = amount
+        self.item_count = item_count
+        self.funds_type = funds_type
+        self.availability = availability
 
 
 class AccountTrailer(Bai2SingleModel):

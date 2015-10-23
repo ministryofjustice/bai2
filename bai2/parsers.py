@@ -6,7 +6,7 @@ from .models import \
     Bai2File, Bai2FileHeader, Bai2FileTrailer, \
     Group, GroupHeader, GroupTrailer, \
     AccountIdentifier, AccountTrailer, Account, \
-    TransactionDetail
+    TransactionDetail, Summary
 from .constants import GroupStatus, AsOfDateModifier, FundsType
 from .utils import parse_date, parse_military_time, parse_type_code
 from .conf import settings
@@ -272,7 +272,7 @@ class AccountIdentifierParser(BaseSingleParser):
             )
             if availability:
                 summary['availability'] = availability
-            summary_items.append(summary)
+            summary_items.append(Summary(**summary))
         model_fields['summary_items'] = summary_items
 
         return model_fields
@@ -298,7 +298,7 @@ class AccountParser(BaseSectionParser):
 
         if not settings.IGNORE_INTEGRITY_CHECKS:
             transaction_sum = sum([child.amount or 0 for child in obj.children])
-            account_sum = sum([summary['amount'] or 0 for summary in obj.header.summary_items])
+            account_sum = sum([summary.amount or 0 for summary in obj.header.summary_items])
 
             control_total = transaction_sum + account_sum
             if control_total != obj.trailer.account_control_total:

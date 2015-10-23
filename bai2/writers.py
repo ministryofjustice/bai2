@@ -81,11 +81,8 @@ class BaseSingleWriter(BaseWriter):
             else:
                 record += ',' + field_value
 
-        # if final field is empty, delimit with ,/
-        if field_value == '':
-            record += ',/'
-        # otherwise, delimit with / unless we don't
-        elif self.trailing_slash:
+        # delimit with / unless we don't (e.g. for text)
+        if self.trailing_slash:
             record += '/'
         return record
 
@@ -160,9 +157,15 @@ def expand_summary_items(summary_items):
                 summary_field_config = (summary_field_config, lambda x: x)
 
             summary_field_name, writer = summary_field_config
-            field_value = summary_item.get(summary_field_name, None)
-            value = writer(field_value) if field_value is not None else None
-            items['%s_%s' % (summary_field_name, n)] = convert_to_string(value)
+            field_value = getattr(summary_item, summary_field_name, None)
+            output = writer(field_value) if field_value is not None else None
+
+            if isinstance(output, dict):
+                items.update(OrderedDict(
+                    [('%s_%s' % (k, n), v) for k, v in output.items()]
+                ))
+            else:
+                items['%s_%s' % (summary_field_name, n)] = convert_to_string(output)
     return items
 
 
@@ -179,7 +182,8 @@ class AccountIdentifierWriter(BaseSingleWriter):
         ('type_code', lambda tc: tc.code),
         'amount',
         'item_count',
-        ('funds_type', lambda ft: ft.value)
+        ('funds_type', lambda ft: ft.value),
+        ('availability', expand_availability)
     ]
 
     def _check_for_continuation(self, record, fields, field_name):
