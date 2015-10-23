@@ -92,12 +92,20 @@ class BaseSingleWriter(BaseWriter):
 
 def expand_availability(availability):
     fields = OrderedDict()
-    for field, value in availability.items():
-        if field == 'date':
-            value = write_date(value) if value else None
-        elif field == 'time':
-            value = write_military_time(value) if value else None
-        fields[field] = convert_to_string(value)
+    if len(availability) == 0:
+        pass
+    elif list(availability.keys()) in [['0', '1', '>1'], ['date', 'time']]:
+        for field, value in availability.items():
+            if field == 'date':
+                value = write_date(value) if value else None
+            elif field == 'time':
+                value = write_military_time(value) if value else None
+            fields[field] = convert_to_string(value)
+    else:
+        fields['distribution_length'] = str(len(availability))
+        for field, value in availability.items():
+            fields['day_%s' % str(field)] = convert_to_string(field)
+            fields['amount_%s' % str(field)] = convert_to_string(value)
     return fields
 
 
