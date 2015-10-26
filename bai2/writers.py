@@ -5,7 +5,7 @@ from .models import \
     Group, GroupHeader, GroupTrailer, \
     AccountIdentifier, AccountTrailer, Account, \
     TransactionDetail
-from .utils import write_date, write_military_time, convert_to_string
+from .utils import write_date, write_time, convert_to_string
 from .constants import CONTINUATION_CODE
 from .conf import settings
 
@@ -96,7 +96,7 @@ def expand_availability(availability):
             if field == 'date':
                 value = write_date(value) if value else None
             elif field == 'time':
-                value = write_military_time(value) if value else None
+                value = write_time(value) if value else None
             fields[field] = convert_to_string(value)
     else:
         fields['distribution_length'] = str(len(availability))
@@ -219,7 +219,7 @@ class GroupHeaderWriter(BaseSingleWriter):
         'originator_id',
         ('group_status', lambda gs: gs.value),
         ('as_of_date', write_date),
-        ('as_of_time', write_military_time),
+        ('as_of_time', write_time),
         'currency',
         ('as_of_date_modifier', lambda aodm: aodm.value)
     ]
@@ -249,7 +249,7 @@ class Bai2FileHeaderWriter(BaseSingleWriter):
         'sender_id',
         'receiver_id',
         ('creation_date', write_date),
-        ('creation_time', write_military_time),
+        ('creation_time', write_time),
         'file_id',
         'physical_record_length',
         'block_size',

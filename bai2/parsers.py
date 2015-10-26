@@ -8,7 +8,7 @@ from .models import \
     AccountIdentifier, AccountTrailer, Account, \
     TransactionDetail, Summary
 from .constants import GroupStatus, AsOfDateModifier, FundsType
-from .utils import parse_date, parse_military_time, parse_type_code
+from .utils import parse_date, parse_time, parse_type_code
 from .conf import settings
 
 
@@ -164,7 +164,7 @@ class BaseSingleParser(BaseParser):
             time = rest.pop(0)
             availability = OrderedDict()
             availability['date'] = parse_date(date) if date else None
-            availability['time'] = parse_military_time(time) if time else None
+            availability['time'] = parse_time(time) if time else None
         elif funds_type == FundsType.distributed_availability:
             num_distributions = int(rest.pop(0))
             availability = OrderedDict()
@@ -320,7 +320,7 @@ class GroupHeaderParser(BaseSingleParser):
         'originator_id',
         ('group_status', GroupStatus),
         ('as_of_date', parse_date),
-        ('as_of_time', parse_military_time),
+        ('as_of_time', parse_time),
         'currency',
         ('as_of_date_modifier', AsOfDateModifier)
     ]
@@ -391,7 +391,7 @@ class Bai2FileHeaderParser(BaseSingleParser):
         'sender_id',
         'receiver_id',
         ('creation_date', parse_date),
-        ('creation_time', parse_military_time),
+        ('creation_time', parse_time),
         'file_id',
         ('physical_record_length', int),
         ('block_size', int),

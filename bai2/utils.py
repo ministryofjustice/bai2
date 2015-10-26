@@ -1,5 +1,7 @@
 import datetime
+import re
 
+from .conf import settings
 from .constants import TypeCodes
 
 
@@ -12,6 +14,19 @@ def parse_date(value):
 
 def write_date(date):
     return datetime.datetime.strftime(date, '%y%m%d')
+
+
+def parse_time(value):
+    clock_pattern = re.compile('\d\d:\d\d:\d\d')
+
+    if clock_pattern.match(value):
+        return parse_clock_time(value)
+    else:
+        return parse_military_time(value)
+
+
+def parse_clock_time(value):
+    return datetime.datetime.strptime(value, '%H:%M:%S').time()
 
 
 def parse_military_time(value):
@@ -29,6 +44,20 @@ def parse_military_time(value):
     if value == '9999' or value == '2400':
         return datetime.time.max
     return datetime.datetime.strptime(value, '%H%M').time()
+
+
+def write_time(time):
+    if settings.USE_CLOCK_FORMAT_FOR_INTRA_DAY and time != datetime.time.max:
+        return write_clock_time(time)
+    else:
+        return write_military_time(time)
+
+
+def write_clock_time(time):
+    date = datetime.datetime.now().replace(hour=time.hour,
+                                           minute=time.minute,
+                                           second=time.second)
+    return datetime.datetime.strftime(date, '%H:%M:%S')
 
 
 def write_military_time(time):

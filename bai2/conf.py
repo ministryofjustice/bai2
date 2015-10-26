@@ -16,7 +16,10 @@ class Bai2Settings(object):
                 ) == '1',
                 'LINE_LENGTH': int(os.environ.get(
                     'BAI2_LINE_LENGTH', 80
-                ))
+                )),
+                'USE_CLOCK_FORMAT_FOR_INTRA_DAY': os.environ.get(
+                    'BAI2_USE_CLOCK_FORMAT_FOR_INTRA_DAY', '0'
+                ) == '1'
             }
 
     def __getattr__(self, attr):
