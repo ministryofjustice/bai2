@@ -32,7 +32,7 @@ class Bai2SingleModel(Bai2Model):
 
 class Bai2SectionModel(Bai2Model):
 
-    def __init__(self, header, trailer, children):
+    def __init__(self, header=None, trailer=None, children=None):
         self.header = header
         self.trailer = trailer
         self.children = children
@@ -54,6 +54,11 @@ class Bai2SectionModel(Bai2Model):
 # IMPLEMENTATION
 
 class Bai2File(Bai2SectionModel):
+
+    def __init__(self, header=None, trailer=None, children=None):
+        self.header = header or Bai2FileHeader([])
+        self.trailer = trailer or Bai2FileTrailer([])
+        self.children = children or []
 
     def update_totals(self):
         file_control_total = 0
@@ -105,6 +110,11 @@ class Bai2FileTrailer(Bai2SingleModel):
 
 class Group(Bai2SectionModel):
 
+    def __init__(self, header=None, trailer=None, children=None):
+        self.header = header or GroupHeader([])
+        self.trailer = trailer or GroupTrailer([])
+        self.children = children or []
+
     def update_totals(self):
         group_control_total = 0
         for account in self.children:
@@ -154,6 +164,11 @@ class GroupTrailer(Bai2SingleModel):
 
 
 class Account(Bai2SectionModel):
+
+    def __init__(self, header=None, trailer=None, children=None):
+        self.header = header or AccountIdentifier([])
+        self.trailer = trailer or AccountTrailer([])
+        self.children = children or []
 
     def update_totals(self):
         account_control_total = 0

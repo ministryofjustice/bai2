@@ -17,5 +17,5 @@ def parse_from_file(f):
     return parse_from_string(f.read())
 
 
-def write_to_string(bai2_obj):
+def write(bai2_obj):
     return Bai2FileWriter(bai2_obj).write()

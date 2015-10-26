@@ -287,9 +287,7 @@ class AccountWriterTestCase(TestCase):
             ]
         )
 
-        account_trailer = models.AccountTrailer([])
-
-        return models.Account(account_identifier, account_trailer, transactions)
+        return models.Account(header=account_identifier, children=transactions)
 
     def test_account(self):
         account = AccountWriterTestCase.create_account_section()
@@ -325,9 +323,7 @@ class GroupWriterTestCase(TestCase):
             as_of_date_modifier=constants.AsOfDateModifier.final_previous_day
         )
 
-        group_trailer = models.GroupTrailer([])
-
-        return models.Group(group_header, group_trailer, accounts)
+        return models.Group(header=group_header, children=accounts)
 
     def test_group(self):
         group = GroupWriterTestCase.create_group_section()
@@ -371,9 +367,7 @@ class Bai2FileWriterTestCase(TestCase):
             version_number=2
         )
 
-        file_trailer = models.Bai2FileTrailer([])
-
-        return models.Bai2File(file_header, file_trailer, groups)
+        return models.Bai2File(header=file_header, children=groups)
 
     def test_bai2_file(self):
         bai2_file = Bai2FileWriterTestCase.create_bai2_file()
