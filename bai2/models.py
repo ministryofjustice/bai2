@@ -174,6 +174,8 @@ class Account(Bai2SectionModel):
         account_control_total = 0
         for transaction in self.children:
             account_control_total += transaction.amount
+        for summary in self.header.summary_items:
+            account_control_total += summary.amount
 
         self.trailer.account_control_total = account_control_total
 
@@ -199,7 +201,7 @@ class Summary(object):
     def __init__(
         self,
         type_code=None,
-        amount=None,
+        amount=0,
         item_count=None,
         funds_type=None,
         availability={}

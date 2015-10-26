@@ -300,7 +300,7 @@ class AccountWriterTestCase(TestCase):
                 '16,399,2599,,,,BILLS BILLS BILLS BILLS BILLS BILLS BILLS BILLS BILLS BILLS BILLS\n'
                 '88, BILLS\n'
                 '16,399,1000,0,,,OTHER\n'
-                '49,3599,5/'
+                '49,23599,5/'
             )
         )
 
@@ -337,13 +337,13 @@ class GroupWriterTestCase(TestCase):
                 '16,399,2599,,,,BILLS BILLS BILLS BILLS BILLS BILLS BILLS BILLS BILLS BILLS BILLS\n'
                 '88, BILLS\n'
                 '16,399,1000,0,,,OTHER\n'
-                '49,3599,5/\n'
+                '49,23599,5/\n'
                 '03,77777777,GBP,010,10000,,,015,10000,,/\n'
                 '16,399,2599,,,,BILLS BILLS BILLS BILLS BILLS BILLS BILLS BILLS BILLS BILLS BILLS\n'
                 '88, BILLS\n'
                 '16,399,1000,0,,,OTHER\n'
-                '49,3599,5/\n'
-                '98,7198,2,12/'
+                '49,23599,5/\n'
+                '98,47198,2,12/'
             )
         )
 
@@ -382,25 +382,25 @@ class Bai2FileWriterTestCase(TestCase):
                 '16,399,2599,,,,BILLS BILLS BILLS BILLS BILLS BILLS BILLS BILLS BILLS BILLS BILLS\n'
                 '88, BILLS\n'
                 '16,399,1000,0,,,OTHER\n'
-                '49,3599,5/\n'
+                '49,23599,5/\n'
                 '03,77777777,GBP,010,10000,,,015,10000,,/\n'
                 '16,399,2599,,,,BILLS BILLS BILLS BILLS BILLS BILLS BILLS BILLS BILLS BILLS BILLS\n'
                 '88, BILLS\n'
                 '16,399,1000,0,,,OTHER\n'
-                '49,3599,5/\n'
-                '98,7198,2,12/\n'
+                '49,23599,5/\n'
+                '98,47198,2,12/\n'
                 '02,8888888,CITIGB00,1,150715,2340,GBP,2/\n'
                 '03,77777777,GBP,010,10000,,,015,10000,,/\n'
                 '16,399,2599,,,,BILLS BILLS BILLS BILLS BILLS BILLS BILLS BILLS BILLS BILLS BILLS\n'
                 '88, BILLS\n'
                 '16,399,1000,0,,,OTHER\n'
-                '49,3599,5/\n'
+                '49,23599,5/\n'
                 '03,77777777,GBP,010,10000,,,015,10000,,/\n'
                 '16,399,2599,,,,BILLS BILLS BILLS BILLS BILLS BILLS BILLS BILLS BILLS BILLS BILLS\n'
                 '88, BILLS\n'
                 '16,399,1000,0,,,OTHER\n'
-                '49,3599,5/\n'
-                '98,7198,2,12/\n'
-                '99,14396,2,26/'
+                '49,23599,5/\n'
+                '98,47198,2,12/\n'
+                '99,94396,2,26/'
             )
         )
