@@ -7,7 +7,7 @@ from bai2 import models, writers, constants
 
 class TransactionDetailWriterTestCase(TestCase):
 
-    def test_transaction_detail_with_default_availability(self):
+    def test_transaction_detail_with_default_availability_renders_correctly(self):
         transaction = models.TransactionDetail(
             [],
             type_code=constants.TypeCodes['399'],
@@ -18,7 +18,7 @@ class TransactionDetailWriterTestCase(TestCase):
         output = writers.TransactionDetailWriter(transaction).write()
         self.assertEqual(output, '16,399,2599,,,,BILLS')
 
-    def test_transaction_detail_with_immediate_availability(self):
+    def test_transaction_detail_with_immediate_availability_renders_correctly(self):
         transaction = models.TransactionDetail(
             [],
             type_code=constants.TypeCodes['399'],
@@ -30,7 +30,7 @@ class TransactionDetailWriterTestCase(TestCase):
         output = writers.TransactionDetailWriter(transaction).write()
         self.assertEqual(output, '16,399,2599,0,,,BILLS')
 
-    def test_transaction_detail_with_distributed_availability_simple(self):
+    def test_transaction_detail_with_distributed_availability_simple_renders_correctly(self):
         transaction = models.TransactionDetail(
             [],
             type_code=constants.TypeCodes['399'],
@@ -43,7 +43,7 @@ class TransactionDetailWriterTestCase(TestCase):
         output = writers.TransactionDetailWriter(transaction).write()
         self.assertEqual(output, '16,399,2599,S,500,599,2599,,,BILLS')
 
-    def test_transaction_detail_with_value_dated_availability(self):
+    def test_transaction_detail_with_value_dated_availability_renders_correctly(self):
         transaction = models.TransactionDetail(
             [],
             type_code=constants.TypeCodes['399'],
@@ -57,7 +57,7 @@ class TransactionDetailWriterTestCase(TestCase):
         output = writers.TransactionDetailWriter(transaction).write()
         self.assertEqual(output, '16,399,2599,V,151001,,,,BILLS')
 
-    def test_transaction_detail_with_distributed_availability(self):
+    def test_transaction_detail_with_distributed_availability_renders_correctly(self):
         transaction = models.TransactionDetail(
             [],
             type_code=constants.TypeCodes['399'],
@@ -70,7 +70,7 @@ class TransactionDetailWriterTestCase(TestCase):
         output = writers.TransactionDetailWriter(transaction).write()
         self.assertEqual(output, '16,399,2599,D,3,1,500,2,599,4,2599,,,BILLS')
 
-    def test_transaction_detail_with_continuation(self):
+    def test_transaction_detail_with_continuation_renders_correctly(self):
         transaction = models.TransactionDetail(
             [],
             type_code=constants.TypeCodes['399'],
@@ -87,7 +87,7 @@ class TransactionDetailWriterTestCase(TestCase):
 
 class AccountIdentifierWriterTestCase(TestCase):
 
-    def test_account_identifier(self):
+    def test_account_identifier_renders_correctly(self):
         account_identifier = models.AccountIdentifier(
             [],
             customer_account_number='77777777',
@@ -104,7 +104,7 @@ class AccountIdentifierWriterTestCase(TestCase):
             '03,77777777,GBP,010,10000,,,015,10000,,/'
         )
 
-    def test_account_identifier_with_continuation(self):
+    def test_account_identifier_with_continuation_renders_correctly(self):
         account_identifier = models.AccountIdentifier(
             [],
             customer_account_number='77777777',
@@ -138,7 +138,7 @@ class AccountIdentifierWriterTestCase(TestCase):
             '88,074,10000,,,075,10000,,,400,10000,175,,100,10000,50,/'
         )
 
-    def test_account_identifier_with_summary_availability(self):
+    def test_account_identifier_with_summary_availability_renders_correctly(self):
         account_identifier = models.AccountIdentifier(
             [],
             customer_account_number='77777777',
@@ -168,7 +168,7 @@ class AccountIdentifierWriterTestCase(TestCase):
 
 class AccountTrailerWriterTestCase(TestCase):
 
-    def test_account_trailer(self):
+    def test_account_trailer_renders_correctly(self):
         account_trailer = models.AccountTrailer(
             [],
             account_control_total=100,
@@ -184,7 +184,7 @@ class AccountTrailerWriterTestCase(TestCase):
 
 class GroupHeaderWriterTestTcase(TestCase):
 
-    def test_group_header(self):
+    def test_group_header_renders_correctly(self):
         group_header = models.GroupHeader(
             [],
             ultimate_receiver_id='8888888',
@@ -205,7 +205,7 @@ class GroupHeaderWriterTestTcase(TestCase):
 
 class GroupTrailerWriterTestCase(TestCase):
 
-    def test_account_trailer(self):
+    def test_account_trailer_renders_correctly(self):
         group_trailer = models.GroupTrailer(
             [],
             group_control_total=100,
@@ -222,7 +222,7 @@ class GroupTrailerWriterTestCase(TestCase):
 
 class Bai2FileHeaderWriterTestCase(TestCase):
 
-    def test_file_header(self):
+    def test_file_header_renders_correctly(self):
         file_header = models.Bai2FileHeader(
             [],
             sender_id='CITIDIRECT',
@@ -244,7 +244,7 @@ class Bai2FileHeaderWriterTestCase(TestCase):
 
 class Bai2FileTrailerWriterTestCase(TestCase):
 
-    def test_file_trailer(self):
+    def test_file_trailer_renders_correctly(self):
         file_trailer = models.Bai2FileTrailer(
             [],
             file_control_total=100,
@@ -289,7 +289,7 @@ class AccountWriterTestCase(TestCase):
 
         return models.Account(header=account_identifier, children=transactions)
 
-    def test_account(self):
+    def test_account_renders_correctly(self):
         account = AccountWriterTestCase.create_account_section()
 
         output = writers.AccountWriter(account).write()
@@ -325,7 +325,7 @@ class GroupWriterTestCase(TestCase):
 
         return models.Group(header=group_header, children=accounts)
 
-    def test_group(self):
+    def test_group_renders_correctly(self):
         group = GroupWriterTestCase.create_group_section()
 
         output = writers.GroupWriter(group).write()
@@ -369,7 +369,7 @@ class Bai2FileWriterTestCase(TestCase):
 
         return models.Bai2File(header=file_header, children=groups)
 
-    def test_bai2_file(self):
+    def test_bai2_file_renders_correctly(self):
         bai2_file = Bai2FileWriterTestCase.create_bai2_file()
 
         output = writers.Bai2FileWriter(bai2_file).write()

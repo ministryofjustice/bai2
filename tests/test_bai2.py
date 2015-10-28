@@ -50,7 +50,7 @@ class ParseTestCase(TestCase):
     def test_parse_from_file(self):
         from os.path import abspath, join, dirname
 
-        file_path = join(abspath(dirname(__file__)), 'data', 'example.bai2')
+        file_path = join(abspath(dirname(__file__)), 'data', 'citi_example.bai2')
 
         with open(file_path) as f:
             bai2_file = bai2.parse_from_file(f)
@@ -59,7 +59,7 @@ class ParseTestCase(TestCase):
     def test_parse_from_file_2(self):
         from os.path import abspath, join, dirname
 
-        file_path = join(abspath(dirname(__file__)), 'data', 'example2.bai2')
+        file_path = join(abspath(dirname(__file__)), 'data', 'nwb_example.bai2')
 
         with open(file_path) as f:
             bai2_file = bai2.parse_from_file(f)
