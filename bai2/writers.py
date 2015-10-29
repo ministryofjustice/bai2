@@ -41,19 +41,17 @@ class BaseSectionWriter(BaseWriter):
 
         children = []
         for child in self.obj.children:
-            children.append(self.child_writer_class(child).write())
+            children += self.child_writer_class(child).write()
 
         self.obj.update_totals()
-        self.obj.trailer.number_of_records = len(
-            '\n'.join([header] + children).split('\n')) + 1
+        self.obj.trailer.number_of_records = len(header) + len(children) + 1
         trailer = self.trailer_writer_class(self.obj.trailer).write()
 
-        return '\n'.join([header] + children + [trailer])
+        return header + children + trailer
 
 
 class BaseSingleWriter(BaseWriter):
     model = None
-    trailing_slash = True
 
     def _write_field_from_config(self, field_config):
         if isinstance(field_config, str):
@@ -74,28 +72,16 @@ class BaseSingleWriter(BaseWriter):
             fields.update(self._write_field_from_config(field_config))
         return fields
 
-    def _check_for_continuation(self, record, fields, field_name):
-        return (False, fields[field_name])
-
     def write(self):
         record = ''
         fields = self._write_fields_from_config(self.fields_config)
 
         record += self.model.code.value
         for field_name in fields:
-            continuation, field_value = self._check_for_continuation(
-                record, fields, field_name
-            )
-            if continuation:
-                record += '/\n'
-                record += CONTINUATION_CODE + ',' + field_value
-            else:
-                record += ',' + field_value
+            record += ',' + fields[field_name]
+        record += '/'
 
-        # delimit with / unless we don't (e.g. for text)
-        if self.trailing_slash:
-            record += '/'
-        return record
+        return [record]
 
 
 def expand_availability(writer, availability):
@@ -120,7 +106,6 @@ def expand_availability(writer, availability):
 
 class TransactionDetailWriter(BaseSingleWriter):
     model = TransactionDetail
-    trailing_slash = False
 
     fields_config = [
         ('type_code', lambda w, tc: tc.code),
@@ -132,32 +117,35 @@ class TransactionDetailWriter(BaseSingleWriter):
         'text'
     ]
 
-    def _check_for_continuation(self, record, fields, field_name):
-        continuation = False
-        field_value = fields[field_name]
-        if field_name == 'text' and self.obj.text:
-            current_index = 0
-            field_value = ''
+    def write(self):
+        records = ['']
+        fields = self._write_fields_from_config(self.fields_config)
 
-            if self.text_on_new_line:
-                continuation = True
+        i = 0
+        records[i] += self.model.code.value
+        for field_name in fields:
+            if field_name == 'text' and self.obj.text:
+                text_cursor = 0
+                if self.text_on_new_line:
+                    records[i] += '/'
+                    records.append(CONTINUATION_CODE)
+                    i += 1
+
+                while text_cursor < len(self.obj.text):
+                    # -1 for comma after preceding field
+                    remaining_line_length = (self.line_length - len(records[i])) - 1
+
+                    if remaining_line_length > 0:
+                        end_index = text_cursor + remaining_line_length
+                        records[i] += ',' + self.obj.text[text_cursor:end_index]
+                        text_cursor = end_index
+                    else:
+                        records.append(CONTINUATION_CODE)
+                        i += 1
             else:
-                remaining_line_length = (self.line_length - len(record)) - 1
-                if remaining_line_length > 0:
-                    field_value = self.obj.text[:remaining_line_length]
-                    current_index = remaining_line_length
+                records[i] += ',' + fields[field_name]
 
-            while current_index < len(self.obj.text):
-                if current_index > 0:
-                    field_value += '\n' + CONTINUATION_CODE + ','
-
-                end_index = current_index + (self.line_length - 3)
-                field_value += (
-                    self.obj.text[current_index:end_index]
-                )
-                current_index = end_index
-
-        return (continuation, field_value)
+        return records
 
 
 def expand_summary_items(writer, summary_items):
@@ -199,13 +187,21 @@ class AccountIdentifierWriter(BaseSingleWriter):
         ('availability', expand_availability)
     ]
 
-    def _check_for_continuation(self, record, fields, field_name):
-        line_length = len(record) % self.line_length
-        field_length = len(fields[field_name]) + 2
-        if (line_length + field_length) >= self.line_length:
-            return (True, fields[field_name])
-        else:
-            return (False, fields[field_name])
+    def write(self):
+        records = ['']
+        fields = self._write_fields_from_config(self.fields_config)
+
+        i = 0
+        records[i] += self.model.code.value
+        for field_name in fields:
+            field_length = len(fields[field_name]) + 2
+            if (len(records[i]) + field_length) >= self.line_length:
+                records[i] += '/'
+                records.append(CONTINUATION_CODE)
+                i += 1
+            records[i] += ',' + fields[field_name]
+        records[i] += '/'
+        return records
 
 
 class AccountTrailerWriter(BaseSingleWriter):

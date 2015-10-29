@@ -3,8 +3,11 @@ from unittest import TestCase
 from bai2 import bai2
 from bai2.models import Bai2File
 
+from .test_writers import Bai2FileWriterTestCase
+
 
 class ParseTestCase(TestCase):
+
     def test_parse_from_lines(self):
         lines = [
             '01,CITIDIRECT,8888888,150716,0713,00131100,,,2/',
@@ -89,3 +92,42 @@ class ParseTestCase(TestCase):
         from_model = bai2_file.as_string()
 
         self.assertEqual(original, from_model)
+
+
+class WriteTestCase(TestCase):
+
+    def test_write(self):
+        bai2_file = Bai2FileWriterTestCase.create_bai2_file()
+
+        output = bai2.write(bai2_file)
+        self.assertEqual(
+            output,
+            (
+                '01,CITIDIRECT,8888888,150715,2340,00131100,,,2/\n'
+                '02,8888888,CITIGB00,1,150715,2340,GBP,2/\n'
+                '03,77777777,GBP,010,10000,,,015,10000,,/\n'
+                '16,399,2599,,,,BILLS BILLS BILLS BILLS BILLS BILLS BILLS BILLS BILLS BILLS BILLS\n'
+                '88, BILLS\n'
+                '16,399,1000,0,,,OTHER\n'
+                '49,23599,5/\n'
+                '03,77777777,GBP,010,10000,,,015,10000,,/\n'
+                '16,399,2599,,,,BILLS BILLS BILLS BILLS BILLS BILLS BILLS BILLS BILLS BILLS BILLS\n'
+                '88, BILLS\n'
+                '16,399,1000,0,,,OTHER\n'
+                '49,23599,5/\n'
+                '98,47198,2,12/\n'
+                '02,8888888,CITIGB00,1,150715,2340,GBP,2/\n'
+                '03,77777777,GBP,010,10000,,,015,10000,,/\n'
+                '16,399,2599,,,,BILLS BILLS BILLS BILLS BILLS BILLS BILLS BILLS BILLS BILLS BILLS\n'
+                '88, BILLS\n'
+                '16,399,1000,0,,,OTHER\n'
+                '49,23599,5/\n'
+                '03,77777777,GBP,010,10000,,,015,10000,,/\n'
+                '16,399,2599,,,,BILLS BILLS BILLS BILLS BILLS BILLS BILLS BILLS BILLS BILLS BILLS\n'
+                '88, BILLS\n'
+                '16,399,1000,0,,,OTHER\n'
+                '49,23599,5/\n'
+                '98,47198,2,12/\n'
+                '99,94396,2,26/'
+            )
+        )

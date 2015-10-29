@@ -16,7 +16,7 @@ class TransactionDetailWriterTestCase(TestCase):
         )
 
         output = writers.TransactionDetailWriter(transaction).write()
-        self.assertEqual(output, '16,399,2599,,,,BILLS')
+        self.assertEqual(output, ['16,399,2599,,,,BILLS'])
 
     def test_transaction_detail_with_text_on_new_line_renders_correctly(self):
         transaction = models.TransactionDetail(
@@ -29,7 +29,7 @@ class TransactionDetailWriterTestCase(TestCase):
         output = writers.TransactionDetailWriter(
             transaction, text_on_new_line=True
         ).write()
-        self.assertEqual(output, '16,399,2599,,,/\n88,BILLS')
+        self.assertEqual(output, ['16,399,2599,,,/', '88,BILLS'])
 
     def test_transaction_detail_with_immediate_availability_renders_correctly(self):
         transaction = models.TransactionDetail(
@@ -41,7 +41,7 @@ class TransactionDetailWriterTestCase(TestCase):
         )
 
         output = writers.TransactionDetailWriter(transaction).write()
-        self.assertEqual(output, '16,399,2599,0,,,BILLS')
+        self.assertEqual(output, ['16,399,2599,0,,,BILLS'])
 
     def test_transaction_detail_with_distributed_availability_simple_renders_correctly(self):
         transaction = models.TransactionDetail(
@@ -54,7 +54,7 @@ class TransactionDetailWriterTestCase(TestCase):
         )
 
         output = writers.TransactionDetailWriter(transaction).write()
-        self.assertEqual(output, '16,399,2599,S,500,599,2599,,,BILLS')
+        self.assertEqual(output, ['16,399,2599,S,500,599,2599,,,BILLS'])
 
     def test_transaction_detail_with_value_dated_availability_renders_correctly(self):
         transaction = models.TransactionDetail(
@@ -68,7 +68,7 @@ class TransactionDetailWriterTestCase(TestCase):
         )
 
         output = writers.TransactionDetailWriter(transaction).write()
-        self.assertEqual(output, '16,399,2599,V,151001,,,,BILLS')
+        self.assertEqual(output, ['16,399,2599,V,151001,,,,BILLS'])
 
     def test_transaction_detail_with_distributed_availability_renders_correctly(self):
         transaction = models.TransactionDetail(
@@ -81,7 +81,7 @@ class TransactionDetailWriterTestCase(TestCase):
         )
 
         output = writers.TransactionDetailWriter(transaction).write()
-        self.assertEqual(output, '16,399,2599,D,3,1,500,2,599,4,2599,,,BILLS')
+        self.assertEqual(output, ['16,399,2599,D,3,1,500,2,599,4,2599,,,BILLS'])
 
     def test_transaction_detail_with_continuation_renders_correctly(self):
         transaction = models.TransactionDetail(
@@ -94,8 +94,8 @@ class TransactionDetailWriterTestCase(TestCase):
         output = writers.TransactionDetailWriter(transaction).write()
         self.assertEqual(
             output,
-            '16,399,2599,,,,BILLS BILLS BILLS BILLS BILLS BILLS BILLS BILLS BILLS BILLS BILLS\n' +
-            '88, BILLS')
+            ['16,399,2599,,,,BILLS BILLS BILLS BILLS BILLS BILLS BILLS BILLS BILLS BILLS BILLS',
+             '88, BILLS'])
 
 
 class AccountIdentifierWriterTestCase(TestCase):
@@ -114,7 +114,7 @@ class AccountIdentifierWriterTestCase(TestCase):
         output = writers.AccountIdentifierWriter(account_identifier).write()
         self.assertEqual(
             output,
-            '03,77777777,GBP,010,10000,,,015,10000,,/'
+            ['03,77777777,GBP,010,10000,,,015,10000,,/']
         )
 
     def test_account_identifier_with_continuation_renders_correctly(self):
@@ -147,8 +147,8 @@ class AccountIdentifierWriterTestCase(TestCase):
         output = writers.AccountIdentifierWriter(account_identifier).write()
         self.assertEqual(
             output,
-            '03,77777777,GBP,010,10000,,,015,10000,,,045,10000,,,040,10000,,,072,10000,,/\n' +
-            '88,074,10000,,,075,10000,,,400,10000,175,,100,10000,50,/'
+            ['03,77777777,GBP,010,10000,,,015,10000,,,045,10000,,,040,10000,,,072,10000,,/',
+             '88,074,10000,,,075,10000,,,400,10000,175,,100,10000,50,/']
         )
 
     def test_account_identifier_with_summary_availability_renders_correctly(self):
@@ -175,7 +175,7 @@ class AccountIdentifierWriterTestCase(TestCase):
         output = writers.AccountIdentifierWriter(account_identifier).write()
         self.assertEqual(
             output,
-            '03,77777777,GBP,010,10000,,S,100,200,300,015,10000,,S,100,200,300/'
+            ['03,77777777,GBP,010,10000,,S,100,200,300,015,10000,,S,100,200,300/']
         )
 
 
@@ -191,7 +191,7 @@ class AccountTrailerWriterTestCase(TestCase):
         output = writers.AccountTrailerWriter(account_trailer).write()
         self.assertEqual(
             output,
-            '49,100,4/'
+            ['49,100,4/']
         )
 
 
@@ -212,7 +212,7 @@ class GroupHeaderWriterTestTcase(TestCase):
         output = writers.GroupHeaderWriter(group_header).write()
         self.assertEqual(
             output,
-            '02,8888888,CITIGB00,1,150715,2340,GBP,2/'
+            ['02,8888888,CITIGB00,1,150715,2340,GBP,2/']
         )
 
 
@@ -229,7 +229,7 @@ class GroupTrailerWriterTestCase(TestCase):
         output = writers.GroupTrailerWriter(group_trailer).write()
         self.assertEqual(
             output,
-            '98,100,1,6/'
+            ['98,100,1,6/']
         )
 
 
@@ -251,7 +251,7 @@ class Bai2FileHeaderWriterTestCase(TestCase):
         output = writers.Bai2FileHeaderWriter(file_header).write()
         self.assertEqual(
             output,
-            '01,CITIDIRECT,8888888,150715,2340,00131100,,,2/'
+            ['01,CITIDIRECT,8888888,150715,2340,00131100,,,2/']
         )
 
 
@@ -268,7 +268,7 @@ class Bai2FileTrailerWriterTestCase(TestCase):
         output = writers.Bai2FileTrailerWriter(file_trailer).write()
         self.assertEqual(
             output,
-            '99,100,1,8/'
+            ['99,100,1,8/']
         )
 
 
@@ -308,13 +308,13 @@ class AccountWriterTestCase(TestCase):
         output = writers.AccountWriter(account).write()
         self.assertEqual(
             output,
-            (
-                '03,77777777,GBP,010,10000,,,015,10000,,/\n'
-                '16,399,2599,,,,BILLS BILLS BILLS BILLS BILLS BILLS BILLS BILLS BILLS BILLS BILLS\n'
-                '88, BILLS\n'
-                '16,399,1000,0,,,OTHER\n'
+            [
+                '03,77777777,GBP,010,10000,,,015,10000,,/',
+                '16,399,2599,,,,BILLS BILLS BILLS BILLS BILLS BILLS BILLS BILLS BILLS BILLS BILLS',
+                '88, BILLS',
+                '16,399,1000,0,,,OTHER',
                 '49,23599,5/'
-            )
+            ]
         )
 
 
@@ -344,20 +344,20 @@ class GroupWriterTestCase(TestCase):
         output = writers.GroupWriter(group).write()
         self.assertEqual(
             output,
-            (
-                '02,8888888,CITIGB00,1,150715,2340,GBP,2/\n'
-                '03,77777777,GBP,010,10000,,,015,10000,,/\n'
-                '16,399,2599,,,,BILLS BILLS BILLS BILLS BILLS BILLS BILLS BILLS BILLS BILLS BILLS\n'
-                '88, BILLS\n'
-                '16,399,1000,0,,,OTHER\n'
-                '49,23599,5/\n'
-                '03,77777777,GBP,010,10000,,,015,10000,,/\n'
-                '16,399,2599,,,,BILLS BILLS BILLS BILLS BILLS BILLS BILLS BILLS BILLS BILLS BILLS\n'
-                '88, BILLS\n'
-                '16,399,1000,0,,,OTHER\n'
-                '49,23599,5/\n'
+            [
+                '02,8888888,CITIGB00,1,150715,2340,GBP,2/',
+                '03,77777777,GBP,010,10000,,,015,10000,,/',
+                '16,399,2599,,,,BILLS BILLS BILLS BILLS BILLS BILLS BILLS BILLS BILLS BILLS BILLS',
+                '88, BILLS',
+                '16,399,1000,0,,,OTHER',
+                '49,23599,5/',
+                '03,77777777,GBP,010,10000,,,015,10000,,/',
+                '16,399,2599,,,,BILLS BILLS BILLS BILLS BILLS BILLS BILLS BILLS BILLS BILLS BILLS',
+                '88, BILLS',
+                '16,399,1000,0,,,OTHER',
+                '49,23599,5/',
                 '98,47198,2,12/'
-            )
+            ]
         )
 
 
@@ -388,32 +388,32 @@ class Bai2FileWriterTestCase(TestCase):
         output = writers.Bai2FileWriter(bai2_file).write()
         self.assertEqual(
             output,
-            (
-                '01,CITIDIRECT,8888888,150715,2340,00131100,,,2/\n'
-                '02,8888888,CITIGB00,1,150715,2340,GBP,2/\n'
-                '03,77777777,GBP,010,10000,,,015,10000,,/\n'
-                '16,399,2599,,,,BILLS BILLS BILLS BILLS BILLS BILLS BILLS BILLS BILLS BILLS BILLS\n'
-                '88, BILLS\n'
-                '16,399,1000,0,,,OTHER\n'
-                '49,23599,5/\n'
-                '03,77777777,GBP,010,10000,,,015,10000,,/\n'
-                '16,399,2599,,,,BILLS BILLS BILLS BILLS BILLS BILLS BILLS BILLS BILLS BILLS BILLS\n'
-                '88, BILLS\n'
-                '16,399,1000,0,,,OTHER\n'
-                '49,23599,5/\n'
-                '98,47198,2,12/\n'
-                '02,8888888,CITIGB00,1,150715,2340,GBP,2/\n'
-                '03,77777777,GBP,010,10000,,,015,10000,,/\n'
-                '16,399,2599,,,,BILLS BILLS BILLS BILLS BILLS BILLS BILLS BILLS BILLS BILLS BILLS\n'
-                '88, BILLS\n'
-                '16,399,1000,0,,,OTHER\n'
-                '49,23599,5/\n'
-                '03,77777777,GBP,010,10000,,,015,10000,,/\n'
-                '16,399,2599,,,,BILLS BILLS BILLS BILLS BILLS BILLS BILLS BILLS BILLS BILLS BILLS\n'
-                '88, BILLS\n'
-                '16,399,1000,0,,,OTHER\n'
-                '49,23599,5/\n'
-                '98,47198,2,12/\n'
+            [
+                '01,CITIDIRECT,8888888,150715,2340,00131100,,,2/',
+                '02,8888888,CITIGB00,1,150715,2340,GBP,2/',
+                '03,77777777,GBP,010,10000,,,015,10000,,/',
+                '16,399,2599,,,,BILLS BILLS BILLS BILLS BILLS BILLS BILLS BILLS BILLS BILLS BILLS',
+                '88, BILLS',
+                '16,399,1000,0,,,OTHER',
+                '49,23599,5/',
+                '03,77777777,GBP,010,10000,,,015,10000,,/',
+                '16,399,2599,,,,BILLS BILLS BILLS BILLS BILLS BILLS BILLS BILLS BILLS BILLS BILLS',
+                '88, BILLS',
+                '16,399,1000,0,,,OTHER',
+                '49,23599,5/',
+                '98,47198,2,12/',
+                '02,8888888,CITIGB00,1,150715,2340,GBP,2/',
+                '03,77777777,GBP,010,10000,,,015,10000,,/',
+                '16,399,2599,,,,BILLS BILLS BILLS BILLS BILLS BILLS BILLS BILLS BILLS BILLS BILLS',
+                '88, BILLS',
+                '16,399,1000,0,,,OTHER',
+                '49,23599,5/',
+                '03,77777777,GBP,010,10000,,,015,10000,,/',
+                '16,399,2599,,,,BILLS BILLS BILLS BILLS BILLS BILLS BILLS BILLS BILLS BILLS BILLS',
+                '88, BILLS',
+                '16,399,1000,0,,,OTHER',
+                '49,23599,5/',
+                '98,47198,2,12/',
                 '99,94396,2,26/'
-            )
+            ]
         )
