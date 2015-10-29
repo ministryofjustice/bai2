@@ -7,13 +7,24 @@ from .models import \
     TransactionDetail
 from .utils import write_date, write_time, convert_to_string
 from .constants import CONTINUATION_CODE
-from .conf import settings
 
 
 class BaseWriter(object):
 
-    def __init__(self, obj):
+    def __init__(self, obj,
+                 line_length=80,
+                 text_on_new_line=False,
+                 clock_format_for_intra_day=False):
+        """
+        Keyword arguments:
+        line_length -- number of characters per record (default 80)
+        text_on_new_line -- whether to begin a text field in a new record (default False)
+        clock_format_for_intra_day -- use HH:MM:SS instead of HHMM for intra-day times (default False)
+        """
         self.obj = obj
+        self.line_length = line_length
+        self.text_on_new_line = text_on_new_line
+        self.clock_format_for_intra_day = clock_format_for_intra_day
 
     def write(self):
         raise NotImplementedError()
@@ -46,11 +57,11 @@ class BaseSingleWriter(BaseWriter):
 
     def _write_field_from_config(self, field_config):
         if isinstance(field_config, str):
-            field_config = (field_config, lambda x: x)
+            field_config = (field_config, lambda w, x: x)
 
-        field_name, writer = field_config
+        field_name, write_func = field_config
         field_value = getattr(self.obj, field_name, None)
-        output = writer(field_value) if field_value is not None else None
+        output = write_func(self, field_value) if field_value is not None else None
 
         if isinstance(output, dict):
             return output
@@ -87,7 +98,7 @@ class BaseSingleWriter(BaseWriter):
         return record
 
 
-def expand_availability(availability):
+def expand_availability(writer, availability):
     fields = OrderedDict()
     if len(availability) == 0:
         pass
@@ -96,7 +107,8 @@ def expand_availability(availability):
             if field == 'date':
                 value = write_date(value) if value else None
             elif field == 'time':
-                value = write_time(value) if value else None
+                value = (write_time(value, writer.clock_format_for_intra_day)
+                         if value else None)
             fields[field] = convert_to_string(value)
     else:
         fields['distribution_length'] = str(len(availability))
@@ -111,9 +123,9 @@ class TransactionDetailWriter(BaseSingleWriter):
     trailing_slash = False
 
     fields_config = [
-        ('type_code', lambda tc: tc.code),
+        ('type_code', lambda w, tc: tc.code),
         'amount',
-        ('funds_type', lambda ft: ft.value),
+        ('funds_type', lambda w, ft: ft.value),
         ('availability', expand_availability),
         'bank_reference',
         'customer_reference',
@@ -127,10 +139,10 @@ class TransactionDetailWriter(BaseSingleWriter):
             current_index = 0
             field_value = ''
 
-            if settings.TEXT_ON_NEW_LINE:
+            if self.text_on_new_line:
                 continuation = True
             else:
-                remaining_line_length = (settings.LINE_LENGTH - len(record)) - 1
+                remaining_line_length = (self.line_length - len(record)) - 1
                 if remaining_line_length > 0:
                     field_value = self.obj.text[:remaining_line_length]
                     current_index = remaining_line_length
@@ -139,7 +151,7 @@ class TransactionDetailWriter(BaseSingleWriter):
                 if current_index > 0:
                     field_value += '\n' + CONTINUATION_CODE + ','
 
-                end_index = current_index + (settings.LINE_LENGTH-3)
+                end_index = current_index + (self.line_length - 3)
                 field_value += (
                     self.obj.text[current_index:end_index]
                 )
@@ -148,17 +160,18 @@ class TransactionDetailWriter(BaseSingleWriter):
         return (continuation, field_value)
 
 
-def expand_summary_items(summary_items):
+def expand_summary_items(writer, summary_items):
     items = OrderedDict()
 
     for n, summary_item in enumerate(summary_items):
         for summary_field_config in AccountIdentifierWriter.summary_fields_config:
             if isinstance(summary_field_config, str):
-                summary_field_config = (summary_field_config, lambda x: x)
+                summary_field_config = (summary_field_config, lambda w, x: x)
 
-            summary_field_name, writer = summary_field_config
+            summary_field_name, write_func = summary_field_config
             field_value = getattr(summary_item, summary_field_name, None)
-            output = writer(field_value) if field_value is not None else None
+            output = (write_func(writer, field_value)
+                      if field_value is not None else None)
 
             if isinstance(output, dict):
                 items.update(OrderedDict(
@@ -179,17 +192,17 @@ class AccountIdentifierWriter(BaseSingleWriter):
     ]
 
     summary_fields_config = [
-        ('type_code', lambda tc: tc.code),
+        ('type_code', lambda w, tc: tc.code),
         'amount',
         'item_count',
-        ('funds_type', lambda ft: ft.value),
+        ('funds_type', lambda w, ft: ft.value),
         ('availability', expand_availability)
     ]
 
     def _check_for_continuation(self, record, fields, field_name):
-        line_length = len(record) % settings.LINE_LENGTH
+        line_length = len(record) % self.line_length
         field_length = len(fields[field_name]) + 2
-        if (line_length + field_length) >= settings.LINE_LENGTH:
+        if (line_length + field_length) >= self.line_length:
             return (True, fields[field_name])
         else:
             return (False, fields[field_name])
@@ -217,11 +230,11 @@ class GroupHeaderWriter(BaseSingleWriter):
     fields_config = [
         'ultimate_receiver_id',
         'originator_id',
-        ('group_status', lambda gs: gs.value),
-        ('as_of_date', write_date),
-        ('as_of_time', write_time),
+        ('group_status', lambda w, gs: gs.value),
+        ('as_of_date', lambda w, d: write_date(d)),
+        ('as_of_time', lambda w, t: write_time(t, w.clock_format_for_intra_day)),
         'currency',
-        ('as_of_date_modifier', lambda aodm: aodm.value)
+        ('as_of_date_modifier', lambda w, aodm: aodm.value)
     ]
 
 
@@ -248,8 +261,8 @@ class Bai2FileHeaderWriter(BaseSingleWriter):
     fields_config = (
         'sender_id',
         'receiver_id',
-        ('creation_date', write_date),
-        ('creation_time', write_time),
+        ('creation_date', lambda w, d: write_date(d)),
+        ('creation_time', lambda w, t: write_time(t, w.clock_format_for_intra_day)),
         'file_id',
         'physical_record_length',
         'block_size',

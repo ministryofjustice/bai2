@@ -18,6 +18,19 @@ class TransactionDetailWriterTestCase(TestCase):
         output = writers.TransactionDetailWriter(transaction).write()
         self.assertEqual(output, '16,399,2599,,,,BILLS')
 
+    def test_transaction_detail_with_text_on_new_line_renders_correctly(self):
+        transaction = models.TransactionDetail(
+            [],
+            type_code=constants.TypeCodes['399'],
+            amount=2599,
+            text='BILLS',
+        )
+
+        output = writers.TransactionDetailWriter(
+            transaction, text_on_new_line=True
+        ).write()
+        self.assertEqual(output, '16,399,2599,,,/\n88,BILLS')
+
     def test_transaction_detail_with_immediate_availability_renders_correctly(self):
         transaction = models.TransactionDetail(
             [],

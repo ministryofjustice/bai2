@@ -9,7 +9,6 @@ from .models import \
     TransactionDetail, Summary
 from .constants import GroupStatus, AsOfDateModifier, FundsType
 from .utils import parse_date, parse_time, parse_type_code
-from .conf import settings
 
 
 # ABSTRACTION
@@ -18,9 +17,14 @@ class BaseParser(object):
     model = None
     child_parser_class = None
 
-    def __init__(self, iterator):
+    def __init__(self, iterator, check_integrity=True):
+        """
+        Keyword arguments:
+        check_integrity -- checks the data integrity of the parsed file (default True)
+        """
         super(BaseParser, self).__init__()
         self._iter = iterator
+        self.check_integrity = check_integrity
 
         self.child_parser = self._get_parser('child')
 
@@ -54,8 +58,8 @@ class BaseSectionParser(BaseParser):
     header_parser_class = None
     trailer_parser_class = None
 
-    def __init__(self, iterator):
-        super(BaseSectionParser, self).__init__(iterator)
+    def __init__(self, iterator, **kwargs):
+        super(BaseSectionParser, self).__init__(iterator, **kwargs)
 
         self.header_parser = self._get_parser('header')
         self.trailer_parser = self._get_parser('trailer')
@@ -83,7 +87,7 @@ class BaseSectionParser(BaseParser):
             (self.child_parser and self.child_parser.can_parse())
 
     def validate_number_of_records(self, obj):
-        if not settings.IGNORE_INTEGRITY_CHECKS:
+        if self.check_integrity:
             number_of_records = len(obj.header.rows) + len(obj.trailer.rows)
             for child in obj.children:
                 number_of_records += len(child.rows)
@@ -296,7 +300,7 @@ class AccountParser(BaseSectionParser):
     def validate(self, obj):
         super(AccountParser, self).validate(obj)
 
-        if not settings.IGNORE_INTEGRITY_CHECKS:
+        if self.check_integrity:
             transaction_sum = sum([child.amount or 0 for child in obj.children])
             account_sum = sum([summary.amount or 0 for summary in obj.header.summary_items])
 
@@ -357,7 +361,7 @@ class GroupParser(BaseSectionParser):
         if not obj.children:
             raise ParsingException('Group without accounts not allowed')
 
-        if not settings.IGNORE_INTEGRITY_CHECKS:
+        if self.check_integrity:
             if obj.trailer.number_of_accounts != len(obj.children):
                 raise IntegrityException(
                     'Invalid number of accounts for {clazz}. '
@@ -429,7 +433,7 @@ class Bai2FileParser(BaseSectionParser):
         if not obj.children:
             raise ParsingException('File without groups not allowed')
 
-        if not settings.IGNORE_INTEGRITY_CHECKS:
+        if self.check_integrity:
             if obj.trailer.number_of_groups != len(obj.children):
                 raise IntegrityException(
                     'Invalid number of groups for {clazz}. '

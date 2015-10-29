@@ -233,12 +233,9 @@ class AccountParserTestCase(TestCase):
             '49,72000001,3/'
         ]
 
-        with mock.patch('bai2.parsers.settings') as mocked_settings:
-            mocked_settings.IGNORE_INTEGRITY_CHECKS = True
-
-            parser = AccountParser(IteratorHelper(lines))
-            account = parser.parse()
-            self.assertTrue(isinstance(account, Account))
+        parser = AccountParser(IteratorHelper(lines), check_integrity=False)
+        account = parser.parse()
+        self.assertTrue(isinstance(account, Account))
 
 
 class GroupParserTestCase(TestCase):
@@ -389,12 +386,9 @@ class GroupParserTestCase(TestCase):
             '98,72000001,2,6/'
         ]
 
-        with mock.patch('bai2.parsers.settings') as mocked_settings:
-            mocked_settings.IGNORE_INTEGRITY_CHECKS = True
-
-            parser = GroupParser(IteratorHelper(lines))
-            group = parser.parse()
-            self.assertTrue(isinstance(group, Group))
+        parser = GroupParser(IteratorHelper(lines), check_integrity=False)
+        group = parser.parse()
+        self.assertTrue(isinstance(group, Group))
 
 
 class Bai2FileParserTestCase(TestCase):
@@ -642,9 +636,6 @@ class Bai2FileParserTestCase(TestCase):
             '99,72000001,2,8/'
         ]
 
-        with mock.patch('bai2.parsers.settings') as mocked_settings:
-            mocked_settings.IGNORE_INTEGRITY_CHECKS = True
-
-            parser = Bai2FileParser(IteratorHelper(lines))
-            bai2_file = parser.parse()
-            self.assertTrue(isinstance(bai2_file, Bai2File))
+        parser = Bai2FileParser(IteratorHelper(lines), check_integrity=False)
+        bai2_file = parser.parse()
+        self.assertTrue(isinstance(bai2_file, Bai2File))

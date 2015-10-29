@@ -1,9 +1,7 @@
 import datetime
 from unittest import TestCase
-import mock
 
 from bai2.utils import parse_date, parse_military_time, parse_time, write_time
-from bai2.conf import settings
 
 
 class ParseDateTestCase(TestCase):
@@ -70,37 +68,28 @@ class ParseMilitaryTime(TestCase):
         )
 
 
-@mock.patch('bai2.utils.settings')
 class WriteTime(TestCase):
 
-    def test_write_intra_day_time_with_setting_false(self, mock_settings):
-        mock_settings.USE_CLOCK_FORMAT_FOR_INTRA_DAY = False
-
+    def test_write_intra_day_time_with_setting_false(self):
         time = datetime.time(hour=17, minute=59)
 
-        str_value = write_time(time)
+        str_value = write_time(time, False)
         self.assertEqual(str_value, '1759')
 
-    def test_write_intra_day_time_with_setting_true(self, mock_settings):
-        mock_settings.USE_CLOCK_FORMAT_FOR_INTRA_DAY = True
-
+    def test_write_intra_day_time_with_setting_true(self):
         time = datetime.time(hour=17, minute=59, second=0)
 
-        str_value = write_time(time)
+        str_value = write_time(time, True)
         self.assertEqual(str_value, '17:59:00')
 
-    def test_write_end_of_day_time_with_setting_false(self, mock_settings):
-        mock_settings.USE_CLOCK_FORMAT_FOR_INTRA_DAY = False
-
+    def test_write_end_of_day_time_with_setting_false(self):
         time = datetime.time.max
 
-        str_value = write_time(time)
+        str_value = write_time(time, False)
         self.assertEqual(str_value, '2400')
 
-    def test_write_end_of_day_time_with_setting_true(self, mock_settings):
-        mock_settings.USE_CLOCK_FORMAT_FOR_INTRA_DAY = True
-
+    def test_write_end_of_day_time_with_setting_true(self):
         time = datetime.time.max
 
-        str_value = write_time(time)
+        str_value = write_time(time, True)
         self.assertEqual(str_value, '2400')

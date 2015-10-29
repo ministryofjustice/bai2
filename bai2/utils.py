@@ -1,7 +1,6 @@
 import datetime
 import re
 
-from .conf import settings
 from .constants import TypeCodes
 
 
@@ -46,8 +45,8 @@ def parse_military_time(value):
     return datetime.datetime.strptime(value, '%H%M').time()
 
 
-def write_time(time):
-    if settings.USE_CLOCK_FORMAT_FOR_INTRA_DAY and time != datetime.time.max:
+def write_time(time, clock_format_for_intra_day=False):
+    if clock_format_for_intra_day and time != datetime.time.max:
         return write_clock_time(time)
     else:
         return write_military_time(time)

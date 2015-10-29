@@ -91,17 +91,6 @@ Section models define a `header`, a `trailer` and a list of `children` whilst si
 Each Model has a `rows` property with the original rows from the BAI2 file.
 
 
-Settings
---------
-
-You can customise the settings using environment vars:
-
- * **BAI2_IGNORE_INTEGRITY_CHECKS**: if `1`, it disables integrity checks.
- * **BAI2_TEXT_ON_NEW_LINE**: if `1`, the TEXT field of a transaction always begins a new continuation record.
- * **BAI2_LINE_LENGTH**: the maximum length of a transaction or account identifier record before a new continuation record will be created.
- * **BAI2_USE_CLOCK_FORMAT_FOR_INTRA_DAY**: if `1`, uses the format HH:MM:SS instead of HHMM for times which are not at the end of the day (which will still be 2400).
-
-
 Exceptions
 ----------
 
