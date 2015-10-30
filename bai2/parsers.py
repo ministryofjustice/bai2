@@ -1,13 +1,14 @@
+from collections import OrderedDict
+
 from .exceptions import ParsingException, NotSupportedYetException, \
     IntegrityException
 from .models import \
     Bai2File, Bai2FileHeader, Bai2FileTrailer, \
     Group, GroupHeader, GroupTrailer, \
     AccountIdentifier, AccountTrailer, Account, \
-    TransactionDetail
+    TransactionDetail, Summary
 from .constants import GroupStatus, AsOfDateModifier, FundsType
-from .utils import parse_date, parse_military_time, parse_type_code
-from .conf import settings
+from .utils import parse_date, parse_time, parse_type_code
 
 
 # ABSTRACTION
@@ -16,9 +17,14 @@ class BaseParser(object):
     model = None
     child_parser_class = None
 
-    def __init__(self, iterator):
+    def __init__(self, iterator, check_integrity=True):
+        """
+        Keyword arguments:
+        check_integrity -- checks the data integrity of the parsed file (default True)
+        """
         super(BaseParser, self).__init__()
         self._iter = iterator
+        self.check_integrity = check_integrity
 
         self.child_parser = self._get_parser('child')
 
@@ -52,8 +58,8 @@ class BaseSectionParser(BaseParser):
     header_parser_class = None
     trailer_parser_class = None
 
-    def __init__(self, iterator):
-        super(BaseSectionParser, self).__init__(iterator)
+    def __init__(self, iterator, **kwargs):
+        super(BaseSectionParser, self).__init__(iterator, **kwargs)
 
         self.header_parser = self._get_parser('header')
         self.trailer_parser = self._get_parser('trailer')
@@ -81,7 +87,7 @@ class BaseSectionParser(BaseParser):
             (self.child_parser and self.child_parser.can_parse())
 
     def validate_number_of_records(self, obj):
-        if not settings.IGNORE_INTEGRITY_CHECKS:
+        if self.check_integrity:
             number_of_records = len(obj.header.rows) + len(obj.trailer.rows)
             for child in obj.children:
                 number_of_records += len(child.rows)
@@ -154,24 +160,22 @@ class BaseSingleParser(BaseParser):
     def _parse_availability(self, funds_type, rest):
         availability = None
         if funds_type == FundsType.distributed_availability_simple:
-            availability = [
-                (day, int(rest.pop(0)))
-                for day in ['0', '1', '>1']
-            ]
+            availability = OrderedDict()
+            for day in ['0', '1', '>1']:
+                availability[day] = int(rest.pop(0))
         elif funds_type == FundsType.value_dated:
-            availability = self._parse_fields_from_config(
-                rest, [
-                    ('date', parse_date),
-                    ('time', parse_military_time)
-                ]
-            )
-            rest = rest[2:]
+            date = rest.pop(0)
+            time = rest.pop(0)
+            availability = OrderedDict()
+            availability['date'] = parse_date(date) if date else None
+            availability['time'] = parse_time(time) if time else None
         elif funds_type == FundsType.distributed_availability:
             num_distributions = int(rest.pop(0))
-            availability = [
-                (rest.pop(0), int(rest.pop(0)))  # (day, amount)
-                for index in range(num_distributions)
-            ]
+            availability = OrderedDict()
+            for index in range(num_distributions):
+                day = rest.pop(0)
+                amount = int(rest.pop(0))
+                availability[day] = amount
 
         return (availability, rest)
 
@@ -272,7 +276,7 @@ class AccountIdentifierParser(BaseSingleParser):
             )
             if availability:
                 summary['availability'] = availability
-            summary_items.append(summary)
+            summary_items.append(Summary(**summary))
         model_fields['summary_items'] = summary_items
 
         return model_fields
@@ -296,9 +300,9 @@ class AccountParser(BaseSectionParser):
     def validate(self, obj):
         super(AccountParser, self).validate(obj)
 
-        if not settings.IGNORE_INTEGRITY_CHECKS:
+        if self.check_integrity:
             transaction_sum = sum([child.amount or 0 for child in obj.children])
-            account_sum = sum([summary['amount'] or 0 for summary in obj.header.summary_items])
+            account_sum = sum([summary.amount or 0 for summary in obj.header.summary_items])
 
             control_total = transaction_sum + account_sum
             if control_total != obj.trailer.account_control_total:
@@ -320,7 +324,7 @@ class GroupHeaderParser(BaseSingleParser):
         'originator_id',
         ('group_status', GroupStatus),
         ('as_of_date', parse_date),
-        ('as_of_time', parse_military_time),
+        ('as_of_time', parse_time),
         'currency',
         ('as_of_date_modifier', AsOfDateModifier)
     ]
@@ -357,7 +361,7 @@ class GroupParser(BaseSectionParser):
         if not obj.children:
             raise ParsingException('Group without accounts not allowed')
 
-        if not settings.IGNORE_INTEGRITY_CHECKS:
+        if self.check_integrity:
             if obj.trailer.number_of_accounts != len(obj.children):
                 raise IntegrityException(
                     'Invalid number of accounts for {clazz}. '
@@ -391,7 +395,7 @@ class Bai2FileHeaderParser(BaseSingleParser):
         'sender_id',
         'receiver_id',
         ('creation_date', parse_date),
-        ('creation_time', parse_military_time),
+        ('creation_time', parse_time),
         'file_id',
         ('physical_record_length', int),
         ('block_size', int),
@@ -400,16 +404,6 @@ class Bai2FileHeaderParser(BaseSingleParser):
 
     def validate(self, obj):
         super(Bai2FileHeaderParser, self).validate(obj)
-
-        if obj.physical_record_length != None:
-            raise NotSupportedYetException(
-                'Only variable length records supported'
-            )
-
-        if obj.block_size != None:
-            raise NotSupportedYetException(
-                'Only variable block size supported'
-            )
 
         if obj.version_number != 2:
             raise NotSupportedYetException(
@@ -439,7 +433,7 @@ class Bai2FileParser(BaseSectionParser):
         if not obj.children:
             raise ParsingException('File without groups not allowed')
 
-        if not settings.IGNORE_INTEGRITY_CHECKS:
+        if self.check_integrity:
             if obj.trailer.number_of_groups != len(obj.children):
                 raise IntegrityException(
                     'Invalid number of groups for {clazz}. '

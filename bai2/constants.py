@@ -1,6 +1,8 @@
 from collections import namedtuple
 from enum import Enum
 
+CONTINUATION_CODE = '88'
+
 
 class RecordCode(Enum):
     file_header = '01'

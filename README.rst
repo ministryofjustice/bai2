@@ -7,7 +7,7 @@ bai2
 .. image:: https://coveralls.io/repos/ministryofjustice/bai2/badge.svg?branch=master&service=github
     :target: https://coveralls.io/github/ministryofjustice/bai2?branch=master
 
-Python module for parsing `BAI2 Files <http://www.bai.org/Libraries/Site-General-Downloads/Cash_Management_2005.sflb.ashx>`_
+Python module for parsing and writing `BAI2 Files <http://www.bai.org/Libraries/Site-General-Downloads/Cash_Management_2005.sflb.ashx>`_
 
 **The library is not production ready at the moment** as we don't have enough data to test against, please help us improve it.
 
@@ -50,6 +50,24 @@ To use bai2 in a project
 
 The `parse_from_*` methods return a `bai2.models.Bai2File` object which can be used to inspect the parsed data.
 
+To write a BAI2 file:
+
+.. code-block:: python
+
+    >>> from bai2 import bai2
+    >>> from bai2 import models
+
+    >>> bai2_file = models.Bai2File()
+    >>> bai2_file.header.sender_id = 'EGBANK'
+
+    >>> bai2_file.children.append(models.Group())
+
+    >>> transactions = [models.TransactionDetail(amount=100)]
+    >>> bai2_file.children[0].children.append(models.Account(children=transactions))
+
+    >>> # write to string
+    >>> output = bai2.write(bai2_file)
+
 
 Models
 ------
@@ -73,14 +91,6 @@ Section models define a `header`, a `trailer` and a list of `children` whilst si
 Each Model has a `rows` property with the original rows from the BAI2 file.
 
 
-Settings
---------
-
-You can customise the settings using environment vars:
-
- * **BAI2_IGNORE_INTEGRITY_CHECKS**: if `1`, it disables integrity checks.
-
-
 Exceptions
 ----------
 
@@ -94,8 +104,7 @@ The `parse` method might raise 3 exceptions:
 Incongruences
 -------------
 
-We've noticed that different banks implement the specs in slightly different ways and the parse method
-might therefore raise an ParsingException.
+We've noticed that different banks implement the specs in slightly different ways and the parse method might therefore raise an ParsingException. It is expected to work correctly with files produced by NatWest, RBS, and JP Morgan.
 
 We don't know yet how to deal with these cases as we don't have access to many bai2 files so we can't test it as we would like.
 

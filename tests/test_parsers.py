@@ -1,6 +1,7 @@
 import datetime
 import mock
 from unittest import TestCase
+from collections import OrderedDict
 
 from bai2.helpers import IteratorHelper
 from bai2.parsers import TransactionDetailParser, AccountParser, \
@@ -53,7 +54,7 @@ class TransactionDetailParserTestCase(TestCase):
         self.assertEqual(transaction.funds_type, FundsType.distributed_availability_simple)
         self.assertEqual(
             transaction.availability,
-            [('0', 5000000), ('1', 4000000), ('>1', 1000000)]
+            OrderedDict([('0', 5000000), ('1', 4000000), ('>1', 1000000)])
         )
         self.assertEqual(transaction.bank_reference, 'AX13612')
         self.assertEqual(transaction.customer_reference, 'B096132')
@@ -108,7 +109,7 @@ class TransactionDetailParserTestCase(TestCase):
         self.assertEqual(transaction.amount, 5)
         self.assertEqual(
             transaction.availability,
-            [('0', 1), ('1', 3), ('>1', 1)]
+            OrderedDict([('0', 1), ('1', 3), ('>1', 1)])
         )
 
     def test_distributed_availability(self):
@@ -132,7 +133,7 @@ class TransactionDetailParserTestCase(TestCase):
 
         self.assertEqual(
             transaction.availability,
-            [('1', 1), ('2', 4)]
+            OrderedDict([('1', 1), ('2', 4)])
         )
 
 
@@ -232,12 +233,9 @@ class AccountParserTestCase(TestCase):
             '49,72000001,3/'
         ]
 
-        with mock.patch('bai2.parsers.settings') as mocked_settings:
-            mocked_settings.IGNORE_INTEGRITY_CHECKS = True
-
-            parser = AccountParser(IteratorHelper(lines))
-            account = parser.parse()
-            self.assertTrue(isinstance(account, Account))
+        parser = AccountParser(IteratorHelper(lines), check_integrity=False)
+        account = parser.parse()
+        self.assertTrue(isinstance(account, Account))
 
 
 class GroupParserTestCase(TestCase):
@@ -388,12 +386,9 @@ class GroupParserTestCase(TestCase):
             '98,72000001,2,6/'
         ]
 
-        with mock.patch('bai2.parsers.settings') as mocked_settings:
-            mocked_settings.IGNORE_INTEGRITY_CHECKS = True
-
-            parser = GroupParser(IteratorHelper(lines))
-            group = parser.parse()
-            self.assertTrue(isinstance(group, Group))
+        parser = GroupParser(IteratorHelper(lines), check_integrity=False)
+        group = parser.parse()
+        self.assertTrue(isinstance(group, Group))
 
 
 class Bai2FileParserTestCase(TestCase):
@@ -514,44 +509,6 @@ class Bai2FileParserTestCase(TestCase):
             'OB:111111 BUCKINGHAM PALACE OB3:BARCLAYS BANK PLC '
             'BO:11111111 BO1:DOE JO'
         )
-
-    def test_only_variable_length_records_supported(self):
-        """
-        Checks that only variable length records are supported, that is,
-        with block_size not defined.
-        """
-        lines = [
-            '01,122099999,123456789,040621,0200,1,55,,2/',
-            '02,031001234,122099999,1,040620,2359,GBP,2/',
-            '03,0975312468,GBP,010,500000,,,190,70000000,4,0/',
-            '16,165,1500000,1,DD1620,, DEALER PAYMENTS',
-            '49,18650000,3/',
-            '98,18650000,1,5/',
-            '99,18650000,1,7/'
-        ]
-
-        parser = Bai2FileParser(IteratorHelper(lines))
-
-        self.assertRaises(NotSupportedYetException, parser.parse)
-
-    def test_only_variable_block_size_supported(self):
-        """
-        Checks that only variable block size is supported, that is,
-        with physical_record_length not defined.
-        """
-        lines = [
-            '01,122099999,123456789,040621,0200,1,,44,2/',
-            '02,031001234,122099999,1,040620,2359,GBP,2/',
-            '03,0975312468,GBP,010,500000,,,190,70000000,4,0/',
-            '16,165,1500000,1,DD1620,, DEALER PAYMENTS',
-            '49,18650000,3/',
-            '98,18650000,1,5/',
-            '99,18650000,1,7/'
-        ]
-
-        parser = Bai2FileParser(IteratorHelper(lines))
-
-        self.assertRaises(NotSupportedYetException, parser.parse)
 
     def test_only_version_2_supported(self):
         """
@@ -679,9 +636,6 @@ class Bai2FileParserTestCase(TestCase):
             '99,72000001,2,8/'
         ]
 
-        with mock.patch('bai2.parsers.settings') as mocked_settings:
-            mocked_settings.IGNORE_INTEGRITY_CHECKS = True
-
-            parser = Bai2FileParser(IteratorHelper(lines))
-            bai2_file = parser.parse()
-            self.assertTrue(isinstance(bai2_file, Bai2File))
+        parser = Bai2FileParser(IteratorHelper(lines), check_integrity=False)
+        bai2_file = parser.parse()
+        self.assertTrue(isinstance(bai2_file, Bai2File))
