@@ -21,11 +21,9 @@ Only Python 2.7 and Python 3.3+ are supported.
 Installation
 ------------
 
-At the moment, the only way to install the library is from github
-
 .. code-block:: bash
 
-    pip install git+https://github.com/ministryofjustice/bai2.git
+    pip install bai2
 
 
 Usage
