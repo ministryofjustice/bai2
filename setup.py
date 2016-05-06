@@ -2,6 +2,8 @@
 # -*- coding: utf-8 -*-
 
 
+import sys
+
 try:
     from setuptools import setup
 except ImportError:
@@ -15,11 +17,15 @@ with open('HISTORY.rst') as history_file:
     history = history_file.read().replace('.. :changelog:', '')
 
 requirements = [
-    # TODO: put package requirements here
 ]
 
+# We only need enum34 for Pythons before 3.4
+if sys.version_info < (3, 4):
+    requirements.append('enum34')
+
+
 test_requirements = [
-    # TODO: put package test requirements here
+    'mock',
 ]
 
 setup(

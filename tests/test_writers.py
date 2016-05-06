@@ -274,6 +274,7 @@ class Bai2FileTrailerWriterTestCase(TestCase):
 
 class AccountWriterTestCase(TestCase):
 
+    @staticmethod
     def create_account_section():
         transactions = []
         transactions.append(models.TransactionDetail(
@@ -320,6 +321,7 @@ class AccountWriterTestCase(TestCase):
 
 class GroupWriterTestCase(TestCase):
 
+    @staticmethod
     def create_group_section():
         accounts = []
         accounts.append(AccountWriterTestCase.create_account_section())
@@ -363,6 +365,7 @@ class GroupWriterTestCase(TestCase):
 
 class Bai2FileWriterTestCase(TestCase):
 
+    @staticmethod
     def create_bai2_file():
         groups = []
         groups.append(GroupWriterTestCase.create_group_section())

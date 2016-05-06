@@ -1,3 +1,5 @@
+from __future__ import absolute_import
+
 from bai2.parsers import Bai2FileParser
 from bai2.writers import Bai2FileWriter
 from bai2.helpers import IteratorHelper

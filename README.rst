@@ -15,7 +15,7 @@ Python module for parsing and writing `BAI2 Files <http://www.bai.org/Libraries/
 Requirements
 ------------
 
-Only python 3.4+ supported.
+Only Python 2.7 and Python 3.3+ are supported.
 
 
 Installation
