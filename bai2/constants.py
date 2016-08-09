@@ -32,6 +32,7 @@ class AsOfDateModifier(Enum):
 
 
 class FundsType(Enum):
+    unknown_availability = 'Z'
     immediate_availability = '0'
     one_day_availability = '1'
     two_day_availability = '2'
