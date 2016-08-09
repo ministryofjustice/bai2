@@ -7,7 +7,7 @@ from bai2 import models, writers, constants
 
 class TransactionDetailWriterTestCase(TestCase):
 
-    def test_transaction_detail_with_default_availability_renders_correctly(self):
+    def test_transaction_detail_with_no_availability_renders_correctly(self):
         transaction = models.TransactionDetail(
             [],
             type_code=constants.TypeCodes['399'],
@@ -17,6 +17,18 @@ class TransactionDetailWriterTestCase(TestCase):
 
         output = writers.TransactionDetailWriter(transaction).write()
         self.assertEqual(output, ['16,399,2599,,,,BILLS'])
+
+    def test_transaction_detail_with_unknown_availability_renders_correctly(self):
+        transaction = models.TransactionDetail(
+            [],
+            type_code=constants.TypeCodes['399'],
+            amount=2599,
+            funds_type=constants.FundsType.unknown_availability,
+            text='BILLS',
+        )
+
+        output = writers.TransactionDetailWriter(transaction).write()
+        self.assertEqual(output, ['16,399,2599,Z,,,BILLS'])
 
     def test_transaction_detail_with_text_on_new_line_renders_correctly(self):
         transaction = models.TransactionDetail(

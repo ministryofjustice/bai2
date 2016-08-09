@@ -63,6 +63,27 @@ class TransactionDetailParserTestCase(TestCase):
             'AMALGAMATED CORP. LOCKBOX DEPOSIT-MISC. RECEIVABLES'
         )
 
+    def test_unknown_availability(self):
+        lines = [
+            '16,165,1500000,Z,DD1620,,DEALER PAYMENTS',
+        ]
+
+        ii = IteratorHelper(lines)
+        parser = TransactionDetailParser(ii)
+
+        transaction = parser.parse()
+
+        self.assertEqual(transaction.type_code, TypeCodes['165'])
+        self.assertEqual(transaction.amount, 1500000)
+        self.assertEqual(transaction.funds_type, FundsType.unknown_availability)
+        self.assertEqual(transaction.availability, None)
+        self.assertEqual(transaction.bank_reference, 'DD1620')
+        self.assertEqual(transaction.customer_reference, None)
+        self.assertEqual(
+            transaction.text,
+            'DEALER PAYMENTS'
+        )
+
     def test_value_dated_availability(self):
         lines = [
             '16,191,001,V,150715,2340,1234567890,RP12312312312312/',
