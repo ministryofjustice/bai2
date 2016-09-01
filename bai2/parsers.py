@@ -41,7 +41,10 @@ class BaseParser(object):
         name = '{name}_parser_class'.format(name=parser_type.lower())
         parser_clazz = getattr(self, name)
         if parser_clazz:
-            return parser_clazz(self._iter)
+            return parser_clazz(
+                self._iter,
+                check_integrity=self.check_integrity,
+            )
         return None
 
     def validate(self, obj):
