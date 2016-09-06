@@ -1,7 +1,7 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
 
-
+import importlib
 import sys
 
 try:
@@ -19,6 +19,8 @@ with open('HISTORY.rst') as history_file:
 requirements = [
 ]
 
+__version__ = importlib.import_module('bai2').__version__
+
 # We only need enum34 for Pythons before 3.4
 if sys.version_info < (3, 4):
     requirements.append('enum34')
@@ -30,7 +32,7 @@ test_requirements = [
 
 setup(
     name='bai2',
-    version='0.4.0',
+    version=__version__,
     description="BAI2 Parser",
     long_description=readme + '\n\n' + history,
     author="MoJ",
