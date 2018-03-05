@@ -11,4 +11,6 @@ python:
   - pypy
   - pypy3
 
-script: python setup.py test
+script:
+  - pip install -U setuptools
+  - python setup.py test
