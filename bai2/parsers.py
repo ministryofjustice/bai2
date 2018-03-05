@@ -141,7 +141,7 @@ class BaseSingleParser(BaseParser):
 
         field_name, parser = field_config
         field_value = parser(raw_value) if raw_value else None
-        return (field_name, field_value)
+        return field_name, field_value
 
     def _parse_fields_from_config(self, values, fields_config):
         fields = {}
@@ -180,7 +180,7 @@ class BaseSingleParser(BaseParser):
                 amount = int(rest.pop(0))
                 availability[day] = amount
 
-        return (availability, rest)
+        return availability, rest
 
     def parse(self):
         self._check_record_code(self.model.code)

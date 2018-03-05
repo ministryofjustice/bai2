@@ -38,9 +38,9 @@ def record_generator(lines):
 
 
 class IteratorHelper(object):
-
     def __init__(self, lines):
         self._generator = record_generator(lines)
+        self.current_record = None
         self.advance()
 
     def advance(self):
