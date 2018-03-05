@@ -1,5 +1,4 @@
 import datetime
-import mock
 from unittest import TestCase
 from collections import OrderedDict
 
