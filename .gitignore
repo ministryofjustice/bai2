@@ -1,44 +1,20 @@
+# compiled
+__pycache__/
+*.mo
+*.po~
+*.pot
 *.py[cod]
 
-# C extensions
-*.so
+# packaging
+*.egg-info/
+.eggs/
+build/
+dist/
+docs/_build/
 
-# Packages
-*.egg
-*.eggs
-*.egg-info
-dist
-build
-eggs
-parts
-bin
-var
-sdist
-develop-eggs
-.installed.cfg
-lib
-lib64
+# testing
+.tox/
 
-# Installer logs
-pip-log.txt
-
-# Unit test / coverage reports
-.coverage
-.tox
-nosetests.xml
-htmlcov
-
-# Translations
-*.mo
-
-# Mr Developer
-.mr.developer.cfg
-.project
-.pydevproject
-
-# Complexity
-output/*.html
-output/*/index.html
-
-# Sphinx
-docs/_build
+# environments
+env/
+venv/
