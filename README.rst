@@ -112,7 +112,5 @@ Please let me know if this happens to you.
 Copyright
 ---------
 
-Copyright |copy| 2015 HM Government (Ministry of Justice Digital Services). See
-LICENSE for further details.
-
-.. |copy| unicode:: 0xA9 .. copyright symbol
+Copyright (C) 2018 HM Government (Ministry of Justice Digital Services).
+See LICENSE.txt for further details.
