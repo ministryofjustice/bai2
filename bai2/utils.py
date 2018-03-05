@@ -12,7 +12,7 @@ def parse_date(value):
 
 
 def write_date(date):
-    return datetime.datetime.strftime(date, '%y%m%d')
+    return date.strftime('%y%m%d')
 
 
 def parse_time(value):
