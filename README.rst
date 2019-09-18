@@ -120,7 +120,7 @@ Distribute a new version to `PyPi`_ by updating the ``__version__`` string in ``
 Copyright
 ---------
 
-Copyright (C) 2018 HM Government (Ministry of Justice Digital Services).
+Copyright (C) 2019 HM Government (Ministry of Justice Digital & Technology).
 See LICENSE.txt for further details.
 
 .. _BAI2: http://www.bai.org/Libraries/Site-General-Downloads/Cash_Management_2005.sflb.ashx
