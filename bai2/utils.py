@@ -16,7 +16,7 @@ def write_date(date):
 
 
 def parse_time(value):
-    clock_pattern = re.compile('\d\d:\d\d:\d\d')
+    clock_pattern = re.compile(r'\d\d:\d\d:\d\d')
 
     if clock_pattern.match(value):
         return parse_clock_time(value)
