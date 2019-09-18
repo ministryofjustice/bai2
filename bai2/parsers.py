@@ -175,7 +175,7 @@ class BaseSingleParser(BaseParser):
         elif funds_type == FundsType.distributed_availability:
             num_distributions = int(rest.pop(0))
             availability = OrderedDict()
-            for index in range(num_distributions):
+            for _ in range(num_distributions):
                 day = rest.pop(0)
                 amount = int(rest.pop(0))
                 availability[day] = amount

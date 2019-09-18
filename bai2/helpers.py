@@ -4,7 +4,7 @@ from .constants import RecordCode
 
 def _build_record(rows):
     fields_str = ''
-    for index, row in enumerate(rows):
+    for row in rows:
         field_str = row[1]
 
         if field_str[-1] == '/':
