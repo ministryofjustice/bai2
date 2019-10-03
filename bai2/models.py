@@ -6,10 +6,10 @@ from .constants import RecordCode
 
 class Record(object):
 
-    def __init__(self, code, fields, rows):
+    def __init__(self, code, fields, rows=None):
         self.code = code
         self.fields = fields
-        self.rows = rows
+        self.rows = rows or []
 
 
 class Bai2Model(object):
@@ -24,8 +24,8 @@ class Bai2Model(object):
 
 class Bai2SingleModel(Bai2Model):
 
-    def __init__(self, rows, **fields):
-        self.rows = rows
+    def __init__(self, rows=None, **fields):
+        self.rows = rows or []
         for name, value in fields.items():
             setattr(self, name, value)
 
@@ -73,7 +73,7 @@ class Bai2FileHeader(Bai2SingleModel):
 
     def __init__(
         self,
-        rows,
+        rows=None,
         sender_id=None,
         receiver_id=None,
         creation_date=None,
@@ -96,7 +96,7 @@ class Bai2FileTrailer(Bai2SingleModel):
 
     def __init__(
         self,
-        rows,
+        rows=None,
         file_control_total=None,
         number_of_groups=None,
         number_of_records=None
@@ -127,7 +127,7 @@ class GroupHeader(Bai2SingleModel):
 
     def __init__(
         self,
-        rows,
+        rows=None,
         ultimate_receiver_id=None,
         originator_id=None,
         group_status=None,
@@ -149,7 +149,7 @@ class GroupTrailer(Bai2SingleModel):
 
     def __init__(
         self,
-        rows,
+        rows=None,
         group_control_total=None,
         number_of_accounts=None,
         number_of_records=None
@@ -183,7 +183,7 @@ class AccountIdentifier(Bai2SingleModel):
 
     def __init__(
         self,
-        rows,
+        rows=None,
         customer_account_number=None,
         currency=None,
         summary_items=[]
@@ -216,7 +216,7 @@ class AccountTrailer(Bai2SingleModel):
 
     def __init__(
         self,
-        rows,
+        rows=None,
         account_control_total=None,
         number_of_records=None
     ):
@@ -231,7 +231,7 @@ class TransactionDetail(Bai2SingleModel):
 
     def __init__(
         self,
-        rows,
+        rows=None,
         type_code=None,
         amount=None,
         funds_type=None,
