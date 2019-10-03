@@ -9,7 +9,6 @@ class TransactionDetailWriterTestCase(TestCase):
 
     def test_transaction_detail_with_no_availability_renders_correctly(self):
         transaction = models.TransactionDetail(
-            [],
             type_code=constants.TypeCodes['399'],
             amount=2599,
             text='BILLS',
@@ -20,7 +19,6 @@ class TransactionDetailWriterTestCase(TestCase):
 
     def test_transaction_detail_with_unknown_availability_renders_correctly(self):
         transaction = models.TransactionDetail(
-            [],
             type_code=constants.TypeCodes['399'],
             amount=2599,
             funds_type=constants.FundsType.unknown_availability,
@@ -32,7 +30,6 @@ class TransactionDetailWriterTestCase(TestCase):
 
     def test_transaction_detail_with_text_on_new_line_renders_correctly(self):
         transaction = models.TransactionDetail(
-            [],
             type_code=constants.TypeCodes['399'],
             amount=2599,
             text='BILLS',
@@ -45,7 +42,6 @@ class TransactionDetailWriterTestCase(TestCase):
 
     def test_transaction_detail_with_immediate_availability_renders_correctly(self):
         transaction = models.TransactionDetail(
-            [],
             type_code=constants.TypeCodes['399'],
             amount=2599,
             funds_type=constants.FundsType.immediate_availability,
@@ -57,7 +53,6 @@ class TransactionDetailWriterTestCase(TestCase):
 
     def test_transaction_detail_with_distributed_availability_simple_renders_correctly(self):
         transaction = models.TransactionDetail(
-            [],
             type_code=constants.TypeCodes['399'],
             amount=2599,
             funds_type=constants.FundsType.distributed_availability_simple,
@@ -70,7 +65,6 @@ class TransactionDetailWriterTestCase(TestCase):
 
     def test_transaction_detail_with_value_dated_availability_renders_correctly(self):
         transaction = models.TransactionDetail(
-            [],
             type_code=constants.TypeCodes['399'],
             amount=2599,
             funds_type=constants.FundsType.value_dated,
@@ -84,7 +78,6 @@ class TransactionDetailWriterTestCase(TestCase):
 
     def test_transaction_detail_with_distributed_availability_renders_correctly(self):
         transaction = models.TransactionDetail(
-            [],
             type_code=constants.TypeCodes['399'],
             amount=2599,
             funds_type=constants.FundsType.distributed_availability,
@@ -97,7 +90,6 @@ class TransactionDetailWriterTestCase(TestCase):
 
     def test_transaction_detail_with_continuation_renders_correctly(self):
         transaction = models.TransactionDetail(
-            [],
             type_code=constants.TypeCodes['399'],
             amount=2599,
             text='BILLS BILLS BILLS BILLS BILLS BILLS BILLS BILLS BILLS BILLS BILLS BILLS',
@@ -114,7 +106,6 @@ class AccountIdentifierWriterTestCase(TestCase):
 
     def test_account_identifier_renders_correctly(self):
         account_identifier = models.AccountIdentifier(
-            [],
             customer_account_number='77777777',
             currency='GBP',
             summary_items=[
@@ -131,7 +122,6 @@ class AccountIdentifierWriterTestCase(TestCase):
 
     def test_account_identifier_with_continuation_renders_correctly(self):
         account_identifier = models.AccountIdentifier(
-            [],
             customer_account_number='77777777',
             currency='GBP',
             summary_items=[
@@ -165,7 +155,6 @@ class AccountIdentifierWriterTestCase(TestCase):
 
     def test_account_identifier_with_summary_availability_renders_correctly(self):
         account_identifier = models.AccountIdentifier(
-            [],
             customer_account_number='77777777',
             currency='GBP',
             summary_items=[
@@ -195,7 +184,6 @@ class AccountTrailerWriterTestCase(TestCase):
 
     def test_account_trailer_renders_correctly(self):
         account_trailer = models.AccountTrailer(
-            [],
             account_control_total=100,
             number_of_records=4
         )
@@ -211,7 +199,6 @@ class GroupHeaderWriterTestTcase(TestCase):
 
     def test_group_header_renders_correctly(self):
         group_header = models.GroupHeader(
-            [],
             ultimate_receiver_id='8888888',
             originator_id='CITIGB00',
             group_status=constants.GroupStatus.update,
@@ -232,7 +219,6 @@ class GroupTrailerWriterTestCase(TestCase):
 
     def test_account_trailer_renders_correctly(self):
         group_trailer = models.GroupTrailer(
-            [],
             group_control_total=100,
             number_of_accounts=1,
             number_of_records=6
@@ -249,7 +235,6 @@ class Bai2FileHeaderWriterTestCase(TestCase):
 
     def test_file_header_renders_correctly(self):
         file_header = models.Bai2FileHeader(
-            [],
             sender_id='CITIDIRECT',
             receiver_id='8888888',
             creation_date=date(year=2015, month=7, day=15),
@@ -271,7 +256,6 @@ class Bai2FileTrailerWriterTestCase(TestCase):
 
     def test_file_trailer_renders_correctly(self):
         file_trailer = models.Bai2FileTrailer(
-            [],
             file_control_total=100,
             number_of_groups=1,
             number_of_records=8
@@ -290,13 +274,11 @@ class AccountWriterTestCase(TestCase):
     def create_account_section():
         transactions = []
         transactions.append(models.TransactionDetail(
-            [],
             type_code=constants.TypeCodes['399'],
             amount=2599,
             text='BILLS BILLS BILLS BILLS BILLS BILLS BILLS BILLS BILLS BILLS BILLS BILLS',
         ))
         transactions.append(models.TransactionDetail(
-            [],
             type_code=constants.TypeCodes['399'],
             amount=1000,
             funds_type=constants.FundsType.immediate_availability,
@@ -304,7 +286,6 @@ class AccountWriterTestCase(TestCase):
         ))
 
         account_identifier = models.AccountIdentifier(
-            [],
             customer_account_number='77777777',
             currency='GBP',
             summary_items=[
@@ -340,7 +321,6 @@ class GroupWriterTestCase(TestCase):
         accounts.append(AccountWriterTestCase.create_account_section())
 
         group_header = models.GroupHeader(
-            [],
             ultimate_receiver_id='8888888',
             originator_id='CITIGB00',
             group_status=constants.GroupStatus.update,
@@ -384,7 +364,6 @@ class Bai2FileWriterTestCase(TestCase):
         groups.append(GroupWriterTestCase.create_group_section())
 
         file_header = models.Bai2FileHeader(
-            [],
             sender_id='CITIDIRECT',
             receiver_id='8888888',
             creation_date=date(year=2015, month=7, day=15),
