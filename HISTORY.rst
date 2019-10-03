@@ -3,6 +3,11 @@
 History
 =======
 
+0.7.0 (2019-10-03)
+------------------
+
+* ``rows`` no longer required in BAI2 models (c.f. issue 12 and PR 13)
+
 0.6.0 (2019-09-18)
 ------------------
 
