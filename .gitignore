@@ -12,6 +12,7 @@ build/
 dist/
 
 # testing
+.coverage
 .tox/
 
 # environments
