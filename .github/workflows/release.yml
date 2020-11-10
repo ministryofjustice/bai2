@@ -1,0 +1,28 @@
+name: Release to PYPI
+on:
+  release:
+    types: [created]
+jobs:
+  release:
+    name: Release to PYPI
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v2
+      - name: Setup python
+        uses: actions/setup-python@v2
+        with:
+          python-version: 3.x
+      - name: Install gettext
+        run: sudo apt-get install gettext
+      - name: Update setuptools pip and wheel
+        run: pip install -U setuptools pip wheel
+      - name: Install twine
+        run: pip install twine
+      - name: Build and release to PYPI
+        run: |
+          python setup.py compilemessages sdist bdist_wheel
+          twine upload --non-interactive dist/*
+        env:
+          TWINE_USERNAME: ${{ secrets.PYPI_USERNAME }}
+          TWINE_PASSWORD: ${{ secrets.PYPI_PASSWORD }}

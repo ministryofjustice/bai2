@@ -107,20 +107,22 @@ Please let me know if this happens to you.
 Development
 -----------
 
-.. image:: https://travis-ci.org/ministryofjustice/bai2.svg?branch=master
-    :target: https://travis-ci.org/ministryofjustice/bai2
+.. image:: https://github.com/ministryofjustice/bai2/workflows/Run%20tests/badge.svg?branch=master
+    :target: https://github.com/ministryofjustice/bai2/actions
 
 Please report bugs and open pull requests on `GitHub`_.
 
 Use ``python setup.py test`` or ``tox`` to run all tests.
 
-Distribute a new version to `PyPi`_ by updating the ``__version__`` string in ``bai2`` and run ``python setup.py sdist bdist_wheel upload``.
+Distribute a new version to `PyPi`_ by updating the ``VERSION`` tuple in ``bai2/__init__.py`` and
+publishing a release in GitHub (this triggers a GitHub Actions workflow to automatically upload it).
+Alternatively, run ``python setup.py sdist bdist_wheel upload`` locally.
 
 
 Copyright
 ---------
 
-Copyright (C) 2019 HM Government (Ministry of Justice Digital & Technology).
+Copyright (C) 2020 HM Government (Ministry of Justice Digital & Technology).
 See LICENSE.txt for further details.
 
 .. _BAI2: http://www.bai.org/Libraries/Site-General-Downloads/Cash_Management_2005.sflb.ashx
