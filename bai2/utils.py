@@ -53,9 +53,7 @@ def write_time(time, clock_format_for_intra_day=False):
 
 
 def write_clock_time(time):
-    date = datetime.datetime.now().replace(hour=time.hour,
-                                           minute=time.minute,
-                                           second=time.second)
+    date = datetime.datetime.now().replace(hour=time.hour, minute=time.minute, second=time.second)
     return datetime.datetime.strftime(date, '%H:%M:%S')
 
 

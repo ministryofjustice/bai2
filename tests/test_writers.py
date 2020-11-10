@@ -1,12 +1,11 @@
-from unittest import TestCase
-from datetime import date, time
 from collections import OrderedDict
+from datetime import date, time
+from unittest import TestCase
 
 from bai2 import models, writers, constants
 
 
 class TransactionDetailWriterTestCase(TestCase):
-
     def test_transaction_detail_with_no_availability_renders_correctly(self):
         transaction = models.TransactionDetail(
             type_code=constants.TypeCodes['399'],
@@ -103,7 +102,6 @@ class TransactionDetailWriterTestCase(TestCase):
 
 
 class AccountIdentifierWriterTestCase(TestCase):
-
     def test_account_identifier_renders_correctly(self):
         account_identifier = models.AccountIdentifier(
             customer_account_number='77777777',
@@ -181,7 +179,6 @@ class AccountIdentifierWriterTestCase(TestCase):
 
 
 class AccountTrailerWriterTestCase(TestCase):
-
     def test_account_trailer_renders_correctly(self):
         account_trailer = models.AccountTrailer(
             account_control_total=100,
@@ -196,7 +193,6 @@ class AccountTrailerWriterTestCase(TestCase):
 
 
 class GroupHeaderWriterTestTcase(TestCase):
-
     def test_group_header_renders_correctly(self):
         group_header = models.GroupHeader(
             ultimate_receiver_id='8888888',
@@ -216,7 +212,6 @@ class GroupHeaderWriterTestTcase(TestCase):
 
 
 class GroupTrailerWriterTestCase(TestCase):
-
     def test_account_trailer_renders_correctly(self):
         group_trailer = models.GroupTrailer(
             group_control_total=100,
@@ -232,7 +227,6 @@ class GroupTrailerWriterTestCase(TestCase):
 
 
 class Bai2FileHeaderWriterTestCase(TestCase):
-
     def test_file_header_renders_correctly(self):
         file_header = models.Bai2FileHeader(
             sender_id='CITIDIRECT',
@@ -253,7 +247,6 @@ class Bai2FileHeaderWriterTestCase(TestCase):
 
 
 class Bai2FileTrailerWriterTestCase(TestCase):
-
     def test_file_trailer_renders_correctly(self):
         file_trailer = models.Bai2FileTrailer(
             file_control_total=100,
@@ -269,7 +262,6 @@ class Bai2FileTrailerWriterTestCase(TestCase):
 
 
 class AccountWriterTestCase(TestCase):
-
     @staticmethod
     def create_account_section():
         transactions = []
@@ -307,13 +299,12 @@ class AccountWriterTestCase(TestCase):
                 '16,399,2599,,,,BILLS BILLS BILLS BILLS BILLS BILLS BILLS BILLS BILLS BILLS BILLS',
                 '88, BILLS',
                 '16,399,1000,0,,,OTHER',
-                '49,23599,5/'
+                '49,23599,5/',
             ]
         )
 
 
 class GroupWriterTestCase(TestCase):
-
     @staticmethod
     def create_group_section():
         accounts = []
@@ -350,13 +341,12 @@ class GroupWriterTestCase(TestCase):
                 '88, BILLS',
                 '16,399,1000,0,,,OTHER',
                 '49,23599,5/',
-                '98,47198,2,12/'
+                '98,47198,2,12/',
             ]
         )
 
 
 class Bai2FileWriterTestCase(TestCase):
-
     @staticmethod
     def create_bai2_file():
         groups = []
@@ -408,6 +398,6 @@ class Bai2FileWriterTestCase(TestCase):
                 '16,399,1000,0,,,OTHER',
                 '49,23599,5/',
                 '98,47198,2,12/',
-                '99,94396,2,26/'
+                '99,94396,2,26/',
             ]
         )

@@ -1,20 +1,16 @@
 from collections import OrderedDict
 
+from .constants import CONTINUATION_CODE
 from .models import \
     Bai2File, Bai2FileHeader, Bai2FileTrailer, \
     Group, GroupHeader, GroupTrailer, \
     AccountIdentifier, AccountTrailer, Account, \
     TransactionDetail
 from .utils import write_date, write_time, convert_to_string
-from .constants import CONTINUATION_CODE
 
 
-class BaseWriter(object):
-
-    def __init__(self, obj,
-                 line_length=80,
-                 text_on_new_line=False,
-                 clock_format_for_intra_day=False):
+class BaseWriter:
+    def __init__(self, obj, line_length=80, text_on_new_line=False, clock_format_for_intra_day=False):
         """
         Keyword arguments:
         line_length -- number of characters per record (default 80)
@@ -114,7 +110,7 @@ class TransactionDetailWriter(BaseSingleWriter):
         ('availability', expand_availability),
         'bank_reference',
         'customer_reference',
-        'text'
+        'text',
     ]
 
     def write(self):
@@ -176,7 +172,7 @@ class AccountIdentifierWriter(BaseSingleWriter):
     fields_config = [
         'customer_account_number',
         'currency',
-        ('summary_items', expand_summary_items)
+        ('summary_items', expand_summary_items),
     ]
 
     summary_fields_config = [
@@ -184,7 +180,7 @@ class AccountIdentifierWriter(BaseSingleWriter):
         'amount',
         'item_count',
         ('funds_type', lambda w, ft: ft.value),
-        ('availability', expand_availability)
+        ('availability', expand_availability),
     ]
 
     def write(self):
@@ -209,7 +205,7 @@ class AccountTrailerWriter(BaseSingleWriter):
 
     fields_config = [
         'account_control_total',
-        'number_of_records'
+        'number_of_records',
     ]
 
 
@@ -230,7 +226,7 @@ class GroupHeaderWriter(BaseSingleWriter):
         ('as_of_date', lambda w, d: write_date(d)),
         ('as_of_time', lambda w, t: write_time(t, w.clock_format_for_intra_day)),
         'currency',
-        ('as_of_date_modifier', lambda w, aodm: aodm.value)
+        ('as_of_date_modifier', lambda w, aodm: aodm.value),
     ]
 
 
@@ -240,7 +236,7 @@ class GroupTrailerWriter(BaseSingleWriter):
     fields_config = [
         'group_control_total',
         'number_of_accounts',
-        'number_of_records'
+        'number_of_records',
     ]
 
 
@@ -262,7 +258,7 @@ class Bai2FileHeaderWriter(BaseSingleWriter):
         'file_id',
         'physical_record_length',
         'block_size',
-        'version_number'
+        'version_number',
     )
 
 

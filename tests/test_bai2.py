@@ -7,7 +7,6 @@ from .test_writers import Bai2FileWriterTestCase
 
 
 class ParseTestCase(TestCase):
-
     def test_parse_from_lines(self):
         lines = [
             '01,CITIDIRECT,8888888,150716,0713,00131100,,,2/',
@@ -23,7 +22,7 @@ class ParseTestCase(TestCase):
             '88,BO:11111111 BO1:DOE JO',
             '49,20001,10/',
             '98,20001,1,12/',
-            '99,20001,1,14/'
+            '99,20001,1,14/',
         ]
 
         bai2_file = bai2.parse_from_lines(lines)
@@ -95,7 +94,6 @@ class ParseTestCase(TestCase):
 
 
 class WriteTestCase(TestCase):
-
     def test_write(self):
         bai2_file = Bai2FileWriterTestCase.create_bai2_file()
 

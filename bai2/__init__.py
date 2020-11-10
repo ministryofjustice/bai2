@@ -1,5 +1,3 @@
-# -*- coding: utf-8 -*-
-
-__author__ = 'Ministry of Justice'
-__email__ = 'dev@digital.justice.gov.uk'
-__version__ = '0.7.0'
+VERSION = (0, 7, 0)
+__version__ = '.'.join(map(str, VERSION))
+__author__ = 'Ministry of Justice Digital & Technology'

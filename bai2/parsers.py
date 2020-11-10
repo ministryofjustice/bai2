@@ -1,5 +1,6 @@
 from collections import OrderedDict
 
+from .constants import GroupStatus, AsOfDateModifier, FundsType
 from .exceptions import ParsingException, NotSupportedYetException, \
     IntegrityException
 from .models import \
@@ -7,13 +8,12 @@ from .models import \
     Group, GroupHeader, GroupTrailer, \
     AccountIdentifier, AccountTrailer, Account, \
     TransactionDetail, Summary
-from .constants import GroupStatus, AsOfDateModifier, FundsType
 from .utils import parse_date, parse_time, parse_type_code
 
 
 # ABSTRACTION
 
-class BaseParser(object):
+class BaseParser:
     model = None
     child_parser_class = None
 
@@ -207,13 +207,13 @@ class TransactionDetailParser(BaseSingleParser):
     head_fields_config = [
         ('type_code', parse_type_code),
         ('amount', int),
-        ('funds_type', FundsType)
+        ('funds_type', FundsType),
     ]
 
     tail_fields_config = [
         'bank_reference',
         'customer_reference',
-        'text'
+        'text',
     ]
 
     def _parse_fields(self, record):
@@ -253,7 +253,7 @@ class AccountIdentifierParser(BaseSingleParser):
         ('type_code', parse_type_code),
         ('amount', int),
         ('item_count', int),
-        ('funds_type', FundsType)
+        ('funds_type', FundsType),
     ]
 
     def _parse_fields(self, record):
@@ -290,7 +290,7 @@ class AccountTrailerParser(BaseSingleParser):
 
     fields_config = [
         ('account_control_total', int),
-        ('number_of_records', int)
+        ('number_of_records', int),
     ]
 
 
@@ -329,7 +329,7 @@ class GroupHeaderParser(BaseSingleParser):
         ('as_of_date', parse_date),
         ('as_of_time', parse_time),
         'currency',
-        ('as_of_date_modifier', AsOfDateModifier)
+        ('as_of_date_modifier', AsOfDateModifier),
     ]
 
     def _parse_fields(self, record):
@@ -348,7 +348,7 @@ class GroupTrailerParser(BaseSingleParser):
     fields_config = [
         ('group_control_total', int),
         ('number_of_accounts', int),
-        ('number_of_records', int)
+        ('number_of_records', int),
     ]
 
 
@@ -402,7 +402,7 @@ class Bai2FileHeaderParser(BaseSingleParser):
         'file_id',
         ('physical_record_length', int),
         ('block_size', int),
-        ('version_number', int)
+        ('version_number', int),
     )
 
     def validate(self, obj):

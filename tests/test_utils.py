@@ -5,7 +5,6 @@ from bai2.utils import parse_date, parse_military_time, parse_time, write_time
 
 
 class ParseDateTestCase(TestCase):
-
     def test_parse(self):
         parsed = parse_date('150330')
         self.assertEqual(
@@ -15,7 +14,6 @@ class ParseDateTestCase(TestCase):
 
 
 class ParseTimeTestCase(TestCase):
-
     def test_clock_time(self):
         parsed_value = parse_time('21:45:34')
 
@@ -34,7 +32,6 @@ class ParseTimeTestCase(TestCase):
 
 
 class ParseMilitaryTime(TestCase):
-
     def test_parse(self):
         parsed_value = parse_military_time('2145')
 
@@ -69,7 +66,6 @@ class ParseMilitaryTime(TestCase):
 
 
 class WriteTime(TestCase):
-
     def test_write_intra_day_time_with_setting_false(self):
         time = datetime.time(hour=17, minute=59)
 

@@ -1,19 +1,19 @@
 import datetime
-from unittest import TestCase
 from collections import OrderedDict
+from unittest import TestCase
 
-from bai2.helpers import IteratorHelper
-from bai2.parsers import TransactionDetailParser, AccountParser, \
-    GroupParser, Bai2FileParser
 from bai2.constants import TypeCodes, FundsType, GroupStatus, \
     AsOfDateModifier
+from bai2.exceptions import ParsingException, \
+    NotSupportedYetException, IntegrityException
+from bai2.helpers import IteratorHelper
 from bai2.models import \
     Bai2File, Bai2FileHeader, Bai2FileTrailer, \
     Group, GroupHeader, GroupTrailer, \
     Account, AccountIdentifier, AccountTrailer, \
     TransactionDetail
-from bai2.exceptions import ParsingException, \
-    NotSupportedYetException, IntegrityException
+from bai2.parsers import TransactionDetailParser, AccountParser, \
+    GroupParser, Bai2FileParser
 
 
 class TransactionDetailParserTestCase(TestCase):
@@ -158,7 +158,6 @@ class TransactionDetailParserTestCase(TestCase):
 
 
 class AccountParserTestCase(TestCase):
-
     def test_parse(self):
         lines = [
             '03,0975312468,GBP,010,500000,,,190,70000000,4,0/',
@@ -259,7 +258,6 @@ class AccountParserTestCase(TestCase):
 
 
 class GroupParserTestCase(TestCase):
-
     def test_parse(self):
         lines = [
             '02,031001234,122099999,1,040620,2359,GBP,2/',
@@ -412,7 +410,6 @@ class GroupParserTestCase(TestCase):
 
 
 class Bai2FileParserTestCase(TestCase):
-
     def test_parse(self):
         lines = [
             '01,CITIDIRECT,8888888,150716,0713,00131100,,,2/',

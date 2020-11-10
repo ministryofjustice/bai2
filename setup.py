@@ -1,38 +1,36 @@
 #!/usr/bin/env python
-# -*- coding: utf-8 -*-
 import importlib
+import os
 import sys
+import warnings
 
-try:
-    from setuptools import setup
-except ImportError:
-    from distutils.core import setup
+from setuptools import setup
 
-with open('README.rst') as readme_file:
-    readme = readme_file.read().strip()
+if sys.version_info[0:2] < (3, 6):
+    warnings.warn('This package is tested with Python version 3.6+')
 
-with open('HISTORY.rst') as history_file:
-    history = history_file.read().replace('.. :changelog:', '').strip()
+root_path = os.path.abspath(os.path.dirname(__file__))
+
+with open(os.path.join(root_path, 'README.rst')) as readme:
+    README = readme.read()
 
 package_info = importlib.import_module('bai2')
 
 install_requires = []
 tests_require = ['flake8']
-if sys.version_info[0:2] < (3, 4):
-    install_requires.append('enum34')
 
 setup(
     name='bai2',
     version=package_info.__version__,
     author=package_info.__author__,
-    author_email=package_info.__email__,
+    author_email='dev@digital.justice.gov.uk',
     url='https://github.com/ministryofjustice/bai2',
-    license='MIT',
-    description='BAI2 Parser',
-    long_description=readme + '\n\n' + history,
     packages=['bai2'],
     package_dir={'bai2': 'bai2'},
     include_package_data=True,
+    license='MIT',
+    description='BAI2 Parser',
+    long_description=README,
     keywords='bai2 bookkeeping cash management balance reporting',
     classifiers=[
         'Development Status :: 4 - Beta',
@@ -40,14 +38,10 @@ setup(
         'License :: OSI Approved :: MIT License',
         'Natural Language :: English',
         'Operating System :: OS Independent',
-        'Programming Language :: Python :: 2',
-        'Programming Language :: Python :: 2.7',
         'Programming Language :: Python :: 3',
-        'Programming Language :: Python :: 3.3',
-        'Programming Language :: Python :: 3.4',
-        'Programming Language :: Python :: 3.5',
         'Programming Language :: Python :: 3.6',
         'Programming Language :: Python :: 3.7',
+        'Programming Language :: Python :: 3.8',
     ],
     install_requires=install_requires,
     tests_require=tests_require,

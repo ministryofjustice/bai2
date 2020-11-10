@@ -37,7 +37,7 @@ def record_generator(lines):
     yield _build_record(records)
 
 
-class IteratorHelper(object):
+class IteratorHelper:
     def __init__(self, lines):
         self._generator = record_generator(lines)
         self.current_record = None

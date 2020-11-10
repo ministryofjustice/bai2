@@ -3,16 +3,14 @@ from .constants import RecordCode
 
 # ABSTRACTION
 
-
-class Record(object):
-
+class Record:
     def __init__(self, code, fields, rows=None):
         self.code = code
         self.fields = fields
         self.rows = rows or []
 
 
-class Bai2Model(object):
+class Bai2Model:
     code = None
 
     def as_string(self):
@@ -23,7 +21,6 @@ class Bai2Model(object):
 
 
 class Bai2SingleModel(Bai2Model):
-
     def __init__(self, rows=None, **fields):
         self.rows = rows or []
         for name, value in fields.items():
@@ -31,7 +28,6 @@ class Bai2SingleModel(Bai2Model):
 
 
 class Bai2SectionModel(Bai2Model):
-
     def __init__(self, header=None, trailer=None, children=None):
         self.header = header
         self.trailer = trailer
@@ -162,7 +158,6 @@ class GroupTrailer(Bai2SingleModel):
 
 
 class Account(Bai2SectionModel):
-
     def __init__(self, header=None, trailer=None, children=None):
         super(Account, self).__init__(header=header or AccountIdentifier([]),
                                       trailer=trailer or AccountTrailer([]),
@@ -194,8 +189,7 @@ class AccountIdentifier(Bai2SingleModel):
         )
 
 
-class Summary(object):
-
+class Summary:
     def __init__(
         self,
         type_code=None,
