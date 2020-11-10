@@ -10,7 +10,6 @@ __pycache__/
 .eggs/
 build/
 dist/
-docs/_build/
 
 # testing
 .tox/
