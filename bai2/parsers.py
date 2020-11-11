@@ -22,7 +22,7 @@ class BaseParser:
         Keyword arguments:
         check_integrity -- checks the data integrity of the parsed file (default True)
         """
-        super(BaseParser, self).__init__()
+        super().__init__()
         self._iter = iterator
         self.check_integrity = check_integrity
 
@@ -62,7 +62,7 @@ class BaseSectionParser(BaseParser):
     trailer_parser_class = None
 
     def __init__(self, iterator, **kwargs):
-        super(BaseSectionParser, self).__init__(iterator, **kwargs)
+        super().__init__(iterator, **kwargs)
 
         self.header_parser = self._get_parser('header')
         self.trailer_parser = self._get_parser('trailer')
@@ -106,7 +106,7 @@ class BaseSectionParser(BaseParser):
                 )
 
     def validate(self, obj):
-        super(BaseSectionParser, self).validate(obj)
+        super().validate(obj)
 
         self.validate_number_of_records(obj)
 
@@ -301,7 +301,7 @@ class AccountParser(BaseSectionParser):
     child_parser_class = TransactionDetailParser
 
     def validate(self, obj):
-        super(AccountParser, self).validate(obj)
+        super().validate(obj)
 
         if self.check_integrity:
             transaction_sum = sum([child.amount or 0 for child in obj.children])
@@ -333,7 +333,7 @@ class GroupHeaderParser(BaseSingleParser):
     ]
 
     def _parse_fields(self, record):
-        fields = super(GroupHeaderParser, self)._parse_fields(record)
+        fields = super()._parse_fields(record)
 
         # if currency not defined => default to USD
         if not fields['currency']:
@@ -359,7 +359,7 @@ class GroupParser(BaseSectionParser):
     child_parser_class = AccountParser
 
     def validate(self, obj):
-        super(GroupParser, self).validate(obj)
+        super().validate(obj)
 
         if not obj.children:
             raise ParsingException('Group without accounts not allowed')
@@ -406,7 +406,7 @@ class Bai2FileHeaderParser(BaseSingleParser):
     )
 
     def validate(self, obj):
-        super(Bai2FileHeaderParser, self).validate(obj)
+        super().validate(obj)
 
         if obj.version_number != 2:
             raise NotSupportedYetException(
@@ -431,7 +431,7 @@ class Bai2FileParser(BaseSectionParser):
     child_parser_class = GroupParser
 
     def validate(self, obj):
-        super(Bai2FileParser, self).validate(obj)
+        super().validate(obj)
 
         if not obj.children:
             raise ParsingException('File without groups not allowed')

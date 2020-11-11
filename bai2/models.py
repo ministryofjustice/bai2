@@ -15,7 +15,7 @@ class Bai2Model:
 
     def as_string(self):
         return '\n'.join([
-            "{0},{1}".format(row[0].value, row[1])
+            '{0},{1}'.format(row[0].value, row[1])
             for row in self.rows
         ])
 
@@ -51,9 +51,9 @@ class Bai2SectionModel(Bai2Model):
 
 class Bai2File(Bai2SectionModel):
     def __init__(self, header=None, trailer=None, children=None):
-        super(Bai2File, self).__init__(header=header or Bai2FileHeader([]),
-                                       trailer=trailer or Bai2FileTrailer([]),
-                                       children=children or [])
+        super().__init__(header=header or Bai2FileHeader([]),
+                         trailer=trailer or Bai2FileTrailer([]),
+                         children=children or [])
 
     def update_totals(self):
         file_control_total = 0
@@ -79,7 +79,7 @@ class Bai2FileHeader(Bai2SingleModel):
         block_size=None,
         version_number=2
     ):
-        super(Bai2FileHeader, self).__init__(
+        super().__init__(
             rows, sender_id=sender_id, receiver_id=receiver_id,
             creation_date=creation_date, creation_time=creation_time,
             file_id=file_id, physical_record_length=physical_record_length,
@@ -97,7 +97,7 @@ class Bai2FileTrailer(Bai2SingleModel):
         number_of_groups=None,
         number_of_records=None
     ):
-        super(Bai2FileTrailer, self).__init__(
+        super().__init__(
             rows, file_control_total=file_control_total,
             number_of_groups=number_of_groups, number_of_records=number_of_records
         )
@@ -105,9 +105,9 @@ class Bai2FileTrailer(Bai2SingleModel):
 
 class Group(Bai2SectionModel):
     def __init__(self, header=None, trailer=None, children=None):
-        super(Group, self).__init__(header=header or GroupHeader([]),
-                                    trailer=trailer or GroupTrailer([]),
-                                    children=children or [])
+        super().__init__(header=header or GroupHeader([]),
+                         trailer=trailer or GroupTrailer([]),
+                         children=children or [])
 
     def update_totals(self):
         group_control_total = 0
@@ -132,7 +132,7 @@ class GroupHeader(Bai2SingleModel):
         currency=None,
         as_of_date_modifier=None
     ):
-        super(GroupHeader, self).__init__(
+        super().__init__(
             rows, ultimate_receiver_id=ultimate_receiver_id,
             originator_id=originator_id, group_status=group_status,
             as_of_date=as_of_date, as_of_time=as_of_time, currency=currency,
@@ -150,7 +150,7 @@ class GroupTrailer(Bai2SingleModel):
         number_of_accounts=None,
         number_of_records=None
     ):
-        super(GroupTrailer, self).__init__(
+        super().__init__(
             rows, group_control_total=group_control_total,
             number_of_accounts=number_of_accounts,
             number_of_records=number_of_records
@@ -159,9 +159,9 @@ class GroupTrailer(Bai2SingleModel):
 
 class Account(Bai2SectionModel):
     def __init__(self, header=None, trailer=None, children=None):
-        super(Account, self).__init__(header=header or AccountIdentifier([]),
-                                      trailer=trailer or AccountTrailer([]),
-                                      children=children or [])
+        super().__init__(header=header or AccountIdentifier([]),
+                         trailer=trailer or AccountTrailer([]),
+                         children=children or [])
 
     def update_totals(self):
         account_control_total = 0
@@ -181,9 +181,10 @@ class AccountIdentifier(Bai2SingleModel):
         rows=None,
         customer_account_number=None,
         currency=None,
-        summary_items=[]
+        summary_items=()
     ):
-        super(AccountIdentifier, self).__init__(
+        summary_items = list(summary_items)
+        super().__init__(
             rows, customer_account_number=customer_account_number,
             currency=currency, summary_items=summary_items
         )
@@ -196,7 +197,7 @@ class Summary:
         amount=0,
         item_count=None,
         funds_type=None,
-        availability={}
+        availability={}  # noqa: B006
     ):
         self.type_code = type_code
         self.amount = amount
@@ -214,7 +215,7 @@ class AccountTrailer(Bai2SingleModel):
         account_control_total=None,
         number_of_records=None
     ):
-        super(AccountTrailer, self).__init__(
+        super().__init__(
             rows, account_control_total=account_control_total,
             number_of_records=number_of_records
         )
@@ -229,12 +230,12 @@ class TransactionDetail(Bai2SingleModel):
         type_code=None,
         amount=None,
         funds_type=None,
-        availability={},
+        availability={},  # noqa: B006
         bank_reference=None,
         customer_reference=None,
         text=None
     ):
-        super(TransactionDetail, self).__init__(
+        super().__init__(
             rows, type_code=type_code, amount=amount, funds_type=funds_type,
             availability=availability, bank_reference=bank_reference,
             customer_reference=customer_reference, text=text
