@@ -123,6 +123,9 @@ Remember to update `History`_.
 History
 -------
 
+0.8.0 (2020-11-11)
+    Remove support for python versions below 3.6
+
 0.7.0 (2019-10-03)
     ``rows`` no longer required in BAI2 models (c.f. issue 12 and PR 13)
 
