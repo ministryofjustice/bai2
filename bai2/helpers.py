@@ -7,10 +7,11 @@ def _build_record(rows):
     for row in rows:
         field_str = row[1]
 
-        if field_str != "" and field_str[-1] == '/':
-            fields_str += field_str[:-1] + ','
-        else:
-            fields_str += field_str + ' '
+        if field_str:
+            if field_str[-1] == '/':
+                fields_str += field_str[:-1] + ','
+            else:
+                fields_str += field_str + ' '
 
     fields = fields_str[:-1].split(',')
     return Record(code=rows[0][0], fields=fields, rows=rows)
