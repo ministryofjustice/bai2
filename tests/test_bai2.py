@@ -67,6 +67,15 @@ class ParseTestCase(TestCase):
             bai2_file = bai2.parse_from_file(f)
             self.assertTrue(isinstance(bai2_file, Bai2File))
 
+    def test_parse_from_file_with_known_parsing_issue(self):
+        from os.path import abspath, join, dirname
+
+        file_path = join(abspath(dirname(__file__)), 'data', 'account_trailer_amount_blank_example.bai2')
+
+        with open(file_path) as f:
+            bai2_file = bai2.parse_from_file(f)
+            self.assertTrue(isinstance(bai2_file, Bai2File))
+
     def test_as_string(self):
         original = (
             '01,CITIDIRECT,8888888,150716,0713,00131100,,,2/\n'
