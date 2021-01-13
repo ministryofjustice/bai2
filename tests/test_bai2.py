@@ -3,7 +3,7 @@ from unittest import TestCase
 from bai2 import bai2
 from bai2.models import Bai2File
 
-from .test_writers import Bai2FileWriterTestCase
+from tests.test_writers import Bai2FileWriterTestCase
 
 
 class ParseTestCase(TestCase):
