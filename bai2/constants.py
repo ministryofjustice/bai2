@@ -133,6 +133,7 @@ TypeCodes = [
     TypeCode('150', TypeCodeTransaction.credit, TypeCodeLevel.summary, 'Total Preauthorized Payment Credits'),
     TypeCode('155', TypeCodeTransaction.credit, TypeCodeLevel.detail, 'Preauthorized Draft Credit'),
     TypeCode('156', TypeCodeTransaction.credit, TypeCodeLevel.detail, 'Item in PAC Deposit'),
+    TypeCode('159', TypeCodeTransaction.credit, TypeCodeLevel.summary, 'Total Real Time Payment Credits'),
     TypeCode('160', TypeCodeTransaction.credit, TypeCodeLevel.summary, 'Total ACH Disbursing Funding Credits'),
     TypeCode('162', TypeCodeTransaction.credit, TypeCodeLevel.summary, 'Corporate Trade Payment Settlement'),
     TypeCode('163', TypeCodeTransaction.credit, TypeCodeLevel.summary, 'Corporate Trade Payment Credits'),
@@ -338,6 +339,7 @@ TypeCodes = [
     TypeCode('451', TypeCodeTransaction.debit, TypeCodeLevel.detail, 'ACH Debit Received'),
     TypeCode('452', TypeCodeTransaction.debit, TypeCodeLevel.detail, 'Item in ACH Disbursement or Debit'),
     TypeCode('455', TypeCodeTransaction.debit, TypeCodeLevel.detail, 'Preauthorized ACH Debit'),
+    TypeCode('459', TypeCodeTransaction.debit, TypeCodeLevel.summary, 'Total Real Time Payment Debits'),
     TypeCode('462', TypeCodeTransaction.debit, TypeCodeLevel.detail, 'Account Holder Initiated ACH Debit'),
     TypeCode('463', TypeCodeTransaction.debit, TypeCodeLevel.summary, 'Corporate Trade Payment Debits'),
     TypeCode('464', TypeCodeTransaction.debit, TypeCodeLevel.detail, 'Corporate Trade Payment Debit'),
@@ -529,6 +531,8 @@ TypeCodes = [
     TypeCode('728', TypeCodeTransaction.credit, TypeCodeLevel.detail, 'Amount Applied to Service Charge'),
     TypeCode('760', TypeCodeTransaction.debit, TypeCodeLevel.summary, 'Loan Disbursement'),
     TypeCode('890', TypeCodeTransaction.misc, TypeCodeLevel.detail, 'Contains Non-monetary Information'),
+    TypeCode('906', None, TypeCodeLevel.detail, 'Today’s Opening 1 Day Float'),
+    TypeCode('907', None, TypeCodeLevel.detail, 'Today’s Opening 2+ Day Float'),
 ]
 TypeCodes = {
     type_code.code: type_code
