@@ -107,7 +107,7 @@ Please let me know if this happens to you.
 Development
 -----------
 
-.. image:: https://github.com/ministryofjustice/bai2/workflows/Run%20tests/badge.svg?branch=master
+.. image:: https://github.com/ministryofjustice/bai2/workflows/Run%20tests/badge.svg?branch=main
     :target: https://github.com/ministryofjustice/bai2/actions
 
 Please report bugs and open pull requests on `GitHub`_.
