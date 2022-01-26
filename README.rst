@@ -123,6 +123,10 @@ Remember to update `History`_.
 History
 -------
 
+0.8.2 (2022-01-26)
+    No library changes
+    Add testing for python 3.9 and 3.10
+
 0.8.0 (2020-11-11)
     Remove support for python versions below 3.6
 
