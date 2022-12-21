@@ -1,3 +1,4 @@
+import pathlib
 from unittest import TestCase
 
 from bai2 import bai2
@@ -7,6 +8,11 @@ from tests.test_writers import Bai2FileWriterTestCase
 
 
 class ParseTestCase(TestCase):
+    @classmethod
+    def open_test_file(cls, name):
+        path = pathlib.Path(__file__).parent / 'data' / f'{name}.bai2'
+        return path.open()
+
     def test_parse_from_lines(self):
         lines = [
             '01,CITIDIRECT,8888888,150716,0713,00131100,,,2/',
@@ -50,29 +56,17 @@ class ParseTestCase(TestCase):
         self.assertTrue(isinstance(bai2_file, Bai2File))
 
     def test_parse_from_file(self):
-        from os.path import abspath, join, dirname
-
-        file_path = join(abspath(dirname(__file__)), 'data', 'citi_example.bai2')
-
-        with open(file_path) as f:
+        with self.open_test_file('citi_example') as f:
             bai2_file = bai2.parse_from_file(f)
             self.assertTrue(isinstance(bai2_file, Bai2File))
 
     def test_parse_from_file_2(self):
-        from os.path import abspath, join, dirname
-
-        file_path = join(abspath(dirname(__file__)), 'data', 'nwb_example.bai2')
-
-        with open(file_path) as f:
+        with self.open_test_file('nwb_example') as f:
             bai2_file = bai2.parse_from_file(f)
             self.assertTrue(isinstance(bai2_file, Bai2File))
 
     def test_parse_from_file_with_known_parsing_issue(self):
-        from os.path import abspath, join, dirname
-
-        file_path = join(abspath(dirname(__file__)), 'data', 'account_trailer_amount_blank_example.bai2')
-
-        with open(file_path) as f:
+        with self.open_test_file('account_trailer_amount_blank_example') as f:
             bai2_file = bai2.parse_from_file(f)
             self.assertTrue(isinstance(bai2_file, Bai2File))
 
