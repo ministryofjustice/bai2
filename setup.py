@@ -6,8 +6,8 @@ import warnings
 
 from setuptools import setup
 
-if sys.version_info[0:2] < (3, 6):
-    warnings.warn('This package is tested with Python version 3.6+')
+if sys.version_info[0:2] < (3, 7):
+    warnings.warn('This package is tested with Python version 3.7+')
 
 root_path = os.path.abspath(os.path.dirname(__file__))
 
@@ -41,11 +41,11 @@ setup(
         'Natural Language :: English',
         'Operating System :: OS Independent',
         'Programming Language :: Python :: 3',
-        'Programming Language :: Python :: 3.6',
         'Programming Language :: Python :: 3.7',
         'Programming Language :: Python :: 3.8',
         'Programming Language :: Python :: 3.9',
         'Programming Language :: Python :: 3.10',
+        'Programming Language :: Python :: 3.11',
     ],
     install_requires=install_requires,
     tests_require=tests_require,

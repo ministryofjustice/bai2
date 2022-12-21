@@ -9,7 +9,7 @@ Python module for parsing and writing `BAI2`_ files.
 Requirements
 ------------
 
-Only Python 3.6+ is supported.
+Only Python 3.7+ is supported.
 
 
 Installation
