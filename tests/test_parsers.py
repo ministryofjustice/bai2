@@ -656,3 +656,11 @@ class Bai2FileParserTestCase(TestCase):
         parser = Bai2FileParser(IteratorHelper(lines), check_integrity=False)
         bai2_file = parser.parse()
         self.assertTrue(isinstance(bai2_file, Bai2File))
+
+    def test_unsupported_type_code__should_raise_unsupported_yet_exception(self):
+        lines = [
+            '16,unsupportedCode,1500000,1,DD1620,, DEALER PAYMENTS',
+        ]
+
+        parser = TransactionDetailParser(IteratorHelper(lines))
+        self.assertRaises(NotSupportedYetException, parser.parse)
