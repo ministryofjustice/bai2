@@ -107,8 +107,11 @@ Please let me know if this happens to you.
 Development
 -----------
 
-.. image:: https://github.com/ministryofjustice/bai2/workflows/Run%20tests/badge.svg?branch=main
-    :target: https://github.com/ministryofjustice/bai2/actions
+.. image:: https://github.com/ministryofjustice/bai2/actions/workflows/test.yml/badge.svg?branch=main
+    :target: https://github.com/ministryofjustice/bai2/actions/workflows/test.yml
+
+.. image:: https://github.com/ministryofjustice/bai2/actions/workflows/lint.yml/badge.svg?branch=main
+    :target: https://github.com/ministryofjustice/bai2/actions/workflows/lint.yml
 
 Please report bugs and open pull requests on `GitHub`_.
 
