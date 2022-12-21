@@ -123,6 +123,12 @@ Remember to update `History`_.
 History
 -------
 
+0.9.0 (2022-12-21)
+    More lenient parsing where integers are expected (thanks @daniel-butler)
+    Add support for 827 & 828 ‘SEPA Payments’ type codes (thanks @podj)
+    Remove testing for python versions below 3.7 (the library is still likely to work with 3.6)
+    Add testing for python 3.11
+
 0.8.2 (2022-01-26)
     No library changes
     Add testing for python 3.9 and 3.10
