@@ -2,7 +2,7 @@ import datetime
 import re
 
 from .constants import TypeCodes
-
+from .exceptions import NotSupportedYetException
 
 def parse_date(value):
     """
@@ -66,7 +66,10 @@ def write_military_time(time):
 
 
 def parse_type_code(value):
-    return TypeCodes[value]
+    try:
+        return TypeCodes[value]
+    except KeyError as e:
+        raise NotSupportedYetException(f"Type code '{value}' is not supported yet")
 
 
 def convert_to_string(value):

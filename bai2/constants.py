@@ -530,6 +530,8 @@ TypeCodes = [
     TypeCode('727', TypeCodeTransaction.credit, TypeCodeLevel.detail, 'Amount Applied to Deferred Interest Detail'),
     TypeCode('728', TypeCodeTransaction.credit, TypeCodeLevel.detail, 'Amount Applied to Service Charge'),
     TypeCode('760', TypeCodeTransaction.debit, TypeCodeLevel.summary, 'Loan Disbursement'),
+    TypeCode('827', TypeCodeTransaction.credit, TypeCodeLevel.summary, 'Incoming SEPA Payments'),
+    TypeCode('828', TypeCodeTransaction.debit, TypeCodeLevel.summary, 'Outgoing SEPA Payments'),
     TypeCode('890', TypeCodeTransaction.misc, TypeCodeLevel.detail, 'Contains Non-monetary Information'),
     TypeCode('906', None, TypeCodeLevel.detail, 'Today’s Opening 1 Day Float'),
     TypeCode('907', None, TypeCodeLevel.detail, 'Today’s Opening 2+ Day Float'),
