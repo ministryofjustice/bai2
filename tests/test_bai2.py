@@ -3,7 +3,7 @@ from unittest import TestCase
 from bai2 import bai2
 from bai2.models import Bai2File
 
-from .test_writers import Bai2FileWriterTestCase
+from tests.test_writers import Bai2FileWriterTestCase
 
 
 class ParseTestCase(TestCase):
@@ -62,6 +62,15 @@ class ParseTestCase(TestCase):
         from os.path import abspath, join, dirname
 
         file_path = join(abspath(dirname(__file__)), 'data', 'nwb_example.bai2')
+
+        with open(file_path) as f:
+            bai2_file = bai2.parse_from_file(f)
+            self.assertTrue(isinstance(bai2_file, Bai2File))
+
+    def test_parse_from_file_with_known_parsing_issue(self):
+        from os.path import abspath, join, dirname
+
+        file_path = join(abspath(dirname(__file__)), 'data', 'account_trailer_amount_blank_example.bai2')
 
         with open(file_path) as f:
             bai2_file = bai2.parse_from_file(f)
