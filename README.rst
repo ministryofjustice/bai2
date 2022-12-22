@@ -126,6 +126,9 @@ Remember to update `History`_.
 History
 -------
 
+0.9.1 (2022-12-22)
+    Add support for 829 ‘SEPA Payments’ type code (thanks @podj)
+
 0.9.0 (2022-12-21)
     More lenient parsing where integers are expected (thanks @daniel-butler)
     Add support for 827 & 828 ‘SEPA Payments’ type codes (thanks @podj)
