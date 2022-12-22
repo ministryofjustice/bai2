@@ -532,6 +532,7 @@ TypeCodes = [
     TypeCode('760', TypeCodeTransaction.debit, TypeCodeLevel.summary, 'Loan Disbursement'),
     TypeCode('827', TypeCodeTransaction.credit, TypeCodeLevel.summary, 'Incoming SEPA Payments'),
     TypeCode('828', TypeCodeTransaction.debit, TypeCodeLevel.summary, 'Outgoing SEPA Payments'),
+    TypeCode('829', TypeCodeTransaction.credit, TypeCodeLevel.summary, 'Incoming BACS Payment'),
     TypeCode('890', TypeCodeTransaction.misc, TypeCodeLevel.detail, 'Contains Non-monetary Information'),
     TypeCode('906', None, TypeCodeLevel.detail, 'Today’s Opening 1 Day Float'),
     TypeCode('907', None, TypeCodeLevel.detail, 'Today’s Opening 2+ Day Float'),
