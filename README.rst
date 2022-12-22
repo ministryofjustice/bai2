@@ -15,7 +15,7 @@ Only Python 3.7+ is supported.
 Installation
 ------------
 
-.. code-block:: bash
+.. code-block:: shell
 
     pip install bai2
 
@@ -27,17 +27,17 @@ To use bai2 in a project
 
 .. code-block:: python
 
-    >>> from bai2 import bai2
+    from bai2 import bai2
 
-    >>> # parse from a file
-    >>> with open(<file-path>) as f:
-    >>>     bai2_file = bai2.parse_from_file(f)
+    # parse from a file
+    with open(<file-path>) as f:
+        bai2_file = bai2.parse_from_file(f)
 
-    >>> # parse from a string
-    >>> bai2_file = bai2.parse_from_string(<bai2_as_string>)
+    # parse from a string
+    bai2_file = bai2.parse_from_string(<bai2_as_string>)
 
-    >>> # parse from lines
-    >>> bai2_file = bai2.parse_from_lines(<bai2_as_lines>)
+    # parse from lines
+    bai2_file = bai2.parse_from_lines(<bai2_as_lines>)
 
 
 The ``parse_from_*`` methods return a ``bai2.models.Bai2File`` object which can be used to inspect the parsed data.
@@ -46,19 +46,19 @@ To write a BAI2 file:
 
 .. code-block:: python
 
-    >>> from bai2 import bai2
-    >>> from bai2 import models
+    from bai2 import bai2
+    from bai2 import models
 
-    >>> bai2_file = models.Bai2File()
-    >>> bai2_file.header.sender_id = 'EGBANK'
+    bai2_file = models.Bai2File()
+    bai2_file.header.sender_id = 'EGBANK'
 
-    >>> bai2_file.children.append(models.Group())
+    bai2_file.children.append(models.Group())
 
-    >>> transactions = [models.TransactionDetail(amount=100)]
-    >>> bai2_file.children[0].children.append(models.Account(children=transactions))
+    transactions = [models.TransactionDetail(amount=100)]
+    bai2_file.children[0].children.append(models.Account(children=transactions))
 
-    >>> # write to string
-    >>> output = bai2.write(bai2_file)
+    # write to string
+    output = bai2.write(bai2_file)
 
 
 Models
