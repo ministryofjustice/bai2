@@ -9,7 +9,7 @@ Python module for parsing and writing `BAI2`_ files.
 Requirements
 ------------
 
-Only Python 3.6+ is supported.
+Only Python 3.7+ is supported.
 
 
 Installation
@@ -107,8 +107,11 @@ Please let me know if this happens to you.
 Development
 -----------
 
-.. image:: https://github.com/ministryofjustice/bai2/workflows/Run%20tests/badge.svg?branch=main
-    :target: https://github.com/ministryofjustice/bai2/actions
+.. image:: https://github.com/ministryofjustice/bai2/actions/workflows/test.yml/badge.svg?branch=main
+    :target: https://github.com/ministryofjustice/bai2/actions/workflows/test.yml
+
+.. image:: https://github.com/ministryofjustice/bai2/actions/workflows/lint.yml/badge.svg?branch=main
+    :target: https://github.com/ministryofjustice/bai2/actions/workflows/lint.yml
 
 Please report bugs and open pull requests on `GitHub`_.
 
@@ -122,6 +125,12 @@ Remember to update `History`_.
 
 History
 -------
+
+0.9.0 (2022-12-21)
+    More lenient parsing where integers are expected (thanks @daniel-butler)
+    Add support for 827 & 828 ‘SEPA Payments’ type codes (thanks @podj)
+    Remove testing for python versions below 3.7 (the library is still likely to work with 3.6)
+    Add testing for python 3.11
 
 0.8.2 (2022-01-26)
     No library changes

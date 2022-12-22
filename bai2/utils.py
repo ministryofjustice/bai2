@@ -4,6 +4,7 @@ import re
 from .constants import TypeCodes
 from .exceptions import NotSupportedYetException
 
+
 def parse_date(value):
     """
     YYMMDD Format.

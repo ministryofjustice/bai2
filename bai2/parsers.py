@@ -140,7 +140,12 @@ class BaseSingleParser(BaseParser):
             field_config = (field_config, lambda x: x)
 
         field_name, parser = field_config
-        field_value = parser(raw_value) if raw_value else None
+
+        # Integer check
+        if parser == int and 'total' in field_name:
+            field_value = parser(raw_value) if raw_value else 0
+        else:
+            field_value = parser(raw_value) if raw_value else None
         return field_name, field_value
 
     def _parse_fields_from_config(self, values, fields_config):

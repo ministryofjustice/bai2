@@ -659,7 +659,7 @@ class Bai2FileParserTestCase(TestCase):
 
     def test_unsupported_type_code__should_raise_unsupported_yet_exception(self):
         lines = [
-            '16,unsupportedCode,1500000,1,DD1620,, DEALER PAYMENTS',
+            '16,299,1500000,1,DD1620,, DEALER PAYMENTS',
         ]
 
         parser = TransactionDetailParser(IteratorHelper(lines))

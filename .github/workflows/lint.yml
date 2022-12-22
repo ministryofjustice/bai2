@@ -1,0 +1,17 @@
+name: Lint code
+on: push
+jobs:
+  lint:
+    name: Lint code
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v3
+      - name: Setup python
+        uses: actions/setup-python@v4
+        with:
+          python-version: 3.x
+      - name: Install linting dependencies
+        run: pip install -U setuptools pip wheel -r requirements-tests.txt
+      - name: Lint code
+        run: flake8 --verbose

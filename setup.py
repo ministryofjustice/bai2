@@ -6,8 +6,8 @@ import warnings
 
 from setuptools import setup
 
-if sys.version_info[0:2] < (3, 6):
-    warnings.warn('This package is tested with Python version 3.6+')
+if sys.version_info[0:2] < (3, 7):
+    warnings.warn('This package is tested with Python version 3.7+')
 
 root_path = os.path.abspath(os.path.dirname(__file__))
 
@@ -17,9 +17,7 @@ with open(os.path.join(root_path, 'README.rst')) as readme:
 package_info = importlib.import_module('bai2')
 
 install_requires = []
-tests_require = [
-    'flake8', 'flake8-bugbear', 'flake8-quotes', 'flake8-blind-except', 'flake8-debugger', 'pep8-naming',
-]
+tests_require = []
 
 setup(
     name='bai2',
@@ -41,11 +39,11 @@ setup(
         'Natural Language :: English',
         'Operating System :: OS Independent',
         'Programming Language :: Python :: 3',
-        'Programming Language :: Python :: 3.6',
         'Programming Language :: Python :: 3.7',
         'Programming Language :: Python :: 3.8',
         'Programming Language :: Python :: 3.9',
         'Programming Language :: Python :: 3.10',
+        'Programming Language :: Python :: 3.11',
     ],
     install_requires=install_requires,
     tests_require=tests_require,
