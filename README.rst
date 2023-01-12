@@ -159,7 +159,7 @@ History
 Copyright
 ---------
 
-Copyright (C) 2022 HM Government (Ministry of Justice Digital & Technology).
+Copyright (C) 2023 HM Government (Ministry of Justice Digital & Technology).
 See LICENSE.txt for further details.
 
 .. _BAI2: https://www.bai.org/docs/default-source/libraries/site-general-downloads/cash_management_2005.pdf
