@@ -13,5 +13,5 @@ end_of_line = lf
 [Makefile]
 indent_style = tab
 
-[*.{yaml,yml}]
+[*.{json,yaml,yml}]
 indent_size = 2
