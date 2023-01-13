@@ -45,6 +45,7 @@ setup(
         'Programming Language :: Python :: 3.10',
         'Programming Language :: Python :: 3.11',
     ],
+    python_requires='>=3.6',  # looser requirement than what's tested
     install_requires=install_requires,
     tests_require=tests_require,
     test_suite='tests',
