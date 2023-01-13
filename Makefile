@@ -18,12 +18,12 @@ clean:
 test: clean
 	python setup.py test
 
-test-all: clean
-	pip install tox
+test-all:
+	pip install --upgrade tox
 	tox
 
-coverage: clean
-	pip install coverage
+coverage:
+	pip install --upgrade coverage
 	coverage run setup.py test
 	coverage report --show-missing
 
