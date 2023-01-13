@@ -126,6 +126,9 @@ Remember to update `History`_.
 History
 -------
 
+0.9.2 (2023-01-13)
+    Maintenance release, no library changes
+
 0.9.1 (2022-12-22)
     Add support for 829 ‘SEPA Payments’ type code (thanks @podj)
 
