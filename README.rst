@@ -127,36 +127,36 @@ History
 -------
 
 0.9.2 (2023-01-13)
-    Maintenance release, no library changes
+    Maintenance release, no library changes.
 
 0.9.1 (2022-12-22)
-    Add support for 829 ‘SEPA Payments’ type code (thanks @podj)
+    Add support for 829 ‘SEPA Payments’ type code (thanks @podj).
 
 0.9.0 (2022-12-21)
-    More lenient parsing where integers are expected (thanks @daniel-butler)
-    Add support for 827 & 828 ‘SEPA Payments’ type codes (thanks @podj)
-    Remove testing for python versions below 3.7 (the library is still likely to work with 3.6)
-    Add testing for python 3.11
+    More lenient parsing where integers are expected (thanks @daniel-butler).
+    Add support for 827 & 828 ‘SEPA Payments’ type codes (thanks @podj).
+    Remove testing for python versions below 3.7 (the library is still likely to work with 3.6).
+    Add testing for python 3.11.
 
 0.8.2 (2022-01-26)
-    No library changes
-    Add testing for python 3.9 and 3.10
+    No library changes.
+    Add testing for python 3.9 and 3.10.
 
 0.8.0 (2020-11-11)
-    Remove support for python versions below 3.6
+    Remove support for python versions below 3.6.
 
 0.7.0 (2019-10-03)
-    ``rows`` no longer required in BAI2 models (c.f. issue 12 and PR 13)
+    ``rows`` no longer required in BAI2 models (c.f. issue 12 and PR 13).
 
 0.6.0 (2019-09-18)
-    Fix regular expression escaping
-    Add python 3.7 testing
+    Fix regular expression escaping.
+    Add python 3.7 testing.
 
 0.5.0 (2018-03-05)
-    Updated packaging details and improved python version compatibility
+    Updated packaging details and improved python version compatibility.
 
 0.1.0 (2015-08-06)
-    Original release
+    Original release.
 
 
 Copyright
