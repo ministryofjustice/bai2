@@ -5,12 +5,10 @@ Python module for parsing and writing `BAI2`_ files.
 
 **The library is not production ready at the moment** as we don't have enough data to test against, please help us improve it.
 
-
 Requirements
 ------------
 
 Only Python 3.7+ is supported.
-
 
 Installation
 ------------
@@ -18,7 +16,6 @@ Installation
 .. code-block:: shell
 
     pip install bai2
-
 
 Usage
 -----
@@ -38,7 +35,6 @@ To use bai2 in a project
 
     # parse from lines
     bai2_file = bai2.parse_from_lines(<bai2_as_lines>)
-
 
 The ``parse_from_*`` methods return a ``bai2.models.Bai2File`` object which can be used to inspect the parsed data.
 
@@ -60,7 +56,6 @@ To write a BAI2 file:
     # write to string
     output = bai2.write(bai2_file)
 
-
 Models
 ------
 
@@ -77,11 +72,9 @@ Models structure::
             GroupTrailer
         Bai2FileTrailer
 
-
 Section models define a ``header``, a ``trailer`` and a list of ``children`` whilst single models define properties matching the bai2 fields.
 
 Each Model has a ``rows`` property with the original rows from the BAI2 file.
-
 
 Exceptions
 ----------
@@ -92,7 +85,6 @@ The ``parse`` method might raise 3 exceptions:
 2. ``NotSupportedYetException``: when the library doesn't support the feature yet
 3. ``IntegrityException``: when the control totals or the number of objects reported in the trailers don't match the ones in the file.
 
-
 Incongruences
 -------------
 
@@ -102,7 +94,6 @@ It is expected to work correctly with files produced by NatWest, RBS, and JP Mor
 We don't know yet how to deal with these cases as we don't have access to many bai2 files so we can't test it as we would like.
 
 Please let me know if this happens to you.
-
 
 Development
 -----------
@@ -117,11 +108,10 @@ Please report bugs and open pull requests on `GitHub`_.
 
 Use ``python setup.py test`` or ``tox`` to run all tests.
 
-Distribute a new version to `PyPi`_ by updating the ``VERSION`` tuple in ``bai2/__init__.py`` and
+Distribute a new version to `PyPI`_ by updating the ``VERSION`` tuple in ``bai2/__init__.py`` and
 publishing a release in GitHub (this triggers a GitHub Actions workflow to automatically upload it).
 Alternatively, run ``python setup.py sdist bdist_wheel upload`` locally.
 Remember to update `History`_.
-
 
 History
 -------
@@ -158,7 +148,6 @@ History
 0.1.0 (2015-08-06)
     Original release.
 
-
 Copyright
 ---------
 
@@ -167,4 +156,4 @@ See LICENSE.txt for further details.
 
 .. _BAI2: https://www.bai.org/docs/default-source/libraries/site-general-downloads/cash_management_2005.pdf
 .. _GitHub: https://github.com/ministryofjustice/bai2
-.. _PyPi: https://pypi.org/project/bai2/
+.. _PyPI: https://pypi.org/project/bai2/
