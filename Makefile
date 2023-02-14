@@ -28,4 +28,6 @@ coverage:
 	coverage report --show-missing
 
 release: clean
-	python setup.py sdist bdist_wheel upload
+	pip install --upgrade twine
+	python setup.py sdist bdist_wheel
+	twine upload dist/*
