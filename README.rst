@@ -116,7 +116,7 @@ Remember to update `History`_.
 History
 -------
 
-Unreleased 0.10.0
+0.10.0
     Improve parsing of account identifier records with respect to varying number of commans used by different banks (thanks @forforeach).
 
 0.9.2 (2023-01-13)
