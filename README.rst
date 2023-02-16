@@ -106,6 +106,9 @@ Development
 
 Please report bugs and open pull requests on `GitHub`_.
 
+To work on changes to this library, it’s recommended to install it in editable mode into a virtual environment,
+i.e. ``pip install --editable .``
+
 Use ``python -m tests`` to run all tests locally.
 Alternatively, you can use ``tox`` if you have multiple python versions.
 
