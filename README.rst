@@ -117,7 +117,7 @@ Alternatively, you can use ``tox`` if you have multiple python versions.
 - updating the ``VERSION`` tuple in ``bai2/__init__.py``
 - adding a note to the `History`_
 - publishing a release on GitHub which triggers an upload to PyPI;
-  alternatively, run ``python setup.py sdist bdist_wheel upload`` locally
+  alternatively, run ``python -m build; twine upload dist/*`` locally
 
 History
 -------
