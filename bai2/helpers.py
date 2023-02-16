@@ -1,10 +1,8 @@
-from typing import Tuple, List
-
 from .models import Record
 from .constants import RecordCode
 
 
-def _build_account_identifier_record(rows: List[Tuple[RecordCode, str]]) -> Record:
+def _build_account_identifier_record(rows):
     fields_str = ''
     for index, row in enumerate(rows):
         field_str = row[1]
@@ -28,7 +26,7 @@ def _build_account_identifier_record(rows: List[Tuple[RecordCode, str]]) -> Reco
     return Record(code=rows[0][0], fields=fields, rows=rows)
 
 
-def _build_generic_record(rows: List[Tuple[RecordCode, str]]) -> Record:
+def _build_generic_record(rows):
     fields_str = ''
     for row in rows:
         field_str = row[1]
@@ -54,7 +52,7 @@ RecordBuilderFactory = {
 }
 
 
-def _build_record(rows: List[Tuple[RecordCode, str]]) -> Record:
+def _build_record(rows):
     record_code = rows[0][0]
     return RecordBuilderFactory[record_code](rows)
 
