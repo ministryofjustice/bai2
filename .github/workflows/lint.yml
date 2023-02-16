@@ -11,7 +11,9 @@ jobs:
         uses: actions/setup-python@v4
         with:
           python-version: 3.x
-      - name: Install linting dependencies
-        run: pip install -U setuptools pip wheel -r requirements-lint.txt
+      - name: Update setuptools pip and wheel
+        run: pip install -U setuptools pip wheel
+      - name: Install linting requirements
+        run: pip install -r requirements-lint.txt
       - name: Lint code
         run: flake8 --verbose
