@@ -156,6 +156,32 @@ class TransactionDetailParserTestCase(TestCase):
             OrderedDict([('1', 1), ('2', 4)])
         )
 
+    def test_real_time_payment_credit(self):
+        lines = [
+            '16,158,4346722,,0,0/',
+            '88, ACC NUM:=55668;',
+            '88, SENDER BNK:=PNC; ',
+            '88, SENDER ID:=0096;',
+            '88, SENDER ACC NUM:=4990109778;',
+            '88, ORG ID:=null;',
+            '88, ORG:=PI ARCHITECTS ;',
+            '88, ORG ADDRESS:=6010 Main Sy AUSTIN TX US 78731-4297 ;',
+            '88, ORIG FI ID:=00000096; ',
+            '88, ORG FI ADDRESS:=null;',
+            '88, BNF ID:=6575757;',
+            '88, BNF NAME:=Some LLC; ',
+            '88, BNF ADDRESS:= Boston MA US 02116 ;',
+            '88, REC FI:=SVB;',
+            '88, REC ID:=121140399;',
+            '88, OBI:=PO 123 Inv #789',
+        ]
+
+        parser = TransactionDetailParser(IteratorHelper(lines))
+        transaction = parser.parse()
+        self.assertEqual(transaction.type_code.code, '158')
+        self.assertEqual(transaction.amount, 4346722)
+        self.assertEqual(len(transaction.rows), 16 )
+
 
 class AccountParserTestCase(TestCase):
     def test_parse(self):
