@@ -117,7 +117,7 @@ History
 -------
 
 0.11.0 (2023-02-17)
-    Adds support for Real Time Payment detail codes 158 and 458
+    Adds support for Real Time Payment detail codes 158 and 458 (thanks @LSakey).
 
 0.10.0 (2023-02-16)
     Improve parsing of account identifier records with respect to varying number of commas used by different banks (thanks @forforeach).
