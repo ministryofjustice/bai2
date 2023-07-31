@@ -68,7 +68,7 @@ def write_military_time(time):
 
 def parse_type_code(value):
     try:
-        return utils.TypeCodes[value]
+        return TypeCodes[value]
     except KeyError:
         print(f"Warning: Type code '{value}' is not supported yet. Skipping this line.")
         return None
