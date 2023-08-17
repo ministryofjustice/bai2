@@ -538,8 +538,6 @@ TypeCodes = [
     TypeCode('890', TypeCodeTransaction.misc, TypeCodeLevel.detail, 'Contains Non-monetary Information'),
     TypeCode('906', None, TypeCodeLevel.detail, 'Today’s Opening 1 Day Float'),
     TypeCode('907', None, TypeCodeLevel.detail, 'Today’s Opening 2+ Day Float'),
-    TypeCode('920', None, TypeCodeLevel.detail, 'Custom Credit Summary and Detail Code'),
-    TypeCode('960', None, TypeCodeLevel.detail, 'Custom Debit Summary and Detail Code'),
 ]
 TypeCodes = {
     type_code.code: type_code
