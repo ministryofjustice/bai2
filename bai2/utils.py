@@ -67,10 +67,16 @@ def write_military_time(time):
 
 
 def parse_type_code(value):
-    try:
-        return TypeCodes[value]
-    except KeyError:
-        raise NotSupportedYetException(f"Type code '{value}' is not supported yet")
+    type_code = TypeCodes.get(value, None)
+    if type_code is None:
+        if '920' <= value <= '959':
+            type_code = TypeCodes['920']
+        elif '960' <= value <= '999':
+            type_code = TypeCodes['960']
+        else:
+            raise NotSupportedYetException('Type code {} is not supported yet'.format(value))
+    return type_code
+
 
 
 def convert_to_string(value):

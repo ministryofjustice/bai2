@@ -683,6 +683,24 @@ class Bai2FileParserTestCase(TestCase):
         bai2_file = parser.parse()
         self.assertTrue(isinstance(bai2_file, Bai2File))
 
+    def test_custom_type_code_with_code_between_920_and_959__should_return_920_type_code(self):
+        lines = [
+            '16,930,1500000,1,DD1620,, DEALER PAYMENTS',
+        ]
+
+        parser = TransactionDetailParser(IteratorHelper(lines))
+        bai2_file = parser.parse()
+        self.assertEqual(bai2_file.type_code.code, '920')
+
+    def test_custom_type_code_with_code_between_960_and_999__should_return_960_type_code(self):
+        lines = [
+            '16,980,1500000,1,DD1620,, DEALER PAYMENTS',
+        ]
+
+        parser = TransactionDetailParser(IteratorHelper(lines))
+        bai2_file = parser.parse()
+        self.assertEqual(bai2_file.type_code.code, '960')
+
     def test_unsupported_type_code__should_raise_unsupported_yet_exception(self):
         lines = [
             '16,299,1500000,1,DD1620,, DEALER PAYMENTS',
