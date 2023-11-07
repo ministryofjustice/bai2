@@ -15,11 +15,13 @@ jobs:
           python-version: 3.x
       - name: Update setuptools pip and wheel
         run: pip install -U setuptools pip wheel
-      - name: Install twine
-        run: pip install twine
+      - name: Install release requirements
+        run: pip install -r requirements-release.txt
       - name: Build and release to PYPI
         run: |
-          python setup.py sdist bdist_wheel
+          python -m build
+          unzip -l dist/*.whl
+          tar tzf dist/*.tar.gz
           twine upload --non-interactive dist/*
         env:
           TWINE_USERNAME: ${{ secrets.PYPI_USERNAME }}

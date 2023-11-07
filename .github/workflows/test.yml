@@ -22,4 +22,6 @@ jobs:
       - name: Update setuptools pip and wheel
         run: pip install -U setuptools pip wheel
       - name: Run tests
-        run: python setup.py test
+        run: |
+          pip install --editable .
+          python -m tests
