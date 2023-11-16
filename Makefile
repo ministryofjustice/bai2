@@ -1,4 +1,4 @@
-.PHONY: help init clean test test-all coverage lint release
+.PHONY: help init clean test test-all coverage lint format release
 
 help:
 	@echo "Using make is entirely optional; these are simply shortcuts"
@@ -10,6 +10,7 @@ help:
 	@echo "test-all - run all tests in all supported python environments"
 	@echo "coverage - check code coverage while running all tests using current python environment"
 	@echo "lint - check code style"
+	@echo "format - fix code style"
 	@echo "release - NOT NORMALLY USED; See README.rst for release process"
 
 init:
@@ -38,7 +39,11 @@ coverage:
 
 lint:
 	pip install -r requirements-lint.txt
-	flake8 --verbose
+	ruff check .
+
+format:
+	pip install -r requirements-lint.txt
+	ruff format .
 
 release: clean
 	pip install -r requirements-release.txt

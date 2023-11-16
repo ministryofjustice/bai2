@@ -1,3 +1,27 @@
 [build-system]
 requires = ["setuptools"]
 build-backend = "setuptools.build_meta"
+
+[tool.ruff]
+exclude = [".git/", ".eggs/", ".tox/", "build/", "dist/", "env/", "venv/"]
+indent-width = 4
+line-length = 120
+
+[tool.ruff.format]
+indent-style = "space"
+line-ending = "lf"
+quote-style = "single"
+skip-magic-trailing-comma = false
+
+[tool.ruff.lint]
+preview = true
+select = ["B", "BLE", "C", "E", "F", "I", "PL", "PYI", "Q", "RUF", "S", "SIM", "T", "TCH", "TID", "UP", "W", "YTT"]
+
+[tool.ruff.lint.flake8-quotes]
+inline-quotes = "single"
+
+[tool.ruff.lint.mccabe]
+max-complexity = 10
+
+[tool.ruff.lint.pylint]
+max-args = 7

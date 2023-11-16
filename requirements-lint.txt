@@ -1,6 +1,1 @@
-flake8
-flake8-blind-except
-flake8-bugbear
-flake8-debugger
-flake8-quotes
-pep8-naming
+ruff

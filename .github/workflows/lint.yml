@@ -15,5 +15,5 @@ jobs:
         run: pip install -U setuptools pip wheel
       - name: Install linting requirements
         run: pip install -r requirements-lint.txt
-      - name: Lint code
-        run: flake8 --verbose
+      - name: Check code style
+        run: ruff check .

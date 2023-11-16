@@ -124,6 +124,7 @@ History
 
 Unreleased
     Migrated test, build and release processes away from deprecated setuptools commands.
+    Switched to `ruff <https://github.com/astral-sh/ruff>`_ for code linting and formatting.
     No significant library changes.
 
 0.11.0 (2023-02-17)
