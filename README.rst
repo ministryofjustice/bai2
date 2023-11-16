@@ -122,7 +122,7 @@ Alternatively, you can use ``tox`` if you have multiple python versions.
 History
 -------
 
-Unreleased
+0.12.0 (2023-11-16)
     Migrated test, build and release processes away from deprecated setuptools commands.
     No significant library changes.
 
