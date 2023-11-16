@@ -35,7 +35,7 @@ class TransactionDetailWriterTestCase(TestCase):
         )
 
         output = writers.TransactionDetailWriter(
-            transaction, text_on_new_line=True
+            transaction, text_on_new_line=True,
         ).write()
         self.assertEqual(output, ['16,399,2599,,,/', '88,BILLS'])
 
@@ -81,7 +81,7 @@ class TransactionDetailWriterTestCase(TestCase):
             amount=2599,
             funds_type=constants.FundsType.distributed_availability,
             availability=OrderedDict([('1', 500), ('2', 599), ('4', 2599)]),
-            text='BILLS'
+            text='BILLS',
         )
 
         output = writers.TransactionDetailWriter(transaction).write()
@@ -97,8 +97,11 @@ class TransactionDetailWriterTestCase(TestCase):
         output = writers.TransactionDetailWriter(transaction).write()
         self.assertEqual(
             output,
-            ['16,399,2599,,,,BILLS BILLS BILLS BILLS BILLS BILLS BILLS BILLS BILLS BILLS BILLS',
-             '88, BILLS'])
+            [
+                '16,399,2599,,,,BILLS BILLS BILLS BILLS BILLS BILLS BILLS BILLS BILLS BILLS BILLS',
+                '88, BILLS',
+            ],
+        )
 
 
 class AccountIdentifierWriterTestCase(TestCase):
@@ -109,13 +112,13 @@ class AccountIdentifierWriterTestCase(TestCase):
             summary_items=[
                 models.Summary(type_code=constants.TypeCodes['010'], amount=10000),
                 models.Summary(type_code=constants.TypeCodes['015'], amount=10000),
-            ]
+            ],
         )
 
         output = writers.AccountIdentifierWriter(account_identifier).write()
         self.assertEqual(
             output,
-            ['03,77777777,GBP,010,10000,,,015,10000,,/']
+            ['03,77777777,GBP,010,10000,,,015,10000,,/'],
         )
 
     def test_account_identifier_with_continuation_renders_correctly(self):
@@ -123,32 +126,25 @@ class AccountIdentifierWriterTestCase(TestCase):
             customer_account_number='77777777',
             currency='GBP',
             summary_items=[
-                models.Summary(type_code=constants.TypeCodes['010'],
-                               amount=10000),
-                models.Summary(type_code=constants.TypeCodes['015'],
-                               amount=10000),
-                models.Summary(type_code=constants.TypeCodes['045'],
-                               amount=10000),
-                models.Summary(type_code=constants.TypeCodes['040'],
-                               amount=10000),
-                models.Summary(type_code=constants.TypeCodes['072'],
-                               amount=10000),
-                models.Summary(type_code=constants.TypeCodes['074'],
-                               amount=10000),
-                models.Summary(type_code=constants.TypeCodes['075'],
-                               amount=10000),
-                models.Summary(type_code=constants.TypeCodes['400'],
-                               amount=10000, item_count=175),
-                models.Summary(type_code=constants.TypeCodes['100'],
-                               amount=10000, item_count=50),
-            ]
+                models.Summary(type_code=constants.TypeCodes['010'], amount=10000),
+                models.Summary(type_code=constants.TypeCodes['015'], amount=10000),
+                models.Summary(type_code=constants.TypeCodes['045'], amount=10000),
+                models.Summary(type_code=constants.TypeCodes['040'], amount=10000),
+                models.Summary(type_code=constants.TypeCodes['072'], amount=10000),
+                models.Summary(type_code=constants.TypeCodes['074'], amount=10000),
+                models.Summary(type_code=constants.TypeCodes['075'], amount=10000),
+                models.Summary(type_code=constants.TypeCodes['400'], amount=10000, item_count=175),
+                models.Summary(type_code=constants.TypeCodes['100'], amount=10000, item_count=50),
+            ],
         )
 
         output = writers.AccountIdentifierWriter(account_identifier).write()
         self.assertEqual(
             output,
-            ['03,77777777,GBP,010,10000,,,015,10000,,,045,10000,,,040,10000,,,072,10000,,/',
-             '88,074,10000,,,075,10000,,,400,10000,175,,100,10000,50,/']
+            [
+                '03,77777777,GBP,010,10000,,,015,10000,,,045,10000,,,040,10000,,,072,10000,,/',
+                '88,074,10000,,,075,10000,,,400,10000,175,,100,10000,50,/',
+            ],
         )
 
     def test_account_identifier_with_summary_availability_renders_correctly(self):
@@ -160,21 +156,21 @@ class AccountIdentifierWriterTestCase(TestCase):
                     type_code=constants.TypeCodes['010'],
                     amount=10000,
                     funds_type=constants.FundsType.distributed_availability_simple,
-                    availability=OrderedDict([('0', 100), ('1', 200), ('>1', 300)])
+                    availability=OrderedDict([('0', 100), ('1', 200), ('>1', 300)]),
                 ),
                 models.Summary(
                     type_code=constants.TypeCodes['015'],
                     amount=10000,
                     funds_type=constants.FundsType.distributed_availability_simple,
-                    availability=OrderedDict([('0', 100), ('1', 200), ('>1', 300)])
-                )
-            ]
+                    availability=OrderedDict([('0', 100), ('1', 200), ('>1', 300)]),
+                ),
+            ],
         )
 
         output = writers.AccountIdentifierWriter(account_identifier).write()
         self.assertEqual(
             output,
-            ['03,77777777,GBP,010,10000,,S,100,200,300,015,10000,,S,100,200,300/']
+            ['03,77777777,GBP,010,10000,,S,100,200,300,015,10000,,S,100,200,300/'],
         )
 
 
@@ -182,13 +178,13 @@ class AccountTrailerWriterTestCase(TestCase):
     def test_account_trailer_renders_correctly(self):
         account_trailer = models.AccountTrailer(
             account_control_total=100,
-            number_of_records=4
+            number_of_records=4,
         )
 
         output = writers.AccountTrailerWriter(account_trailer).write()
         self.assertEqual(
             output,
-            ['49,100,4/']
+            ['49,100,4/'],
         )
 
 
@@ -201,13 +197,13 @@ class GroupHeaderWriterTestTcase(TestCase):
             as_of_date=date(year=2015, month=7, day=15),
             as_of_time=time(hour=23, minute=40),
             currency='GBP',
-            as_of_date_modifier=constants.AsOfDateModifier.final_previous_day
+            as_of_date_modifier=constants.AsOfDateModifier.final_previous_day,
         )
 
         output = writers.GroupHeaderWriter(group_header).write()
         self.assertEqual(
             output,
-            ['02,8888888,CITIGB00,1,150715,2340,GBP,2/']
+            ['02,8888888,CITIGB00,1,150715,2340,GBP,2/'],
         )
 
 
@@ -216,13 +212,13 @@ class GroupTrailerWriterTestCase(TestCase):
         group_trailer = models.GroupTrailer(
             group_control_total=100,
             number_of_accounts=1,
-            number_of_records=6
+            number_of_records=6,
         )
 
         output = writers.GroupTrailerWriter(group_trailer).write()
         self.assertEqual(
             output,
-            ['98,100,1,6/']
+            ['98,100,1,6/'],
         )
 
 
@@ -236,13 +232,13 @@ class Bai2FileHeaderWriterTestCase(TestCase):
             file_id='00131100',
             physical_record_length=None,
             block_size=None,
-            version_number=2
+            version_number=2,
         )
 
         output = writers.Bai2FileHeaderWriter(file_header).write()
         self.assertEqual(
             output,
-            ['01,CITIDIRECT,8888888,150715,2340,00131100,,,2/']
+            ['01,CITIDIRECT,8888888,150715,2340,00131100,,,2/'],
         )
 
 
@@ -251,31 +247,32 @@ class Bai2FileTrailerWriterTestCase(TestCase):
         file_trailer = models.Bai2FileTrailer(
             file_control_total=100,
             number_of_groups=1,
-            number_of_records=8
+            number_of_records=8,
         )
 
         output = writers.Bai2FileTrailerWriter(file_trailer).write()
         self.assertEqual(
             output,
-            ['99,100,1,8/']
+            ['99,100,1,8/'],
         )
 
 
 class AccountWriterTestCase(TestCase):
     @staticmethod
     def create_account_section():
-        transactions = []
-        transactions.append(models.TransactionDetail(
-            type_code=constants.TypeCodes['399'],
-            amount=2599,
-            text='BILLS BILLS BILLS BILLS BILLS BILLS BILLS BILLS BILLS BILLS BILLS BILLS',
-        ))
-        transactions.append(models.TransactionDetail(
-            type_code=constants.TypeCodes['399'],
-            amount=1000,
-            funds_type=constants.FundsType.immediate_availability,
-            text='OTHER',
-        ))
+        transactions = [
+            models.TransactionDetail(
+                type_code=constants.TypeCodes['399'],
+                amount=2599,
+                text='BILLS BILLS BILLS BILLS BILLS BILLS BILLS BILLS BILLS BILLS BILLS BILLS',
+            ),
+            models.TransactionDetail(
+                type_code=constants.TypeCodes['399'],
+                amount=1000,
+                funds_type=constants.FundsType.immediate_availability,
+                text='OTHER',
+            ),
+        ]
 
         account_identifier = models.AccountIdentifier(
             customer_account_number='77777777',
@@ -283,7 +280,7 @@ class AccountWriterTestCase(TestCase):
             summary_items=[
                 models.Summary(type_code=constants.TypeCodes['010'], amount=10000),
                 models.Summary(type_code=constants.TypeCodes['015'], amount=10000),
-            ]
+            ],
         )
 
         return models.Account(header=account_identifier, children=transactions)
@@ -300,16 +297,17 @@ class AccountWriterTestCase(TestCase):
                 '88, BILLS',
                 '16,399,1000,0,,,OTHER',
                 '49,23599,5/',
-            ]
+            ],
         )
 
 
 class GroupWriterTestCase(TestCase):
     @staticmethod
     def create_group_section():
-        accounts = []
-        accounts.append(AccountWriterTestCase.create_account_section())
-        accounts.append(AccountWriterTestCase.create_account_section())
+        accounts = [
+            AccountWriterTestCase.create_account_section(),
+            AccountWriterTestCase.create_account_section(),
+        ]
 
         group_header = models.GroupHeader(
             ultimate_receiver_id='8888888',
@@ -318,7 +316,7 @@ class GroupWriterTestCase(TestCase):
             as_of_date=date(year=2015, month=7, day=15),
             as_of_time=time(hour=23, minute=40),
             currency='GBP',
-            as_of_date_modifier=constants.AsOfDateModifier.final_previous_day
+            as_of_date_modifier=constants.AsOfDateModifier.final_previous_day,
         )
 
         return models.Group(header=group_header, children=accounts)
@@ -342,16 +340,17 @@ class GroupWriterTestCase(TestCase):
                 '16,399,1000,0,,,OTHER',
                 '49,23599,5/',
                 '98,47198,2,12/',
-            ]
+            ],
         )
 
 
 class Bai2FileWriterTestCase(TestCase):
     @staticmethod
     def create_bai2_file():
-        groups = []
-        groups.append(GroupWriterTestCase.create_group_section())
-        groups.append(GroupWriterTestCase.create_group_section())
+        groups = [
+            GroupWriterTestCase.create_group_section(),
+            GroupWriterTestCase.create_group_section(),
+        ]
 
         file_header = models.Bai2FileHeader(
             sender_id='CITIDIRECT',
@@ -361,7 +360,7 @@ class Bai2FileWriterTestCase(TestCase):
             file_id='00131100',
             physical_record_length=None,
             block_size=None,
-            version_number=2
+            version_number=2,
         )
 
         return models.Bai2File(header=file_header, children=groups)
@@ -399,5 +398,5 @@ class Bai2FileWriterTestCase(TestCase):
                 '49,23599,5/',
                 '98,47198,2,12/',
                 '99,94396,2,26/',
-            ]
+            ],
         )

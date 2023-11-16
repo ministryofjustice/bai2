@@ -9,7 +9,7 @@ class ParseDateTestCase(TestCase):
         parsed = parse_date('150330')
         self.assertEqual(
             datetime.date(year=2015, month=3, day=30),
-            parsed
+            parsed,
         )
 
 
@@ -19,7 +19,7 @@ class ParseTimeTestCase(TestCase):
 
         self.assertEqual(
             datetime.time(hour=21, minute=45, second=34),
-            parsed_value
+            parsed_value,
         )
 
     def test_military_time(self):
@@ -27,7 +27,7 @@ class ParseTimeTestCase(TestCase):
 
         self.assertEqual(
             datetime.time(hour=21, minute=45),
-            parsed_value
+            parsed_value,
         )
 
 
@@ -37,7 +37,7 @@ class ParseMilitaryTime(TestCase):
 
         self.assertEqual(
             datetime.time(hour=21, minute=45),
-            parsed_value
+            parsed_value,
         )
 
     def test_parse_end_of_day_as_9999(self):
@@ -45,7 +45,7 @@ class ParseMilitaryTime(TestCase):
 
         self.assertEqual(
             datetime.time.max,
-            parsed_value
+            parsed_value,
         )
 
     def test_parse_end_of_day_as_2400(self):
@@ -53,7 +53,7 @@ class ParseMilitaryTime(TestCase):
 
         self.assertEqual(
             datetime.time.max,
-            parsed_value
+            parsed_value,
         )
 
     def test_parse_beginning_of_day(self):
@@ -61,7 +61,7 @@ class ParseMilitaryTime(TestCase):
 
         self.assertEqual(
             datetime.time(hour=0, minute=0),
-            parsed_value
+            parsed_value,
         )
 
 
