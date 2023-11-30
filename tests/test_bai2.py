@@ -100,6 +100,50 @@ class ParseTestCase(TestCase):
 
         self.assertEqual(original, from_model)
 
+    def test_parse_files_with_trailing_whitespaces(self):
+        original = (
+            '01,123456,123456,220310,0022,1,,,2/                                             \n'
+            '02,,123456,1,220309,,USD,2/                                                     \n'
+            '03,654321,USD,010,10372793,,,015,11384293,,/                                    \n'
+            '16,195,1011500,,12345678912345,Test Transaction/                                \n'
+            '49,22768586,3/                                                                  \n'
+            '98,22768586,1,5/                                                                \n'
+            '99,22768586,1,7/                                                                \n'
+        )
+
+        bai2_file = bai2.parse_from_string(original)
+        self.assertTrue(isinstance(bai2_file, Bai2File))
+
+        from_model = bai2_file.as_string()
+        original_stripped = '\n'.join(['{}'.format(s.strip()) for s in original.splitlines()])
+
+        self.assertEqual(original_stripped, from_model)
+
+    def test_parse_files_with_blank_lines(self):
+        original = (
+            '01,123456,123456,220310,0022,1,,,2/                                             \n'
+            '\n'
+            '02,,123456,1,220309,,USD,2/                                                     \n'
+            '\n'
+            '03,654321,USD,010,10372793,,,015,11384293,,/                                    \n'
+            '\n'
+            '16,195,1011500,,12345678912345,Test Transaction/                                \n'
+            '\n'
+            '49,22768586,3/                                                                  \n'
+            '\n'
+            '98,22768586,1,5/                                                                \n'
+            '\n'
+            '99,22768586,1,7/                                                                \n'
+        )
+
+        bai2_file = bai2.parse_from_string(original)
+        self.assertTrue(isinstance(bai2_file, Bai2File))
+
+        from_model = bai2_file.as_string()
+        original_stripped = '\n'.join(['{}'.format(s.strip()) for s in original.splitlines() if s.strip()])
+
+        self.assertEqual(original_stripped, from_model)
+
 
 class WriteTestCase(TestCase):
     def test_write(self):

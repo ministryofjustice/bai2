@@ -10,7 +10,13 @@ def parse_from_lines(lines, **kwargs):
 
 
 def parse_from_string(s, **kwargs):
-    return parse_from_lines(s.splitlines(), **kwargs)
+    lines = [
+        line.strip()
+        for line in s.splitlines()
+        if line.strip()
+    ]
+
+    return parse_from_lines(lines, **kwargs)
 
 
 def parse_from_file(f, **kwargs):
