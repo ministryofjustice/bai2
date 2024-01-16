@@ -122,6 +122,9 @@ Alternatively, you can use ``tox`` if you have multiple python versions.
 History
 -------
 
+0.13.0 (2024-01-16)
+    Parse bai2 files with empty lines, trailing whitespace (thanks @Isaben).
+
 0.12.0 (2023-11-16)
     Migrated test, build and release processes away from deprecated setuptools commands.
     No significant library changes.
