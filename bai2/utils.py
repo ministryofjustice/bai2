@@ -70,7 +70,8 @@ def parse_type_code(value):
     try:
         return TypeCodes[value]
     except KeyError:
-        raise NotSupportedYetException(f"Type code '{value}' is not supported yet")
+        print(f"Warning: Type code '{value}' is not supported yet. Skipping this line.")
+        return None
 
 
 def convert_to_string(value):
