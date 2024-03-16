@@ -3,6 +3,7 @@ from .constants import RecordCode
 
 # ABSTRACTION
 
+
 class Record:
     def __init__(self, code, fields, rows=None):
         self.code = code
@@ -49,6 +50,7 @@ class Bai2SectionModel(Bai2Model):
 
 # IMPLEMENTATION
 
+
 class Bai2File(Bai2SectionModel):
     def __init__(self, header=None, trailer=None, children=None):
         super().__init__(header=header or Bai2FileHeader([]),
@@ -77,13 +79,13 @@ class Bai2FileHeader(Bai2SingleModel):
         file_id=None,
         physical_record_length=None,
         block_size=None,
-        version_number=2
+        version_number=2,
     ):
         super().__init__(
             rows, sender_id=sender_id, receiver_id=receiver_id,
             creation_date=creation_date, creation_time=creation_time,
             file_id=file_id, physical_record_length=physical_record_length,
-            block_size=block_size, version_number=version_number
+            block_size=block_size, version_number=version_number,
         )
 
 
@@ -95,11 +97,11 @@ class Bai2FileTrailer(Bai2SingleModel):
         rows=None,
         file_control_total=None,
         number_of_groups=None,
-        number_of_records=None
+        number_of_records=None,
     ):
         super().__init__(
             rows, file_control_total=file_control_total,
-            number_of_groups=number_of_groups, number_of_records=number_of_records
+            number_of_groups=number_of_groups, number_of_records=number_of_records,
         )
 
 
@@ -130,13 +132,13 @@ class GroupHeader(Bai2SingleModel):
         as_of_date=None,
         as_of_time=None,
         currency=None,
-        as_of_date_modifier=None
+        as_of_date_modifier=None,
     ):
         super().__init__(
             rows, ultimate_receiver_id=ultimate_receiver_id,
             originator_id=originator_id, group_status=group_status,
             as_of_date=as_of_date, as_of_time=as_of_time, currency=currency,
-            as_of_date_modifier=as_of_date_modifier
+            as_of_date_modifier=as_of_date_modifier,
         )
 
 
@@ -148,12 +150,12 @@ class GroupTrailer(Bai2SingleModel):
         rows=None,
         group_control_total=None,
         number_of_accounts=None,
-        number_of_records=None
+        number_of_records=None,
     ):
         super().__init__(
             rows, group_control_total=group_control_total,
             number_of_accounts=number_of_accounts,
-            number_of_records=number_of_records
+            number_of_records=number_of_records,
         )
 
 
@@ -181,12 +183,12 @@ class AccountIdentifier(Bai2SingleModel):
         rows=None,
         customer_account_number=None,
         currency=None,
-        summary_items=()
+        summary_items=(),
     ):
         summary_items = list(summary_items)
         super().__init__(
             rows, customer_account_number=customer_account_number,
-            currency=currency, summary_items=summary_items
+            currency=currency, summary_items=summary_items,
         )
 
 
@@ -197,7 +199,7 @@ class Summary:
         amount=0,
         item_count=None,
         funds_type=None,
-        availability={}  # noqa: B006
+        availability={},  # noqa: B006
     ):
         self.type_code = type_code
         self.amount = amount
@@ -213,11 +215,11 @@ class AccountTrailer(Bai2SingleModel):
         self,
         rows=None,
         account_control_total=None,
-        number_of_records=None
+        number_of_records=None,
     ):
         super().__init__(
             rows, account_control_total=account_control_total,
-            number_of_records=number_of_records
+            number_of_records=number_of_records,
         )
 
 
@@ -233,10 +235,10 @@ class TransactionDetail(Bai2SingleModel):
         availability={},  # noqa: B006
         bank_reference=None,
         customer_reference=None,
-        text=None
+        text=None,
     ):
         super().__init__(
             rows, type_code=type_code, amount=amount, funds_type=funds_type,
             availability=availability, bank_reference=bank_reference,
-            customer_reference=customer_reference, text=text
+            customer_reference=customer_reference, text=text,
         )

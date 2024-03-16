@@ -13,6 +13,7 @@ from .utils import parse_date, parse_time, parse_type_code
 
 # ABSTRACTION
 
+
 class BaseParser:
     model = None
     child_parser_class = None
@@ -33,7 +34,7 @@ class BaseParser:
             raise ParsingException(
                 'Expected {expected}, got {found} instead'.format(
                     expected=expected_code,
-                    found=self._iter.current_record.code
+                    found=self._iter.current_record.code,
                 )
             )
 
@@ -101,7 +102,7 @@ class BaseSectionParser(BaseParser):
                     'expected {expected}, found {found}'.format(
                         clazz=obj.__class__.__name__,
                         expected=obj.trailer.number_of_records,
-                        found=number_of_records
+                        found=number_of_records,
                     )
                 )
 
@@ -162,7 +163,7 @@ class BaseSingleParser(BaseParser):
 
     def _parse_fields(self, record):
         return self._parse_fields_from_config(
-            record.fields, self.fields_config
+            record.fields, self.fields_config,
         )
 
     def _parse_availability(self, funds_type, rest):
@@ -191,7 +192,7 @@ class BaseSingleParser(BaseParser):
         self._check_record_code(self.model.code)
         obj = self.model(
             self._iter.current_record.rows,
-            **self._parse_fields(self._iter.current_record)
+            **self._parse_fields(self._iter.current_record),
         )
 
         self.validate(obj)
@@ -205,6 +206,7 @@ class BaseSingleParser(BaseParser):
 
 
 # IMPLEMENTATION
+
 
 class TransactionDetailParser(BaseSingleParser):
     model = TransactionDetail
@@ -232,7 +234,7 @@ class TransactionDetailParser(BaseSingleParser):
         rest = rest[len(self.head_fields_config):]
         # availability fields:
         availability, rest = self._parse_availability(
-            fields['funds_type'], rest
+            fields['funds_type'], rest,
         )
         fields['availability'] = availability
 
@@ -264,7 +266,7 @@ class AccountIdentifierParser(BaseSingleParser):
     def _parse_fields(self, record):
         model_fields = self._parse_fields_from_config(
             record.fields[:len(self.common_fields_config)],
-            self.common_fields_config
+            self.common_fields_config,
         )
 
         summary_items = []
@@ -319,7 +321,7 @@ class AccountParser(BaseSectionParser):
                     'expected {expected}, found {found}'.format(
                         clazz=obj.__class__.__name__,
                         expected=obj.trailer.account_control_total,
-                        found=control_total
+                        found=control_total,
                     )
                 )
 
@@ -376,7 +378,7 @@ class GroupParser(BaseSectionParser):
                     'expected {expected}, found {found}'.format(
                         clazz=obj.__class__.__name__,
                         expected=obj.trailer.number_of_accounts,
-                        found=len(obj.children)
+                        found=len(obj.children),
                     )
                 )
 
@@ -391,7 +393,7 @@ class GroupParser(BaseSectionParser):
                     'expected {expected}, found {found}'.format(
                         clazz=obj.__class__.__name__,
                         expected=obj.trailer.group_control_total,
-                        found=control_total
+                        found=control_total,
                     )
                 )
 
@@ -448,7 +450,7 @@ class Bai2FileParser(BaseSectionParser):
                     'expected {expected}, found {found}'.format(
                         clazz=obj.__class__.__name__,
                         expected=obj.trailer.number_of_groups,
-                        found=len(obj.children)
+                        found=len(obj.children),
                     )
                 )
 
@@ -463,6 +465,6 @@ class Bai2FileParser(BaseSectionParser):
                     'expected {expected}, found {found}'.format(
                         clazz=obj.__class__.__name__,
                         expected=obj.trailer.file_control_total,
-                        found=control_total
+                        found=control_total,
                     )
                 )

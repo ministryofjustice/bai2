@@ -1,5 +1,5 @@
-from .models import Record
 from .constants import RecordCode
+from .models import Record
 
 
 def _build_account_identifier_record(rows):

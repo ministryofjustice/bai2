@@ -34,14 +34,14 @@ class TransactionDetailParserTestCase(TestCase):
         self.assertEqual(transaction.customer_reference, None)
         self.assertEqual(
             transaction.text,
-            'DEALER PAYMENTS'
+            'DEALER PAYMENTS',
         )
 
     def test_continuation_record(self):
         lines = [
             '16,115,10000000,S,5000000,4000000,1000000/',
             '88,AX13612,B096132,AMALGAMATED CORP. LOCKBOX',
-            '88,DEPOSIT-MISC. RECEIVABLES'
+            '88,DEPOSIT-MISC. RECEIVABLES',
         ]
 
         parser = TransactionDetailParser(IteratorHelper(lines))
@@ -53,13 +53,13 @@ class TransactionDetailParserTestCase(TestCase):
         self.assertEqual(transaction.funds_type, FundsType.distributed_availability_simple)
         self.assertEqual(
             transaction.availability,
-            OrderedDict([('0', 5000000), ('1', 4000000), ('>1', 1000000)])
+            OrderedDict([('0', 5000000), ('1', 4000000), ('>1', 1000000)]),
         )
         self.assertEqual(transaction.bank_reference, 'AX13612')
         self.assertEqual(transaction.customer_reference, 'B096132')
         self.assertEqual(
             transaction.text,
-            'AMALGAMATED CORP. LOCKBOX DEPOSIT-MISC. RECEIVABLES'
+            'AMALGAMATED CORP. LOCKBOX DEPOSIT-MISC. RECEIVABLES',
         )
 
     def test_unknown_availability(self):
@@ -80,7 +80,7 @@ class TransactionDetailParserTestCase(TestCase):
         self.assertEqual(transaction.customer_reference, None)
         self.assertEqual(
             transaction.text,
-            'DEALER PAYMENTS'
+            'DEALER PAYMENTS',
         )
 
     def test_value_dated_availability(self):
@@ -102,11 +102,11 @@ class TransactionDetailParserTestCase(TestCase):
         self.assertEqual(transaction.funds_type, FundsType.value_dated)
         self.assertEqual(
             transaction.availability['date'],
-            datetime.date(day=15, month=7, year=2015)
+            datetime.date(day=15, month=7, year=2015),
         )
         self.assertEqual(
             transaction.availability['time'],
-            datetime.time(hour=23, minute=40)
+            datetime.time(hour=23, minute=40),
         )
 
     def test_distributed_availability_simple(self):
@@ -129,7 +129,7 @@ class TransactionDetailParserTestCase(TestCase):
         self.assertEqual(transaction.amount, 5)
         self.assertEqual(
             transaction.availability,
-            OrderedDict([('0', 1), ('1', 3), ('>1', 1)])
+            OrderedDict([('0', 1), ('1', 3), ('>1', 1)]),
         )
 
     def test_distributed_availability(self):
@@ -153,7 +153,7 @@ class TransactionDetailParserTestCase(TestCase):
 
         self.assertEqual(
             transaction.availability,
-            OrderedDict([('1', 1), ('2', 4)])
+            OrderedDict([('1', 1), ('2', 4)]),
         )
 
     def test_real_time_payment_credit(self):
@@ -188,7 +188,7 @@ class AccountParserTestCase(TestCase):
         lines = [
             '03,0975312468,GBP,010,500000,,,190,70000000,4,0/',
             '16,165,1500000,1,DD1620,, DEALER PAYMENTS',
-            '49,72000000,3/'
+            '49,72000000,3/',
         ]
 
         parser = AccountParser(IteratorHelper(lines))
@@ -208,7 +208,7 @@ class AccountParserTestCase(TestCase):
     def test_parse_without_transactions(self):
         lines = [
             '03,0975312468,GBP,010,500000,,,190,70000000,4,0/',
-            '49,70500000,2/'
+            '49,70500000,2/',
         ]
 
         parser = AccountParser(IteratorHelper(lines))
@@ -224,7 +224,7 @@ class AccountParserTestCase(TestCase):
             '16,115,10000000,S,5000000,4000000,1000000/',
             '88,AX13612,B096132,AMALGAMATED CORP. LOCKBOX',
             '88,DEPOSIT-MISC. RECEIVABLES',
-            '49,82000000,6/'
+            '49,82000000,6/',
         ]
 
         parser = AccountParser(IteratorHelper(lines))
@@ -248,7 +248,7 @@ class AccountParserTestCase(TestCase):
         lines = [
             '03,0975312468,GBP,010,500000,,,190,70000000,4,0/',
             '16,165,1500000,1,DD1620,, DEALER PAYMENTS',
-            '49,72000000,4/'
+            '49,72000000,4/',
         ]
 
         parser = AccountParser(IteratorHelper(lines))
@@ -261,7 +261,7 @@ class AccountParserTestCase(TestCase):
         lines = [
             '03,0975312468,GBP,010,500000,,,190,70000000,4,0/',
             '16,165,1500000,1,DD1620,, DEALER PAYMENTS',
-            '49,72000001,3/'
+            '49,72000001,3/',
         ]
 
         parser = AccountParser(IteratorHelper(lines))
@@ -275,7 +275,7 @@ class AccountParserTestCase(TestCase):
         lines = [
             '03,0975312468,GBP,010,500000,,,190,70000000,4,0/',
             '16,165,1500000,1,DD1620,, DEALER PAYMENTS',
-            '49,72000001,3/'
+            '49,72000001,3/',
         ]
 
         parser = AccountParser(IteratorHelper(lines), check_integrity=False)
@@ -290,7 +290,7 @@ class GroupParserTestCase(TestCase):
             '03,0975312468,GBP,010,500000,,,190,70000000,4,0/',
             '16,165,1500000,1,DD1620,, DEALER PAYMENTS',
             '49,72000000,3/',
-            '98,72000000,1,5/'
+            '98,72000000,1,5/',
         ]
 
         parser = GroupParser(IteratorHelper(lines))
@@ -323,7 +323,7 @@ class GroupParserTestCase(TestCase):
             '03,0975312468,GBP,010,500000,,,190,70000000,4,0/',
             '16,165,1500000,1,DD1620,, DEALER PAYMENTS',
             '49,72000000,3/',
-            '98,72000000,1,5/'
+            '98,72000000,1,5/',
         ]
 
         parser = GroupParser(IteratorHelper(lines))
@@ -341,7 +341,7 @@ class GroupParserTestCase(TestCase):
             '49,72000000,3/',
             '03,0975312469,GBP,010,100,,/',
             '49,100,2/',
-            '98,72000100,2,7/'
+            '98,72000100,2,7/',
         ]
 
         parser = GroupParser(IteratorHelper(lines))
@@ -358,7 +358,7 @@ class GroupParserTestCase(TestCase):
     def test_fails_if_no_accounts_found(self):
         lines = [
             '02,031001234,122099999,1,040620,2359,,2/',
-            '98,11800000,0,2/'
+            '98,11800000,0,2/',
         ]
 
         parser = GroupParser(IteratorHelper(lines))
@@ -381,7 +381,7 @@ class GroupParserTestCase(TestCase):
             '03,0975312468,GBP,010,500000,,,190,70000000,4,0/',
             '16,165,1500000,1,DD1620,, DEALER PAYMENTS',
             '49,72000000,3/',
-            '98,72000000,1,6/'
+            '98,72000000,1,6/',
         ]
 
         parser = GroupParser(IteratorHelper(lines))
@@ -396,7 +396,7 @@ class GroupParserTestCase(TestCase):
             '03,0975312468,GBP,010,500000,,,190,70000000,4,0/',
             '16,165,1500000,1,DD1620,, DEALER PAYMENTS',
             '49,72000000,4/',
-            '98,72000000,1,5/'
+            '98,72000000,1,5/',
         ]
 
         parser = GroupParser(IteratorHelper(lines))
@@ -411,7 +411,7 @@ class GroupParserTestCase(TestCase):
             '03,0975312468,GBP,010,500000,,,190,70000000,4,0/',
             '16,165,1500000,1,DD1620,, DEALER PAYMENTS',
             '49,72000000,3/',
-            '98,72000001,1,5/'
+            '98,72000001,1,5/',
         ]
 
         parser = GroupParser(IteratorHelper(lines))
@@ -427,7 +427,7 @@ class GroupParserTestCase(TestCase):
             '03,0975312468,GBP,010,500000,,,190,70000000,4,0/',
             '16,165,1500000,1,DD1620,, DEALER PAYMENTS',
             '49,72000000,3/',
-            '98,72000001,2,6/'
+            '98,72000001,2,6/',
         ]
 
         parser = GroupParser(IteratorHelper(lines), check_integrity=False)
@@ -451,7 +451,7 @@ class Bai2FileParserTestCase(TestCase):
             '88,BO:11111111 BO1:DOE JO',
             '49,20001,10/',
             '98,20001,1,12/',
-            '99,20001,1,14/'
+            '99,20001,1,14/',
         ]
 
         parser = Bai2FileParser(IteratorHelper(lines))
@@ -498,9 +498,7 @@ class Bai2FileParserTestCase(TestCase):
         self.assertEqual(group_header.as_of_date, july_15_2015)
         self.assertEqual(group_header.as_of_time, datetime.time(hour=23, minute=40))
         self.assertEqual(group_header.currency, 'GBP')
-        self.assertEqual(
-            group_header.as_of_date_modifier, AsOfDateModifier.final_previous_day
-        )
+        self.assertEqual(group_header.as_of_date_modifier, AsOfDateModifier.final_previous_day)
 
         # Group Trailer
 
@@ -550,7 +548,7 @@ class Bai2FileParserTestCase(TestCase):
             'PY:RP1231231231231200                 A1234BC 22/03/66 '
             'BI:22222222 '
             'OB:111111 BUCKINGHAM PALACE OB3:BARCLAYS BANK PLC '
-            'BO:11111111 BO1:DOE JO'
+            'BO:11111111 BO1:DOE JO',
         )
 
     def test_only_version_2_supported(self):
@@ -564,7 +562,7 @@ class Bai2FileParserTestCase(TestCase):
             '16,165,1500000,1,DD1620,, DEALER PAYMENTS',
             '49,18650000,3/',
             '98,18650000,1,5/',
-            '99,18650000,1,7/'
+            '99,18650000,1,7/',
         ]
 
         parser = Bai2FileParser(IteratorHelper(lines))
@@ -583,7 +581,7 @@ class Bai2FileParserTestCase(TestCase):
             '03,0975312469,GBP,010,100,,/',
             '49,100,2/',
             '98,100,1,4/',
-            '99,72000100,2,11/'
+            '99,72000100,2,11/',
         ]
 
         parser = Bai2FileParser(IteratorHelper(lines))
@@ -599,7 +597,7 @@ class Bai2FileParserTestCase(TestCase):
     def test_fails_if_no_groups_found(self):
         lines = [
             '01,122099999,123456789,040621,0200,1,,,2/',
-            '99,1215450000,0,2/'
+            '99,1215450000,0,2/',
         ]
 
         parser = Bai2FileParser(IteratorHelper(lines))
@@ -624,7 +622,7 @@ class Bai2FileParserTestCase(TestCase):
             '16,165,1500000,1,DD1620,, DEALER PAYMENTS',
             '49,72000000,3/',
             '98,72000000,1,5/',
-            '99,72000000,1,8/'
+            '99,72000000,1,8/',
         ]
 
         parser = Bai2FileParser(IteratorHelper(lines))
@@ -641,7 +639,7 @@ class Bai2FileParserTestCase(TestCase):
             '16,165,1500000,1,DD1620,, DEALER PAYMENTS',
             '49,72000000,3/',
             '98,72000000,1,5/',
-            '99,72000000,2,7/'
+            '99,72000000,2,7/',
         ]
 
         parser = Bai2FileParser(IteratorHelper(lines))
@@ -658,7 +656,7 @@ class Bai2FileParserTestCase(TestCase):
             '16,165,1500000,1,DD1620,, DEALER PAYMENTS',
             '49,72000000,3/',
             '98,72000000,1,5/',
-            '99,72000001,1,7/'
+            '99,72000001,1,7/',
         ]
 
         parser = Bai2FileParser(IteratorHelper(lines))
@@ -676,7 +674,7 @@ class Bai2FileParserTestCase(TestCase):
             '16,165,1500000,1,DD1620,, DEALER PAYMENTS',
             '49,72000000,3/',
             '98,72000000,1,5/',
-            '99,72000001,2,8/'
+            '99,72000001,2,8/',
         ]
 
         parser = Bai2FileParser(IteratorHelper(lines), check_integrity=False)
