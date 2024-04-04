@@ -1,9 +1,9 @@
 import datetime
 from collections import OrderedDict
-from unittest import TestCase
+from unittest import TestCase, mock
 
-from bai2.constants import TypeCodes, FundsType, GroupStatus, \
-    AsOfDateModifier
+from bai2.constants import TypeCodes, TypeCode, TypeCodeLevel, TypeCodeTransaction, \
+    FundsType, GroupStatus, AsOfDateModifier
 from bai2.exceptions import ParsingException, \
     NotSupportedYetException, IntegrityException
 from bai2.helpers import IteratorHelper
@@ -181,6 +181,39 @@ class TransactionDetailParserTestCase(TestCase):
         self.assertEqual(transaction.type_code.code, '158')
         self.assertEqual(transaction.amount, 4346722)
         self.assertEqual(len(transaction.rows), 16)
+
+    def test_unsupported_type_code_should_raise_unsupported_exception(self):
+        lines = [
+            '16,299,1500000,1,DD1620,,DEALER PAYMENTS',
+        ]
+
+        parser = TransactionDetailParser(IteratorHelper(lines))
+        self.assertRaises(NotSupportedYetException, parser.parse)
+
+    def test_custom_type_code(self):
+        """
+        Simulate adding a custom type code:
+
+        ```python
+        TypeCodes['299'] = TypeCode('299', TypeCodeTransaction.credit, TypeCodeLevel.detail, 'Custom transaction')
+        ```
+        """
+
+        lines = [
+            '16,299,1500000,1,DD1620,,DEALER PAYMENTS',
+        ]
+
+        with mock.patch.dict(TypeCodes, [
+            ('299', TypeCode('299', TypeCodeTransaction.credit, TypeCodeLevel.detail, 'Custom transaction')),
+        ]):
+            parser = TransactionDetailParser(IteratorHelper(lines))
+            transaction = parser.parse()
+
+        self.assertEqual(transaction.type_code.code, '299')
+        self.assertEqual(transaction.amount, 1500000)
+        self.assertEqual(transaction.bank_reference, 'DD1620')
+        self.assertEqual(transaction.customer_reference, None)
+        self.assertEqual(transaction.text, 'DEALER PAYMENTS')
 
 
 class AccountParserTestCase(TestCase):
@@ -680,11 +713,3 @@ class Bai2FileParserTestCase(TestCase):
         parser = Bai2FileParser(IteratorHelper(lines), check_integrity=False)
         bai2_file = parser.parse()
         self.assertTrue(isinstance(bai2_file, Bai2File))
-
-    def test_unsupported_type_code__should_raise_unsupported_yet_exception(self):
-        lines = [
-            '16,299,1500000,1,DD1620,, DEALER PAYMENTS',
-        ]
-
-        parser = TransactionDetailParser(IteratorHelper(lines))
-        self.assertRaises(NotSupportedYetException, parser.parse)
