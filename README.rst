@@ -92,8 +92,7 @@ We've noticed that different banks implement the specs in slightly different way
 It is expected to work correctly with files produced by NatWest, RBS, and JP Morgan.
 
 We don't know yet how to deal with these cases as we don't have access to many bai2 files so we can't test it as we would like.
-
-Please let me know if this happens to you.
+You can help by submitting pull requests with sample bai2 files.
 
 Development
 -----------
@@ -105,6 +104,7 @@ Development
     :target: https://github.com/ministryofjustice/bai2/actions/workflows/lint.yml
 
 Please report bugs and open pull requests on `GitHub`_.
+Please add an item to the `History`_ section to explain code changes.
 
 To work on changes to this library, it’s recommended to install it in editable mode into a virtual environment,
 i.e. ``pip install --editable .``
@@ -121,6 +121,9 @@ Alternatively, you can use ``tox`` if you have multiple python versions.
 
 History
 -------
+
+0.14.0 (2024-04-04)
+    Adds support for charitable organizations/Donor Advised Funds codes 706 and 708 (thanks @coop-nfg).
 
 0.13.0 (2024-01-16)
     Parse bai2 files with empty lines, trailing whitespace (thanks @Isaben).
