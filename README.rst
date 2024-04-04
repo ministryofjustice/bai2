@@ -94,6 +94,14 @@ It is expected to work correctly with files produced by NatWest, RBS, and JP Mor
 We don't know yet how to deal with these cases as we don't have access to many bai2 files so we can't test it as we would like.
 You can help by submitting pull requests with sample bai2 files.
 
+For parsing custom transaction type codes that are specific to your use case, you can try overriding the default set:
+
+.. code-block:: python
+
+    from bai2.constants import TypeCodes, TypeCode, TypeCodeLevel, TypeCodeTransaction
+
+    TypeCodes['299'] = TypeCode('299', TypeCodeTransaction.credit, TypeCodeLevel.detail, 'Custom transaction')
+
 Development
 -----------
 
