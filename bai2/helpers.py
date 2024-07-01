@@ -21,13 +21,12 @@ def _build_account_identifier_record(rows):
                     # some banks emit this extra comma, some don't, so we need to normalize it
                     fields_str += ','
                 elif fields_str[-1] != ',':
-                    # if the number of commas is multiple of 4 and the las character is
+                    # if the number of commas is multiple of 4 and the last character is
                     # not a comma, then we need to add an extra comma
                     fields_str += ','
             else:
                 fields_str += field_str
 
-    #import pdb; pdb.set_trace()
     fields = fields_str.split(',')
     return Record(code=rows[0][0], fields=fields, rows=rows)
 
