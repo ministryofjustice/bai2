@@ -219,9 +219,10 @@ class TransactionDetailParserTestCase(TestCase):
 class AccountParserTestCase(TestCase):
     def test_parse(self):
         lines = [
-            '03,0975312468,GBP,010,500000,,,190,70000000,4,0/',
+            '03,0975312468,GBP,010,4764927,,,015,4626045,,,022,0,,,040,4626045,,/',
+            '88,045,4626045,,,072,0,,,074,0,,,076,0,,,100,0,,,400,138882,,/',
             '16,165,1500000,1,DD1620,, DEALER PAYMENTS',
-            '49,72000000,3/',
+            '49,20281944,4/',
         ]
 
         parser = AccountParser(IteratorHelper(lines))
@@ -233,8 +234,64 @@ class AccountParserTestCase(TestCase):
         self.assertEqual(header.currency, 'GBP')
 
         trailer = account.trailer
-        self.assertEqual(trailer.account_control_total, 72000000)
-        self.assertEqual(trailer.number_of_records, 3)
+        self.assertEqual(trailer.account_control_total, 20281944)
+        self.assertEqual(trailer.number_of_records, 4)
+
+        self.assertEqual(len(account.children), 1)
+
+    def test_parse_with_different_continuation(self):
+        lines = [
+            '03,0975312468,GBP,010,4764927,,,015,4626045,,,022,0,,,040,4626045,,,/',
+            '88,045,4626045,,,072,0,,,074,0,,,076,0,,,100,0,,,400,138882,,/',
+            '16,165,1500000,1,DD1620,, DEALER PAYMENTS',
+            '49,20281944,4/',
+        ]
+
+        parser = AccountParser(IteratorHelper(lines))
+
+        account = parser.parse()
+
+        header = account.header
+        self.assertEqual(header.customer_account_number, '0975312468')
+        self.assertEqual(header.currency, 'GBP')
+
+        trailer = account.trailer
+        self.assertEqual(trailer.account_control_total, 20281944)
+        self.assertEqual(trailer.number_of_records, 4)
+
+        self.assertEqual(len(account.children), 1)
+
+    def test_parse_with_multiple_continuation(self):
+        lines = [
+            '03,0975312468,USD,,,,/',
+            '88,010,24855219,,/',
+            '88,015,23827278,,/',
+            '88,040,24855219,,/',
+            '88,045,23827278,,/',
+            '88,050,9339141,,/',
+            '88,055,15513272,,/',
+            '88,056,0,,/',
+            '88,072,0,,/',
+            '88,074,0,,/',
+            '88,075,0,,/',
+            '88,076,0,,/',
+            '88,100,106255,4,/',
+            '88,400,1134196,8,/',
+            '16,165,1500000,1,DD1620,, DEALER PAYMENTS',
+            '49,124957858,16/',
+        ]
+
+        parser = AccountParser(IteratorHelper(lines))
+
+        account = parser.parse()
+
+        header = account.header
+        self.assertEqual(header.customer_account_number, '0975312468')
+        self.assertEqual(header.currency, 'USD')
+
+        trailer = account.trailer
+        self.assertEqual(trailer.account_control_total, 124957858)
+        self.assertEqual(trailer.number_of_records, 16)
 
         self.assertEqual(len(account.children), 1)
 

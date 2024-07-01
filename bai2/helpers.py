@@ -5,6 +5,7 @@ from .models import Record
 def _build_account_identifier_record(rows):
     fields_str = ''
     for index, row in enumerate(rows):
+        record = row[0]
         field_str = row[1]
         commas_count = field_str.count(',')
         # first row will have account identifier and currency (the common part of the account identifier)
@@ -19,9 +20,14 @@ def _build_account_identifier_record(rows):
                     # if the number of commas is not a multiple of 4, then we need to add a comma
                     # some banks emit this extra comma, some don't, so we need to normalize it
                     fields_str += ','
+                elif fields_str[-1] != ',':
+                    # if the number of commas is multiple of 4 and the las character is
+                    # not a comma, then we need to add an extra comma
+                    fields_str += ','
             else:
                 fields_str += field_str
 
+    #import pdb; pdb.set_trace()
     fields = fields_str.split(',')
     return Record(code=rows[0][0], fields=fields, rows=rows)
 

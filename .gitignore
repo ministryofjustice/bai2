@@ -18,3 +18,7 @@ dist/
 # environments
 env/
 venv/
+
+# other
+.idea
+.python-version
