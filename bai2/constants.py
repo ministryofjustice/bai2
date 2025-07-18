@@ -71,6 +71,7 @@ TypeCodes = [
     TypeCode('043', None, TypeCodeLevel.status, 'Average Available – Previous Month'),
     TypeCode('044', None, TypeCodeLevel.status, 'Disbursing Opening Available Balance'),
     TypeCode('045', None, TypeCodeLevel.status, 'Closing Available'),
+    TypeCode('048', None, TypeCodeLevel.status, 'Available + 1 day'),
     TypeCode('050', None, TypeCodeLevel.status, 'Average Closing Available MTD'),
     TypeCode('051', None, TypeCodeLevel.status, 'Average Closing Available – Last Month'),
     TypeCode('054', None, TypeCodeLevel.status, 'Average Closing Available YTD – Last Month'),
