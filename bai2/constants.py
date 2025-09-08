@@ -53,6 +53,16 @@ class TypeCodeLevel(Enum):
 
 TypeCode = namedtuple('TypeCode', ['code', 'transaction', 'level', 'description'])
 TypeCodes = [
+    TypeCode('000', None, TypeCodeLevel.status, 'Type Code 000'),
+    TypeCode('001', None, TypeCodeLevel.status, 'Type Code 001'),
+    TypeCode('002', None, TypeCodeLevel.status, 'Type Code 002'),
+    TypeCode('003', None, TypeCodeLevel.status, 'Type Code 003'),
+    TypeCode('004', None, TypeCodeLevel.status, 'Type Code 004'),
+    TypeCode('005', None, TypeCodeLevel.status, 'Type Code 005'),
+    TypeCode('006', None, TypeCodeLevel.status, 'Type Code 006'),
+    TypeCode('007', None, TypeCodeLevel.status, 'Type Code 007'),
+    TypeCode('008', None, TypeCodeLevel.status, 'Type Code 008'),
+    TypeCode('009', None, TypeCodeLevel.status, 'Type Code 009'),
     TypeCode('010', None, TypeCodeLevel.status, 'Opening Ledger'),
     TypeCode('011', None, TypeCodeLevel.status, 'Average Opening Ledger MTD'),
     TypeCode('012', None, TypeCodeLevel.status, 'Average Opening Ledger YTD'),
