@@ -53,7 +53,7 @@ class TypeCodeLevel(Enum):
 
 TypeCode = namedtuple('TypeCode', ['code', 'transaction', 'level', 'description'])
 TypeCodes = [
-    TypeCode('000', None, TypeCodeLevel.status, 'Type Code 000'),
+    TypeCode('000', TypeCodeTransaction.credit, TypeCodeLevel.detail, 'Type Code 000'),
     TypeCode('001', None, TypeCodeLevel.status, 'Type Code 001'),
     TypeCode('002', None, TypeCodeLevel.status, 'Type Code 002'),
     TypeCode('003', None, TypeCodeLevel.status, 'Type Code 003'),
