@@ -2,7 +2,7 @@ from collections import OrderedDict
 from datetime import date, time
 from unittest import TestCase
 
-from bai2 import models, writers, constants
+from bai2 import constants, models, writers
 
 
 class TransactionDetailWriterTestCase(TestCase):

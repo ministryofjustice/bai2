@@ -3,26 +3,40 @@ on:
   release:
     types: [created]
 jobs:
-  release:
-    name: Release to PYPI
+  build:
+    name: Build package
     runs-on: ubuntu-latest
     steps:
       - name: Checkout repository
-        uses: actions/checkout@v4
+        uses: actions/checkout@v5
+        with:
+          persist-credentials: false
       - name: Setup python
-        uses: actions/setup-python@v5
+        uses: actions/setup-python@v6
         with:
           python-version: 3.x
-      - name: Update setuptools pip and wheel
-        run: pip install -U setuptools pip wheel
-      - name: Install release requirements
-        run: pip install -r requirements-release.txt
-      - name: Build and release to PYPI
-        run: |
-          python -m build
-          unzip -l dist/*.whl
-          tar tzf dist/*.tar.gz
-          twine upload --non-interactive dist/*
-        env:
-          TWINE_USERNAME: ${{ secrets.PYPI_USERNAME }}
-          TWINE_PASSWORD: ${{ secrets.PYPI_PASSWORD }}
+      - name: Install build tools
+        run: pip install -U setuptools pip wheel build
+      - name: Build package
+        run: python -m build
+      - name: Upload artefact
+        uses: actions/upload-artifact@v5
+        with:
+          name: package
+          path: dist/
+
+  release:
+    name: Release to PYPI
+    runs-on: ubuntu-latest
+    permissions:
+      id-token: write
+    needs:
+      - build
+    steps:
+      - name: Download all the dists
+        uses: actions/download-artifact@v6
+        with:
+          name: package
+          path: dist/
+      - name: Release to PyPI
+        uses: pypa/gh-action-pypi-publish@release/v1

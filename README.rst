@@ -8,7 +8,7 @@ Python module for parsing and writing `BAI2`_ files.
 Requirements
 ------------
 
-Only Python 3.7+ is supported.
+Only tested on Python 3.10+, but should work on 3.7+.
 
 Installation
 ------------
@@ -108,9 +108,6 @@ Development
 .. image:: https://github.com/ministryofjustice/bai2/actions/workflows/test.yml/badge.svg?branch=main
     :target: https://github.com/ministryofjustice/bai2/actions/workflows/test.yml
 
-.. image:: https://github.com/ministryofjustice/bai2/actions/workflows/lint.yml/badge.svg?branch=main
-    :target: https://github.com/ministryofjustice/bai2/actions/workflows/lint.yml
-
 Please report bugs and open pull requests on `GitHub`_.
 Please add an item to the `History`_ section to explain code changes.
 
@@ -129,6 +126,11 @@ Alternatively, you can use ``tox`` if you have multiple python versions.
 
 History
 -------
+
+0.15.0 (2025-11-04)
+    Testing on python 3.10 to 3.14.
+    Improve linting and modernise code style.
+    Migrated to trusted publishing.
 
 0.14.0 (2024-04-04)
     Adds support for charitable organizations/Donor Advised Funds codes 706 and 708 (thanks @coop-nfg).
@@ -181,7 +183,7 @@ History
 Copyright
 ---------
 
-Copyright (C) 2023 HM Government (Ministry of Justice Digital & Technology).
+Copyright (C) 2025 HM Government (Ministry of Justice Digital & Technology).
 See LICENSE.txt for further details.
 
 .. _BAI2: https://www.bai.org/docs/default-source/libraries/site-general-downloads/cash_management_2005.pdf

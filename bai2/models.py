@@ -1,6 +1,5 @@
 from .constants import RecordCode
 
-
 # ABSTRACTION
 
 
@@ -16,7 +15,7 @@ class Bai2Model:
 
     def as_string(self):
         return '\n'.join([
-            '{0},{1}'.format(row[0].value, row[1])
+            f'{row[0].value},{row[1]}'
             for row in self.rows
         ])
 
