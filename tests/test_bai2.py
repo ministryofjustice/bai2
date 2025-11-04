@@ -3,7 +3,6 @@ from unittest import TestCase
 
 from bai2 import bai2
 from bai2.models import Bai2File
-
 from tests.test_writers import Bai2FileWriterTestCase
 
 
@@ -115,7 +114,7 @@ class ParseTestCase(TestCase):
         self.assertTrue(isinstance(bai2_file, Bai2File))
 
         from_model = bai2_file.as_string()
-        original_stripped = '\n'.join(['{}'.format(s.strip()) for s in original.splitlines()])
+        original_stripped = '\n'.join(s.strip() for s in original.splitlines())
 
         self.assertEqual(original_stripped, from_model)
 
@@ -140,7 +139,7 @@ class ParseTestCase(TestCase):
         self.assertTrue(isinstance(bai2_file, Bai2File))
 
         from_model = bai2_file.as_string()
-        original_stripped = '\n'.join(['{}'.format(s.strip()) for s in original.splitlines() if s.strip()])
+        original_stripped = '\n'.join(s.strip() for s in original.splitlines() if s.strip())
 
         self.assertEqual(original_stripped, from_model)
 

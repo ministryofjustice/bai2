@@ -1,23 +1,25 @@
-name: Run tests
+name: Test and lint
 on: push
 jobs:
   test:
     name: Run tests
     runs-on: ubuntu-latest
     strategy:
+      fail-fast: false
       matrix:
         python-version:
-          - "3.7"
-          - "3.8"
-          - "3.9"
           - "3.10"
           - "3.11"
           - "3.12"
+          - "3.13"
+          - "3.14"
     steps:
       - name: Checkout repository
-        uses: actions/checkout@v4
+        uses: actions/checkout@v5
+        with:
+          persist-credentials: false
       - name: Setup python
-        uses: actions/setup-python@v5
+        uses: actions/setup-python@v6
         with:
           python-version: ${{ matrix.python-version }}
       - name: Update setuptools pip and wheel
@@ -26,3 +28,22 @@ jobs:
         run: |
           pip install --editable .
           python -m tests
+
+  lint:
+    name: Lint code
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v5
+        with:
+          persist-credentials: false
+      - name: Setup python
+        uses: actions/setup-python@v6
+        with:
+          python-version: 3.x
+      - name: Update setuptools pip and wheel
+        run: pip install -U setuptools pip wheel
+      - name: Install linting requirements
+        run: pip install -r requirements-lint.txt
+      - name: Lint code
+        run: flake8 --verbose

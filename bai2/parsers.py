@@ -1,15 +1,21 @@
 from collections import OrderedDict
 
-from .constants import GroupStatus, AsOfDateModifier, FundsType
-from .exceptions import ParsingException, NotSupportedYetException, \
-    IntegrityException
-from .models import \
-    Bai2File, Bai2FileHeader, Bai2FileTrailer, \
-    Group, GroupHeader, GroupTrailer, \
-    AccountIdentifier, AccountTrailer, Account, \
-    TransactionDetail, Summary
+from .constants import AsOfDateModifier, FundsType, GroupStatus
+from .exceptions import IntegrityException, NotSupportedYetException, ParsingException
+from .models import (
+    Account,
+    AccountIdentifier,
+    AccountTrailer,
+    Bai2File,
+    Bai2FileHeader,
+    Bai2FileTrailer,
+    Group,
+    GroupHeader,
+    GroupTrailer,
+    Summary,
+    TransactionDetail,
+)
 from .utils import parse_date, parse_time, parse_type_code
-
 
 # ABSTRACTION
 
@@ -32,14 +38,11 @@ class BaseParser:
     def _check_record_code(self, expected_code):
         if self._iter.current_record.code != expected_code:
             raise ParsingException(
-                'Expected {expected}, got {found} instead'.format(
-                    expected=expected_code,
-                    found=self._iter.current_record.code,
-                )
+                f'Expected {expected_code}, got {self._iter.current_record.code} instead',
             )
 
     def _get_parser(self, parser_type):
-        name = '{name}_parser_class'.format(name=parser_type.lower())
+        name = f'{parser_type.lower()}_parser_class'
         parser_clazz = getattr(self, name)
         if parser_clazz:
             return parser_clazz(
@@ -85,10 +88,11 @@ class BaseSectionParser(BaseParser):
         return children
 
     def can_parse(self):
-        return \
-            self.header_parser.can_parse() or \
-            self.trailer_parser.can_parse() or \
-            (self.child_parser and self.child_parser.can_parse())
+        return (
+            self.header_parser.can_parse()
+            or self.trailer_parser.can_parse()
+            or (self.child_parser and self.child_parser.can_parse())
+        )
 
     def validate_number_of_records(self, obj):
         if self.check_integrity:
@@ -98,12 +102,8 @@ class BaseSectionParser(BaseParser):
 
             if number_of_records != obj.trailer.number_of_records:
                 raise IntegrityException(
-                    'Invalid number of records for {clazz}. '
-                    'expected {expected}, found {found}'.format(
-                        clazz=obj.__class__.__name__,
-                        expected=obj.trailer.number_of_records,
-                        found=number_of_records,
-                    )
+                    f'Invalid number of records for {obj.__class__.__name__}. '
+                    f'expected {obj.trailer.number_of_records}, found {number_of_records}',
                 )
 
     def validate(self, obj):
@@ -143,7 +143,7 @@ class BaseSingleParser(BaseParser):
         field_name, parser = field_config
 
         # Integer check
-        if parser == int and 'total' in field_name:
+        if parser is int and 'total' in field_name:
             field_value = parser(raw_value) if raw_value else 0
         else:
             field_value = parser(raw_value) if raw_value else None
@@ -152,21 +152,21 @@ class BaseSingleParser(BaseParser):
     def _parse_fields_from_config(self, values, fields_config):
         fields = {}
 
-        index = 0
-        for field_config in fields_config:
+        for index, field_config in enumerate(fields_config):
             field_name, field_value = self._parse_field_from_config(
-                field_config, values[index]
+                field_config, values[index],
             )
             fields[field_name] = field_value
-            index += 1
         return fields
 
     def _parse_fields(self, record):
         return self._parse_fields_from_config(
-            record.fields, self.fields_config,
+            record.fields,
+            self.fields_config,
         )
 
-    def _parse_availability(self, funds_type, rest):
+    @classmethod
+    def _parse_availability(cls, funds_type, rest):
         availability = None
         if funds_type == FundsType.distributed_availability_simple:
             availability = OrderedDict()
@@ -228,13 +228,14 @@ class TransactionDetailParser(BaseSingleParser):
         rest = record.fields
         fields = self._parse_fields_from_config(
             rest[:len(self.head_fields_config)],
-            self.head_fields_config
+            self.head_fields_config,
         )
 
         rest = rest[len(self.head_fields_config):]
         # availability fields:
         availability, rest = self._parse_availability(
-            fields['funds_type'], rest,
+            fields['funds_type'],
+            rest,
         )
         fields['availability'] = availability
 
@@ -242,8 +243,8 @@ class TransactionDetailParser(BaseSingleParser):
         fields.update(
             self._parse_fields_from_config(
                 rest[:2] + [','.join(rest[2:])],
-                self.tail_fields_config
-            )
+                self.tail_fields_config,
+            ),
         )
 
         return fields
@@ -277,13 +278,9 @@ class AccountIdentifierParser(BaseSingleParser):
             if len(rest) == 1 and not rest[0]:
                 break
 
-            summary = self._parse_fields_from_config(
-                rest, self.summary_fields_config
-            )
+            summary = self._parse_fields_from_config(rest, self.summary_fields_config)
             rest = rest[len(self.summary_fields_config):]
-            availability, rest = self._parse_availability(
-                summary['funds_type'], rest
-            )
+            availability, rest = self._parse_availability(summary['funds_type'], rest)
             if availability:
                 summary['availability'] = availability
             summary_items.append(Summary(**summary))
@@ -311,18 +308,16 @@ class AccountParser(BaseSectionParser):
         super().validate(obj)
 
         if self.check_integrity:
-            transaction_sum = sum([child.amount or 0 for child in obj.children])
-            account_sum = sum([summary.amount or 0 for summary in obj.header.summary_items])
+            transaction_sum = sum(child.amount or 0 for child in obj.children)
+            account_sum = sum(
+                summary.amount or 0 for summary in obj.header.summary_items
+            )
 
             control_total = transaction_sum + account_sum
             if control_total != obj.trailer.account_control_total:
                 raise IntegrityException(
-                    'Invalid account control total for {clazz}. '
-                    'expected {expected}, found {found}'.format(
-                        clazz=obj.__class__.__name__,
-                        expected=obj.trailer.account_control_total,
-                        found=control_total,
-                    )
+                    f'Invalid account control total for {obj.__class__.__name__}. '
+                    f'expected {obj.trailer.account_control_total}, found {control_total}',
                 )
 
 
@@ -374,27 +369,18 @@ class GroupParser(BaseSectionParser):
         if self.check_integrity:
             if obj.trailer.number_of_accounts != len(obj.children):
                 raise IntegrityException(
-                    'Invalid number of accounts for {clazz}. '
-                    'expected {expected}, found {found}'.format(
-                        clazz=obj.__class__.__name__,
-                        expected=obj.trailer.number_of_accounts,
-                        found=len(obj.children),
-                    )
+                    f'Invalid number of accounts for {obj.__class__.__name__}. '
+                    f'expected {obj.trailer.number_of_accounts}, found {len(obj.children)}',
                 )
 
-            control_total = sum([
-                account.trailer.account_control_total
-                for account in obj.children
-            ])
+            control_total = sum(
+                account.trailer.account_control_total for account in obj.children
+            )
 
             if control_total != obj.trailer.group_control_total:
                 raise IntegrityException(
-                    'Invalid group control total for {clazz}. '
-                    'expected {expected}, found {found}'.format(
-                        clazz=obj.__class__.__name__,
-                        expected=obj.trailer.group_control_total,
-                        found=control_total,
-                    )
+                    f'Invalid group control total for {obj.__class__.__name__}. '
+                    f'expected {obj.trailer.group_control_total}, found {control_total}',
                 )
 
 
@@ -416,9 +402,7 @@ class Bai2FileHeaderParser(BaseSingleParser):
         super().validate(obj)
 
         if obj.version_number != 2:
-            raise NotSupportedYetException(
-                'Only BAI version 2 supported'
-            )
+            raise NotSupportedYetException('Only BAI version 2 supported')
 
 
 class Bai2FileTrailerParser(BaseSingleParser):
@@ -446,25 +430,16 @@ class Bai2FileParser(BaseSectionParser):
         if self.check_integrity:
             if obj.trailer.number_of_groups != len(obj.children):
                 raise IntegrityException(
-                    'Invalid number of groups for {clazz}. '
-                    'expected {expected}, found {found}'.format(
-                        clazz=obj.__class__.__name__,
-                        expected=obj.trailer.number_of_groups,
-                        found=len(obj.children),
-                    )
+                    f'Invalid number of groups for {obj.__class__.__name__}. '
+                    f'expected {obj.trailer.number_of_groups}, found {len(obj.children)}',
                 )
 
-            control_total = sum([
-                account.trailer.group_control_total
-                for account in obj.children
-            ])
+            control_total = sum(
+                account.trailer.group_control_total for account in obj.children
+            )
 
             if control_total != obj.trailer.file_control_total:
                 raise IntegrityException(
-                    'Invalid file control total for {clazz}. '
-                    'expected {expected}, found {found}'.format(
-                        clazz=obj.__class__.__name__,
-                        expected=obj.trailer.file_control_total,
-                        found=control_total,
-                    )
+                    f'Invalid file control total for {obj.__class__.__name__}. '
+                    f'expected {obj.trailer.file_control_total}, found {control_total}',
                 )

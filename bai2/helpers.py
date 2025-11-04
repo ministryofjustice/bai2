@@ -58,8 +58,8 @@ def _build_record(rows):
 
 
 def record_generator(lines):
-    rows = iter(
-        [(RecordCode(line[:2]), line[3:]) for line in lines]
+    rows = (
+        (RecordCode(line[:2]), line[3:]) for line in lines
     )
 
     records = [next(rows)]

@@ -2,18 +2,30 @@ import datetime
 from collections import OrderedDict
 from unittest import TestCase, mock
 
-from bai2.constants import TypeCodes, TypeCode, TypeCodeLevel, TypeCodeTransaction, \
-    FundsType, GroupStatus, AsOfDateModifier
-from bai2.exceptions import ParsingException, \
-    NotSupportedYetException, IntegrityException
+from bai2.constants import (
+    AsOfDateModifier,
+    FundsType,
+    GroupStatus,
+    TypeCode,
+    TypeCodeLevel,
+    TypeCodes,
+    TypeCodeTransaction,
+)
+from bai2.exceptions import IntegrityException, NotSupportedYetException, ParsingException
 from bai2.helpers import IteratorHelper
-from bai2.models import \
-    Bai2File, Bai2FileHeader, Bai2FileTrailer, \
-    Group, GroupHeader, GroupTrailer, \
-    Account, AccountIdentifier, AccountTrailer, \
-    TransactionDetail
-from bai2.parsers import TransactionDetailParser, AccountParser, \
-    GroupParser, Bai2FileParser
+from bai2.models import (
+    Account,
+    AccountIdentifier,
+    AccountTrailer,
+    Bai2File,
+    Bai2FileHeader,
+    Bai2FileTrailer,
+    Group,
+    GroupHeader,
+    GroupTrailer,
+    TransactionDetail,
+)
+from bai2.parsers import AccountParser, Bai2FileParser, GroupParser, TransactionDetailParser
 
 
 class TransactionDetailParserTestCase(TestCase):

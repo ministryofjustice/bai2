@@ -1,12 +1,19 @@
 from collections import OrderedDict
 
 from .constants import CONTINUATION_CODE
-from .models import \
-    Bai2File, Bai2FileHeader, Bai2FileTrailer, \
-    Group, GroupHeader, GroupTrailer, \
-    AccountIdentifier, AccountTrailer, Account, \
-    TransactionDetail
-from .utils import write_date, write_time, convert_to_string
+from .models import (
+    Account,
+    AccountIdentifier,
+    AccountTrailer,
+    Bai2File,
+    Bai2FileHeader,
+    Bai2FileTrailer,
+    Group,
+    GroupHeader,
+    GroupTrailer,
+    TransactionDetail,
+)
+from .utils import convert_to_string, write_date, write_time
 
 
 class BaseWriter:
@@ -95,8 +102,8 @@ def expand_availability(writer, availability):
     else:
         fields['distribution_length'] = str(len(availability))
         for field, value in availability.items():
-            fields['day_%s' % str(field)] = convert_to_string(field)
-            fields['amount_%s' % str(field)] = convert_to_string(value)
+            fields[f'day_{field}'] = convert_to_string(field)
+            fields[f'amount_{field}'] = convert_to_string(value)
     return fields
 
 
@@ -159,10 +166,10 @@ def expand_summary_items(writer, summary_items):
 
             if isinstance(output, dict):
                 items.update(OrderedDict(
-                    [('%s_%s' % (k, n), v) for k, v in output.items()]
+                    [(f'{k}_{n}', v) for k, v in output.items()],
                 ))
             else:
-                items['%s_%s' % (summary_field_name, n)] = convert_to_string(output)
+                items[f'{summary_field_name}_{n}'] = convert_to_string(output)
     return items
 
 
