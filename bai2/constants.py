@@ -545,6 +545,7 @@ TypeCodes = [
     TypeCode('727', TypeCodeTransaction.credit, TypeCodeLevel.detail, 'Amount Applied to Deferred Interest Detail'),
     TypeCode('728', TypeCodeTransaction.credit, TypeCodeLevel.detail, 'Amount Applied to Service Charge'),
     TypeCode('760', TypeCodeTransaction.debit, TypeCodeLevel.summary, 'Loan Disbursement'),
+    TypeCode('801', None, TypeCodeLevel.status, 'Sweep Balance'),
     TypeCode('827', TypeCodeTransaction.credit, TypeCodeLevel.summary, 'Incoming SEPA Payments'),
     TypeCode('828', TypeCodeTransaction.debit, TypeCodeLevel.summary, 'Outgoing SEPA Payments'),
     TypeCode('829', TypeCodeTransaction.credit, TypeCodeLevel.summary, 'Incoming BACS Payment'),
