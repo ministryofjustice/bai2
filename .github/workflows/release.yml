@@ -20,7 +20,7 @@ jobs:
       - name: Build package
         run: python -m build
       - name: Upload artefact
-        uses: actions/upload-artifact@v5
+        uses: actions/upload-artifact@v6
         with:
           name: package
           path: dist/
