@@ -2,7 +2,7 @@ from .constants import RecordCode
 from .models import Record
 
 
-def _build_account_identifier_record(rows):
+def _build_account_identifier_record(rows, include_quirk=True):
     fields_str = ''
     for index, row in enumerate(rows):
         field_str = row[1]
@@ -18,6 +18,9 @@ def _build_account_identifier_record(rows):
                 if summary_commas_count % 4 != 0:
                     # if the number of commas is not a multiple of 4, then we need to add a comma
                     # some banks emit this extra comma, some don't, so we need to normalize it
+                    fields_str += ','
+                elif not include_quirk:
+                    # By spec, all `/` should be a separator
                     fields_str += ','
             else:
                 fields_str += field_str

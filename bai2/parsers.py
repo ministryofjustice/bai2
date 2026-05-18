@@ -2,6 +2,7 @@ from collections import OrderedDict
 
 from .constants import AsOfDateModifier, FundsType, GroupStatus
 from .exceptions import IntegrityException, NotSupportedYetException, ParsingException
+from .helpers import _build_account_identifier_record
 from .models import (
     Account,
     AccountIdentifier,
@@ -265,6 +266,18 @@ class AccountIdentifierParser(BaseSingleParser):
     ]
 
     def _parse_fields(self, record):
+        try:
+            return self._parse_account_identifier_fields(record)
+        except Exception:
+            # If we failed to builde the record, fall back
+            # to a more spec compliant end of record handling
+            quirk_record = _build_account_identifier_record(
+                record.rows,
+                include_quirk=False,
+            )
+            return self._parse_account_identifier_fields(quirk_record)
+
+    def _parse_account_identifier_fields(self, record):
         model_fields = self._parse_fields_from_config(
             record.fields[:len(self.common_fields_config)],
             self.common_fields_config,

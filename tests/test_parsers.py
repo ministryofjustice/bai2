@@ -25,7 +25,13 @@ from bai2.models import (
     GroupTrailer,
     TransactionDetail,
 )
-from bai2.parsers import AccountParser, Bai2FileParser, GroupParser, TransactionDetailParser
+from bai2.parsers import (
+    AccountIdentifierParser,
+    AccountParser,
+    Bai2FileParser,
+    GroupParser,
+    TransactionDetailParser,
+)
 
 
 class TransactionDetailParserTestCase(TestCase):
@@ -261,6 +267,34 @@ class AccountParserTestCase(TestCase):
         account = parser.parse()
 
         self.assertEqual(len(account.children), 0)
+
+    def test_parse_account_identifier_with_summary_split_across_records(self):
+        lines = [
+            '03,01894102469,USD,010,4764927,,,015,4626045,,,022,0,,,040,4626045,,,045/',
+            '88,4626045,,,072,0,,,074,0,,,076,0,,,100,0,,,400,138882,,/',
+        ]
+
+        parser = AccountIdentifierParser(IteratorHelper(lines))
+
+        header = parser.parse()
+
+        self.assertEqual(header.customer_account_number, '01894102469')
+        self.assertEqual(header.currency, 'USD')
+        self.assertEqual(
+            [(summary.type_code.code, summary.amount) for summary in header.summary_items],
+            [
+                ('010', 4764927),
+                ('015', 4626045),
+                ('022', 0),
+                ('040', 4626045),
+                ('045', 4626045),
+                ('072', 0),
+                ('074', 0),
+                ('076', 0),
+                ('100', 0),
+                ('400', 138882),
+            ],
+        )
 
     def test_parse_with_multiple_transactions(self):
         lines = [
